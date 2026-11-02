@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -516,8 +516,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       <button class="btn btn-primary btn-xs" onclick="copyAllActiveBarcodes()">
         📋 คัดลอกเลขค้างทั้งหมด (<span id="btnTotalActiveCount">0</span> เลข)
       </button>
-      <button class="btn btn-accent btn-xs" onclick="syncGoogleSheets(true)">
-        🔄 ซิงค์ชีตล่าสุด
+      <button class="btn btn-accent btn-xs" onclick="syncGoogleSheets(false, true)">
+        🔄 ดึงอัปเดตจาก Google Sheet ตอนนี้
+      </button>
+      <button class="btn btn-outline btn-xs" onclick="syncGoogleSheets(true, true)" title="เช็คซ้ำทุกแท็บตั้งแต่วันแรก">
+        🔍 เช็คซ้ำทุกแท็บ
       </button>
       <a class="btn btn-outline btn-xs" href="https://docs.google.com/spreadsheets/d/1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc/edit?usp=sharing" target="_blank" rel="noopener">
         📊 เปิด Google Sheet
@@ -667,16 +670,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     ];
 
     const SEED_UNRESOLVED = [
-      { tabName: '1.11.69', date: '01/11/2569', rowNum: 342, service: 'E (W)', barcode: 'WC990275354TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' },
-      { tabName: '1.11.69', date: '01/11/2569', rowNum: 343, service: 'E (W)', barcode: 'WB545368690TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' },
-      { tabName: '1.11.69', date: '01/11/2569', rowNum: 344, service: 'E (W)', barcode: 'WC990269645TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' }
+      { tabName: '1.11.69', gid: '709649230', date: '01/11/2569', rowNum: 342, service: 'E (W)', barcode: 'WC990275354TH', bagTime: '31/10/2569 15:10', operator: 'kanitha.po', sheetCause: '' },
+      { tabName: '1.11.69', gid: '709649230', date: '01/11/2569', rowNum: 343, service: 'E (W)', barcode: 'WB545368690TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' },
+      { tabName: '1.11.69', gid: '709649230', date: '01/11/2569', rowNum: 344, service: 'E (W)', barcode: 'WC990269645TH', bagTime: '31/10/2569 15:10', operator: 'kanitha.po', sheetCause: '' }
     ];
 
     let state = {
       casesByBarcode: {},
       neighborState: {},
       resolvedTabsCache: { '28.10.69': true, '29.10.69': true },
+      tabGids: { '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' },
       customTabs: [],
+      autoSyncEnabled: true,
+      lastSyncTime: '',
       expandedCases: {},     // barcode -> boolean (default false = collapsed!)
       collapsedDates: {},    // tabName -> boolean
       collapsedSeries: {},   // seriesKey -> boolean
@@ -694,7 +700,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.casesByBarcode = parsed.casesByBarcode || {};
           state.neighborState = parsed.neighborState || {};
           state.resolvedTabsCache = parsed.resolvedTabsCache || { '28.10.69': true, '29.10.69': true };
+          state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, parsed.tabGids || {});
           state.customTabs = parsed.customTabs || [];
+          if (typeof parsed.autoSyncEnabled === 'boolean') state.autoSyncEnabled = parsed.autoSyncEnabled;
+          state.lastSyncTime = parsed.lastSyncTime || '';
         }
       } catch (e) {
         console.error(e);
@@ -710,7 +719,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           casesByBarcode: state.casesByBarcode,
           neighborState: state.neighborState,
           resolvedTabsCache: state.resolvedTabsCache,
-          customTabs: state.customTabs
+          tabGids: state.tabGids,
+          customTabs: state.customTabs,
+          autoSyncEnabled: state.autoSyncEnabled,
+          lastSyncTime: state.lastSyncTime
         }));
         const badge = document.getElementById('saveStatusBadge');
         if (badge) {
@@ -728,11 +740,15 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (!bc) return;
       const existing = state.casesByBarcode[bc];
       const hasSheetCause = Boolean(item.sheetCause && item.sheetCause.trim());
+      if (item.tabName && item.gid) {
+        state.tabGids[item.tabName] = item.gid;
+      }
 
       if (!existing) {
         state.casesByBarcode[bc] = {
           barcode: bc,
           tabName: item.tabName,
+          gid: item.gid || state.tabGids[item.tabName] || '',
           date: item.date,
           rowNum: item.rowNum,
           service: item.service || '-',
@@ -747,6 +763,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         };
       } else {
         existing.tabName = item.tabName || existing.tabName;
+        existing.gid = item.gid || state.tabGids[existing.tabName] || existing.gid || '';
         existing.date = item.date || existing.date;
         existing.rowNum = item.rowNum || existing.rowNum;
         existing.service = item.service || existing.service;
@@ -868,11 +885,32 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return groups;
     }
 
-    // Google Sheets Live Sync (with Resolved History Cache)
+    // Google Sheets Live Sync (with Real-Time Tab Discovery + Resolved History Cache)
+    async function discoverAllSheetTabs() {
+      const discovered = [];
+      try {
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlview`, { cache: 'no-store' });
+        if (res.ok) {
+          const html = await res.text();
+          const regex = /items\.push\(\{name:\s*"([^"]+)",\s*pageUrl:[^,]+,\s*gid:\s*"(\d+)"/g;
+          let m;
+          while ((m = regex.exec(html)) !== null) {
+            const tabName = m[1].trim();
+            const gid = m[2].trim();
+            state.tabGids[tabName] = gid;
+            if (!discovered.includes(tabName)) discovered.push(tabName);
+          }
+        }
+      } catch (e) {
+        // Fallback to candidate date generator if offline or file:// protocol blocks fetch
+      }
+      return discovered;
+    }
+
     function generateCandidateDateTabs() {
       const candidates = ['28.10.69', '29.10.69', '30.10.69', '31.10.69', '1.11.69', '2.11.69', '3.11.69', '4.11.69', '5.11.69'];
       const now = new Date();
-      for (let diff = -5; diff <= 3; diff++) {
+      for (let diff = -15; diff <= 5; diff++) {
         const d = new Date(now.getTime() + diff * 86400000);
         const day = d.getDate();
         const month = d.getMonth() + 1;
@@ -907,7 +945,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           resolve(res.table.rows);
         };
 
-        script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&sheet=${encodeURIComponent(tabName)}`;
+        script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&sheet=${encodeURIComponent(tabName)}&_ts=${Date.now()}`;
         script.onerror = () => {
           cleanup();
           resolve(null);
@@ -926,14 +964,21 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return `${d}.${m}.${yShort}` === tabName.trim();
     }
 
-    async function syncGoogleSheets(forceAll = false) {
+    async function syncGoogleSheets(forceAll = false, showToastOnFinish = false) {
       const statusEl = document.getElementById('syncStatusText');
-      if (statusEl) statusEl.textContent = '🔄 กำลังตรวจแท็บวันที่ใหม่...';
+      if (statusEl) statusEl.innerHTML = '🔄 <span style="color:#fbbf24;">กำลังดึงข้อมูลล่าสุดจาก Google Sheet...</span>';
 
-      const candidates = generateCandidateDateTabs();
-      const tabsToFetch = candidates.filter(t => forceAll ? true : !state.resolvedTabsCache[t]);
+      // 1. Discover exact tab names & GIDs directly from Google Sheet htmlview
+      const discoveredTabs = await discoverAllSheetTabs();
+      const baseList = discoveredTabs.length > 0 ? discoveredTabs : generateCandidateDateTabs();
+      state.customTabs.forEach(t => {
+        if (!baseList.includes(t)) baseList.push(t);
+      });
 
-      let newFoundCount = 0;
+      const tabsToFetch = baseList.filter(t => forceAll ? true : !state.resolvedTabsCache[t]);
+
+      let unresolvedFoundCount = 0;
+      let newlyResolvedFromSheetCount = 0;
 
       await Promise.all(tabsToFetch.map(async (tabName) => {
         const rows = await fetchSheetTabGviz(tabName);
@@ -947,7 +992,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             break;
           }
         }
-        if (firstDateStr && !doesRowDateMatchTab(firstDateStr, tabName)) return;
+        if (!discoveredTabs.includes(tabName) && firstDateStr && !doesRowDateMatchTab(firstDateStr, tabName)) return;
 
         let pnkTotalInTab = 0;
         let pnkUnresolvedInTab = 0;
@@ -962,8 +1007,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             if (!barcode) return;
             pnkTotalInTab++;
             const sheetCause = val(10);
+            const wasPreviouslyUnresolved = state.casesByBarcode[barcode] && !state.casesByBarcode[barcode].closedByUser && !state.casesByBarcode[barcode].sheetCause;
+
             upsertSheetCase({
               tabName,
+              gid: state.tabGids[tabName] || '',
               date: val(0) || tabName,
               rowNum: idx + 2,
               service: val(2),
@@ -974,9 +1022,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             }, false);
 
             const caseObj = state.casesByBarcode[barcode];
+            if (wasPreviouslyUnresolved && sheetCause) {
+              newlyResolvedFromSheetCount++;
+            }
             if (!caseObj.closedByUser && !sheetCause) {
               pnkUnresolvedInTab++;
-              newFoundCount++;
+              unresolvedFoundCount++;
             }
           }
         });
@@ -986,11 +1037,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         }
       }));
 
+      const nowStr = new Date().toLocaleTimeString('th-TH');
+      state.lastSyncTime = nowStr;
       saveState();
       renderAll();
 
+      const allKnownTabs = Object.keys(state.tabGids);
       if (statusEl) {
-        statusEl.textContent = `✅ ซิงค์ล่าสุดแล้ว (ข้ามวันในประวัติ ${Object.keys(state.resolvedTabsCache).length} วัน)`;
+        statusEl.innerHTML = `✅ อัปเดตจากชีตล่าสุดเมื่อ <b>${nowStr}</b> (พบแท็บในชีต: ${allKnownTabs.join(', ')})`;
+      }
+
+      if (showToastOnFinish || forceAll) {
+        const extraMsg = newlyResolvedFromSheetCount > 0 ? ` • พบรายการลงสาเหตุแล้วในชีตเพิ่ม ${newlyResolvedFromSheetCount} เคส` : '';
+        showToast(`🔄 ดึงข้อมูล Google Sheet ล่าสุดแล้ว (${nowStr}) • งานค้าง ${unresolvedFoundCount} เคส${extraMsg}`);
       }
     }
 
@@ -1084,8 +1143,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               <button class="btn btn-primary btn-xs" onclick="copyDateGroupBarcodes('${tabKey}')">
                 📋 ก๊อปปี้เลขค้นหาวันนี้ (${uniqueCodes.size} เลข)
               </button>
-              <button class="btn btn-success btn-xs" onclick="copyDateCausesForSheetPaste('${tabKey}')" title="เรียงตามบรรทัดในชีต เพื่อกด Ctrl+V ที่ช่อง K${minRow} ครั้งเดียวลงครบทุกแถว">
-                📋 ก๊อปปี้สาเหตุเรียงตามแถว (${minRow}–${maxRow}) ไปกด Ctrl+V ช่อง K${minRow}
+              <button class="btn btn-success btn-xs" onclick="copyDateCausesForSheetPaste('${tabKey}', false)" title="เรียงตามบรรทัดในชีต เพื่อกด Ctrl+V ที่ช่อง K${minRow} ครั้งเดียวลงครบทุกแถว">
+                📋 ก๊อปปี้สาเหตุเรียงตามแถว (${minRow}–${maxRow})
+              </button>
+              <button class="btn btn-warning btn-xs" onclick="copyDateCausesForSheetPaste('${tabKey}', true)" title="คัดลอกสาเหตุเรียงตามแถว + เปิดชีตกระโดดไปเลือกช่อง K${minRow}:K${maxRow} ให้ทันที">
+                🎯 ก๊อปปี้ + เปิดชีตตรงช่อง K${minRow}
               </button>
               <button class="btn btn-outline btn-xs" onclick="closeAllCasesInDate('${tabKey}')">
                 ✅ ปิดงานทั้งวัน (${tabKey})
@@ -1465,7 +1527,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     }
 
     // 1-Click Safe Multi-Row Copy for Google Sheets Column K!
-    function copyDateCausesForSheetPaste(tabKey) {
+    function copyDateCausesForSheetPaste(tabKey, openSheetJump = false) {
       const casesInTab = Object.values(state.casesByBarcode).filter(c => c.tabName === tabKey);
       if (!casesInTab.length) return;
       casesInTab.sort((a, b) => a.rowNum - b.rowNum);
@@ -1487,8 +1549,17 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       copyTextToClipboard(
         lines.join('\n'),
-        `📋 คัดลอกสาเหตุเรียงตามแถว ${minRow}–${maxRow} (${filledCount} แถว) แล้ว! ไปคลิกช่อง K${minRow} ในชีตแล้วกด Ctrl+V ครั้งเดียววางครบทุกแถวได้เลย`
+        `📋 คัดลอกสาเหตุเรียงตามแถว ${minRow}–${maxRow} (${filledCount} แถว) แล้ว! กด Ctrl+V ที่ช่อง K${minRow} ในชีตได้เลย`
       );
+
+      if (openSheetJump) {
+        const gid = state.tabGids[tabKey] || casesInTab[0].gid || '';
+        const rangeParam = `range=K${minRow}:K${maxRow}`;
+        const url = gid
+          ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=${gid}&${rangeParam}`
+          : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing`;
+        window.open(url, '_blank', 'noopener');
+      }
     }
 
     function updateCaseField(barcode, field, value) {
@@ -1891,10 +1962,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }
     });
 
-    // Startup
+    // Startup & Auto-Refresh from Google Sheet every 3 minutes
     loadState();
     renderAll();
-    syncGoogleSheets(false);
+    syncGoogleSheets(false, false);
+    setInterval(() => {
+      if (state.autoSyncEnabled) syncGoogleSheets(false, false);
+    }, 180000);
   </script>
 </body>
 </html>
