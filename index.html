@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ปณก. 10501 — รายการไม่มีสถานะรับฝาก</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -20,62 +20,76 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       --primary-hover: #1d4ed8;
       --success: #059669;
       --danger: #dc2626;
-      --font: 'Sarabun', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-      --mono: 'Consolas', 'JetBrains Mono', monospace;
+      --font: -apple-system, BlinkMacSystemFont, 'Sarabun', 'Segoe UI', sans-serif;
+      --mono: 'SFMono-Regular', 'Consolas', 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font);
-      line-height: 1.5;
-      padding: 16px;
-      max-width: 980px;
+      line-height: 1.45;
+      padding: 12px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
-    /* Simple Minimal Top Bar */
+    /* Top Bar */
     .topbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .topbar-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .brand-tag {
       background: var(--danger);
       color: #fff;
       font-weight: 700;
-      font-size: 0.85rem;
-      padding: 4px 10px;
+      font-size: 0.8rem;
+      padding: 3px 8px;
       border-radius: 6px;
+      white-space: nowrap;
     }
     .brand h1 {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text);
     }
     .sync-sub {
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .topbar-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
     }
 
-    /* Clean Buttons */
+    /* Clean Touch-Friendly Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 8px 14px;
+      gap: 5px;
+      padding: 9px 12px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 600;
       font-family: var(--font);
       cursor: pointer;
@@ -86,12 +100,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       transition: all 0.15s;
       white-space: nowrap;
     }
-    .btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .btn-primary:hover { background: var(--primary-hover); }
     .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
-    .btn-success:hover { filter: brightness(0.95); }
-    .btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 6px; }
+    .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 7px; }
 
     /* Date Card */
     .date-card {
@@ -99,33 +111,45 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       border: 1px solid var(--border);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       overflow: hidden;
     }
     .date-card-header {
-      padding: 14px 18px;
+      padding: 12px 14px;
       background: #f8fafc;
       border-bottom: 1px solid var(--border);
+    }
+    .date-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 6px;
+      margin-bottom: 10px;
     }
     .date-title {
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .count-pill {
       background: #dbeafe;
       color: #1e40af;
-      font-size: 0.78rem;
-      padding: 2px 9px;
+      font-size: 0.76rem;
+      padding: 2px 8px;
       border-radius: 99px;
       font-weight: 700;
+    }
+    .date-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .date-actions .btn {
+      flex: 1;
+      min-width: 135px;
     }
 
     /* Series Sub-Group */
@@ -135,221 +159,279 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     .series-block:last-child { border-bottom: none; }
 
     .series-bar {
-      padding: 8px 18px;
+      padding: 8px 14px;
       background: #f1f5f9;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.84rem;
+      gap: 6px;
+      font-size: 0.82rem;
       color: #334155;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* Item Row */
+    /* Responsive Item Card / Row */
     .item-row {
-      display: grid;
-      grid-template-columns: 70px 185px 1fr auto;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 18px;
+      padding: 12px 14px;
       border-top: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    @media (max-width: 720px) {
-      .item-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    .item-row:hover { background: #fcfcfd; }
-
+    .item-id-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
     .row-no {
-      font-size: 0.8rem;
-      color: var(--muted);
-      font-weight: 600;
+      font-size: 0.76rem;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-weight: 700;
     }
     .barcode-box {
       font-family: var(--mono);
-      font-size: 0.98rem;
-      color: #334155;
+      font-size: 1.02rem;
+      color: #1e293b;
+      letter-spacing: 0.2px;
     }
     .barcode-box b {
       color: #0f172a;
-      background: #fef3c7;
+      background: #fef08a;
       padding: 1px 4px;
       border-radius: 4px;
     }
     .sub-info {
       font-size: 0.75rem;
       color: var(--muted);
-      margin-top: 2px;
     }
 
-    /* Clean Inputs */
-    .cause-wrap {
+    .item-bottom {
       display: flex;
       gap: 6px;
       align-items: center;
-      width: 100%;
+      flex-wrap: wrap;
     }
     .select-clean, .input-clean {
-      padding: 6px 10px;
+      padding: 8px 10px;
       border: 1px solid #cbd5e1;
-      border-radius: 7px;
-      font-size: 0.84rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
       font-family: var(--font);
       color: var(--text);
       background: #fff;
+      width: 100%;
     }
     .select-clean:focus, .input-clean:focus {
       outline: none;
       border-color: var(--primary);
     }
-    .input-clean { flex: 1; min-width: 140px; }
 
-    /* Modal Backdrop (Used for ±3 & QR and Extra Tools) */
+    @media (min-width: 640px) {
+      .select-clean.cause-select { width: 210px; }
+      .input-clean.cause-input { flex: 1; width: auto; }
+    }
+
+    /* Modal Backdrop */
     .modal-backdrop {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(15, 23, 42, 0.6);
       z-index: 9999;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      padding: 16px;
+      padding: 0;
+    }
+    @media (min-width: 640px) {
+      .modal-backdrop {
+        align-items: center;
+        padding: 16px;
+      }
     }
     .modal-backdrop.open { display: flex; }
 
     .modal-card {
       background: #ffffff;
-      border-radius: 14px;
-      max-width: 720px;
+      border-radius: 16px 16px 0 0;
+      max-width: 640px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      padding: 16px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
     }
+    @media (min-width: 640px) {
+      .modal-card {
+        border-radius: 14px;
+        padding: 20px;
+      }
+    }
+
     .modal-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
+      align-items: flex-start;
+      gap: 10px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    /* Neighbor Table inside Modal */
-    .n-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
-    }
-    .n-table th, .n-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-    .n-table th { color: var(--muted); font-size: 0.78rem; background: #f8fafc; }
-    .n-main { background: #fef2f2; font-weight: 700; }
-
+    /* QR Box inside Modal */
     .qr-center {
       text-align: center;
-      padding: 14px;
+      padding: 12px;
       background: #f8fafc;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 14px;
+      border-radius: 12px;
+      margin-bottom: 12px;
     }
     .qr-box-white {
-      display: inline-block;
-      background: #fff;
-      padding: 12px;
-      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #cbd5e1;
+      margin: 8px auto;
+      min-width: 190px;
+      min-height: 190px;
+    }
+    .qr-nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    /* Mobile-Friendly Neighbor List (No horizontal scroll / no squished columns!) */
+    .neighbor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .n-item {
       border: 1px solid var(--border);
-      margin: 8px 0;
+      border-radius: 9px;
+      padding: 8px 10px;
+      background: #fff;
+    }
+    .n-item.n-main {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .n-item.n-active-qr {
+      border: 2px solid var(--primary);
+      background: #eff6ff;
+    }
+    .n-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .n-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: #e2e8f0;
+      color: #334155;
+      min-width: 68px;
+      text-align: center;
+    }
+    .n-badge.main {
+      background: var(--danger);
+      color: #fff;
     }
 
     .toast {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
       background: #0f172a;
       color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 11px 16px;
+      border-radius: 10px;
       font-size: 0.85rem;
       font-weight: 600;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      transform: translateY(80px);
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transform: translateY(100px);
       opacity: 0;
       transition: all 0.25s;
       z-index: 10000;
+      pointer-events: none;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
 
-  <!-- Minimal Header -->
+  <!-- Clean Mobile-Ready Header -->
   <div class="topbar">
-    <div>
+    <div class="topbar-head">
       <div class="brand">
         <span class="brand-tag">ปณก. 10501</span>
         <h1>รายการไม่มีสถานะรับฝาก</h1>
       </div>
-      <div class="sync-sub" id="syncStatusText">กำลังเช็คข้อมูลล่าสุดจาก Google Sheet...</div>
     </div>
-
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button class="btn" onclick="syncGoogleSheets(false, true)">🔄 อัปเดตจากชีต</button>
-      <button class="btn" onclick="openModal('toolsModal')">🧰 เครื่องมือเสริม</button>
-      <button class="btn" onclick="openModal('historyModal')">🗂️ ประวัติที่ทำแล้ว (<span id="closedCount">0</span>)</button>
+    <div class="sync-sub" id="syncStatusText">กำลังเช็คข้อมูลล่าสุดจาก Google Sheet...</div>
+    <div class="topbar-actions">
+      <button class="btn btn-sm" onclick="syncGoogleSheets(false, true)">🔄 อัปเดตชีต</button>
+      <button class="btn btn-sm" onclick="openModal('toolsModal')">🧰 เครื่องมือ</button>
+      <button class="btn btn-sm" onclick="openModal('historyModal')">🗂️ ประวัติ (<span id="closedCount">0</span>)</button>
     </div>
   </div>
 
-  <!-- Main Content: Only Unresolved Cases -->
+  <!-- Main Content -->
   <div id="mainContainer"></div>
 
-  <!-- Modal 1: Check ±3 Neighbors & QR Code for a Single Barcode -->
+  <!-- Modal 1: Check ±3 Neighbors & QR Code -->
   <div id="neighborModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('neighborModal')">
     <div class="modal-card">
       <div class="modal-header">
         <div>
-          <b style="font-size:1.05rem;" id="nmTitle">เลขข้างเคียง (-3 ถึง +3)</b>
-          <div style="font-size:0.8rem; color:var(--muted);" id="nmSub"></div>
+          <div style="font-size:0.78rem; color:var(--muted);">เลขข้างเคียง (-3 ถึง +3) ของ</div>
+          <div style="font-family:var(--mono); font-size:1.15rem; font-weight:800;" id="nmTitle">-</div>
+          <div style="font-size:0.76rem; color:var(--muted); margin-top:2px;" id="nmSub"></div>
         </div>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-primary btn-sm" id="nmCopy7Btn">📋 คัดลอกทั้ง 7 เลข</button>
-          <button class="btn btn-sm" onclick="closeModal('neighborModal')">✕ ปิด</button>
-        </div>
+        <button class="btn btn-sm" onclick="closeModal('neighborModal')">✕ ปิด</button>
       </div>
 
       <!-- Scannable QR Preview Box -->
       <div class="qr-center">
-        <div style="font-size:0.8rem; color:var(--muted);" id="nmQrLabel">QR Code สำหรับยิงเครื่องพิมพ์ใบจ่าหน้า</div>
-        <div style="font-family:var(--mono); font-size:1.25rem; font-weight:800; margin-top:2px;" id="nmQrCodeText">-</div>
+        <div style="font-size:0.8rem; font-weight:700; color:var(--primary);" id="nmQrLabel">QR Code: เลขหลัก (0)</div>
+        <div style="font-family:var(--mono); font-size:1.3rem; font-weight:800; margin-top:2px; letter-spacing:0.5px;" id="nmQrCodeText">-</div>
         <div class="qr-box-white" id="nmQrCanvas"></div>
-        <div style="display:flex; justify-content:center; gap:8px;">
-          <button class="btn btn-sm" onclick="stepActiveQr(-1)">⬅️ ก่อนหน้า (-1)</button>
-          <button class="btn btn-sm" onclick="copyText(currentModalQrCode)">📋 คัดลอกเลขนี้</button>
-          <button class="btn btn-sm" onclick="stepActiveQr(1)">ถัดไป (+1) ➡️</button>
+        <div class="qr-nav-grid">
+          <button class="btn btn-sm" onclick="stepActiveQr(-1)">⬅️ ก่อนหน้า</button>
+          <button class="btn btn-primary btn-sm" onclick="copyText(currentModalQrCode)">📋 คัดลอกเลขนี้</button>
+          <button class="btn btn-sm" onclick="stepActiveQr(1)">ถัดไป ➡️</button>
         </div>
+        <button class="btn btn-sm" id="nmCopy7Btn" style="width:100%; margin-top:6px;">📋 คัดลอกทั้ง 7 เลขไปค้น QMS</button>
       </div>
 
-      <!-- Clean 7-row Table -->
-      <table class="n-table">
-        <thead>
-          <tr>
-            <th>ลำดับ</th>
-            <th>หมายเลขพัสดุ</th>
-            <th>QR</th>
-            <th>บันทึก / เลขใบเสร็จ 13 หลัก</th>
-          </tr>
-        </thead>
-        <tbody id="nmTableBody"></tbody>
-      </table>
+      <!-- Mobile-friendly Neighbor Cards -->
+      <div class="neighbor-list" id="nmListBody"></div>
     </div>
   </div>
 
@@ -362,31 +444,31 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       </div>
 
       <!-- Tool A: S10 Check Digit -->
-      <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border);">
-        <div style="font-weight:700; margin-bottom:6px;">1. คำนวณเลข Check Digit (UPU S10) & สร้าง QR</div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-          <input type="text" id="s10Prefix" class="input-clean" style="max-width:65px; text-align:center; font-family:var(--mono); text-transform:uppercase;" maxlength="2" value="WC">
-          <input type="text" id="s10Serial" class="input-clean" style="max-width:180px; font-family:var(--mono);" placeholder="กรอกเลข 8 หลัก..." maxlength="13" oninput="calcCustomS10()">
-          <input type="text" id="s10Suffix" class="input-clean" style="max-width:65px; text-align:center; font-family:var(--mono); text-transform:uppercase;" maxlength="2" value="TH">
-          <button class="btn btn-primary btn-sm" onclick="calcCustomS10()">คำนวณ</button>
+      <div style="margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border);">
+        <div style="font-weight:700; font-size:0.9rem; margin-bottom:6px;">1. คำนวณเลข Check Digit (UPU S10) & สร้าง QR</div>
+        <div style="display:grid; grid-template-columns: 65px 1fr 65px; gap:6px; margin-bottom:8px;">
+          <input type="text" id="s10Prefix" class="input-clean" style="text-align:center; font-family:var(--mono); text-transform:uppercase;" maxlength="2" value="WC">
+          <input type="text" id="s10Serial" class="input-clean" style="font-family:var(--mono);" placeholder="กรอกเลข 8 หลัก..." maxlength="13" oninput="calcCustomS10()">
+          <input type="text" id="s10Suffix" class="input-clean" style="text-align:center; font-family:var(--mono); text-transform:uppercase;" maxlength="2" value="TH">
         </div>
-        <div id="s10ResultBox" style="margin-top:8px; font-family:var(--mono); font-weight:700; color:var(--success);"></div>
+        <button class="btn btn-primary btn-sm" style="width:100%;" onclick="calcCustomS10()">คำนวณเลข 13 หลัก & ดู QR</button>
+        <div id="s10ResultBox" style="margin-top:8px; font-family:var(--mono); font-weight:700; color:var(--success); font-size:0.9rem;"></div>
       </div>
 
       <!-- Tool B: Intranet CA POS Receipt -->
-      <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border);">
-        <div style="font-weight:700; margin-bottom:6px;">2. ค้นหาใบเสร็จรับเงิน 13 หลัก (ระบบ Intranet CA POS)</div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <input type="text" id="posInput" class="input-clean" style="max-width:240px; font-family:var(--mono);" placeholder="เลขใบเสร็จ 13 หลัก...">
-          <button class="btn btn-primary btn-sm" onclick="openCaposReceipt()">📋 คัดลอก + เปิดเว็บใบเสร็จ</button>
+      <div style="margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border);">
+        <div style="font-weight:700; font-size:0.9rem; margin-bottom:6px;">2. ค้นหาใบเสร็จรับเงิน 13 หลัก (Intranet CA POS)</div>
+        <div style="display:flex; gap:6px; flex-direction:column;">
+          <input type="text" id="posInput" class="input-clean" style="font-family:var(--mono);" placeholder="กรอกเลขใบเสร็จ 13 หลัก...">
+          <button class="btn btn-primary btn-sm" onclick="openCaposReceipt()">📋 คัดลอก + เปิดเว็บค้นหาใบเสร็จ</button>
         </div>
       </div>
 
       <!-- Tool C: Import QMS File -->
       <div>
-        <div style="font-weight:700; margin-bottom:6px;">3. นำเข้าไฟล์ผลลัพธ์จาก QMS (.xlsx / .csv / .pdf)</div>
-        <input type="file" accept=".pdf,.xlsx,.xls,.csv" multiple onchange="handleFileUpload(event)" style="font-size:0.85rem;">
-        <span id="uploadMsg" style="font-size:0.8rem; color:var(--success); margin-left:8px;"></span>
+        <div style="font-weight:700; font-size:0.9rem; margin-bottom:6px;">3. นำเข้าไฟล์ผลลัพธ์จาก QMS (.xlsx / .csv / .pdf)</div>
+        <input type="file" accept=".pdf,.xlsx,.xls,.csv" multiple onchange="handleFileUpload(event)" style="font-size:0.84rem; width:100%;">
+        <div id="uploadMsg" style="font-size:0.8rem; color:var(--success); margin-top:6px;"></div>
       </div>
     </div>
   </div>
@@ -395,7 +477,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
   <div id="historyModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('historyModal')">
     <div class="modal-card">
       <div class="modal-header">
-        <b style="font-size:1.05rem;">🗂️ ประวัติรายการที่ทำเสร็จแล้ว / ลงสาเหตุในชีตแล้ว</b>
+        <b style="font-size:1rem;">🗂️ ประวัติรายการที่ทำเสร็จแล้ว</b>
         <div style="display:flex; gap:6px;">
           <button class="btn btn-sm" onclick="syncGoogleSheets(true, true)">🔍 เช็คซ้ำทุกแท็บ</button>
           <button class="btn btn-sm" onclick="closeModal('historyModal')">✕ ปิด</button>
@@ -499,7 +581,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }
     }
 
-    // S10 Math
+    // S10 Check Digit & Parser
     function calcS10CheckDigit(eightStr) {
       const w = [8, 6, 4, 2, 3, 5, 9, 7];
       let s = 0;
@@ -545,7 +627,31 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return arr;
     }
 
-    // Render Main UI (Simple & Clean)
+    // Reliable SVG QR Code Renderer using inlined `qrcode` library
+    function renderQrSvgInto(container, text, sizePx = 175) {
+      if (!container) return;
+      container.innerHTML = '';
+      try {
+        if (typeof qrcode === 'function') {
+          const qr = qrcode(0, 'M');
+          qr.addData(String(text || '').trim());
+          qr.make();
+          container.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 4, scalable: true });
+          const svg = container.querySelector('svg');
+          if (svg) {
+            svg.style.width = sizePx + 'px';
+            svg.style.height = sizePx + 'px';
+            svg.style.display = 'block';
+          }
+          return;
+        }
+      } catch (err) {
+        console.error('QR render error:', err);
+      }
+      container.textContent = text;
+    }
+
+    // Render Main UI
     function render() {
       const all = Object.values(state.casesByBarcode);
       const active = all.filter(c => !c.closedByUser && !(c.sheetCause && c.sheetCause.trim()));
@@ -556,9 +662,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const container = document.getElementById('mainContainer');
       if (!active.length) {
         container.innerHTML = `
-          <div class="date-card" style="padding:32px; text-align:center;">
-            <div style="font-size:1.1rem; font-weight:700; color:var(--success);">✅ ไม่มีรายการค้าง</div>
-            <div style="font-size:0.85rem; color:var(--muted); margin-top:4px;">รายการของ ปณก. 10501 ลงสาเหตุครบทั้งหมดแล้ว</div>
+          <div class="date-card" style="padding:28px 16px; text-align:center;">
+            <div style="font-size:1.05rem; font-weight:700; color:var(--success);">✅ ไม่มีรายการค้าง</div>
+            <div style="font-size:0.84rem; color:var(--muted); margin-top:4px;">รายการของ ปณก. 10501 ลงสาเหตุครบทั้งหมดแล้ว</div>
           </div>
         `;
       } else {
@@ -572,15 +678,14 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         container.innerHTML = Object.keys(byDate).map(tabKey => renderDateCard(tabKey, byDate[tabKey])).join('');
       }
 
-      // Render History Modal List
       const histEl = document.getElementById('historyList');
       if (histEl) {
         histEl.innerHTML = closed.map(c => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.84rem; flex-wrap:wrap;">
             <div>
               <span style="color:var(--muted);">[${c.tabName} แถว ${c.rowNum}]</span>
-              <b style="font-family:var(--mono); margin:0 6px;">${c.barcode}</b>
-              <span style="color:var(--success);">${c.userCause || c.sheetCause || '-'}</span>
+              <b style="font-family:var(--mono); margin:0 4px;">${c.barcode}</b>
+              <div style="color:var(--success); margin-top:2px;">✓ ${c.userCause || c.sheetCause || '-'}</div>
             </div>
             <button class="btn btn-sm" onclick="reopenCase('${c.barcode}')">นำกลับมาทำใหม่</button>
           </div>
@@ -593,7 +698,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const minR = rows[0] || '-';
       const maxR = rows[rows.length - 1] || '-';
 
-      // Group by Series Prefix (e.g. WC 9902xxxx) and sort by serial
       const groupsMap = {};
       list.forEach(c => {
         const p = parseS10(c.barcode);
@@ -611,11 +715,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return `
         <div class="date-card">
           <div class="date-card-header">
-            <div class="date-title">
-              📅 วันที่ ${tabKey}
-              <span class="count-pill">${list.length} รายการ (แถว ${minR}–${maxR})</span>
+            <div class="date-title-row">
+              <div class="date-title">
+                📅 วันที่ ${tabKey}
+                <span class="count-pill">${list.length} รายการ (แถว ${minR}–${maxR})</span>
+              </div>
             </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <div class="date-actions">
               <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}')">📋 คัดลอกเลขไปค้น QMS</button>
               <button class="btn btn-primary btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}')">🎯 คัดลอกสาเหตุไปวางช่อง K${minR}</button>
               <button class="btn btn-success btn-sm" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
@@ -627,36 +733,35 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               <div class="series-bar">
                 <span>📦 หมวด ${g.gk} (${g.items.length} รายการ)</span>
                 ${g.items.length > 1 ? `
-                  <div style="display:flex; gap:6px; align-items:center;">
-                    <select class="select-clean" style="padding:3px 8px; font-size:0.78rem;" onchange="if(this.value){ applyGroupCause('${tabKey}', '${g.gk}', this.value); this.value=''; }">
-                      <option value="">⚡ เลือกสาเหตุเดียวกันทั้งหมวดนี้...</option>
-                      ${CAUSES.map(x => `<option value="${x}">${x}</option>`).join('')}
-                    </select>
-                  </div>
+                  <select class="select-clean" style="max-width:240px; padding:5px 8px; font-size:0.78rem;" onchange="if(this.value){ applyGroupCause('${tabKey}', '${g.gk}', this.value); this.value=''; }">
+                    <option value="">⚡ เลือกสาเหตุเดียวกันทั้งหมวด...</option>
+                    ${CAUSES.map(x => `<option value="${x}">${x}</option>`).join('')}
+                  </select>
                 ` : ''}
               </div>
 
               ${g.items.map(({ c, p }) => `
                 <div class="item-row">
-                  <div class="row-no">แถว ${c.rowNum}</div>
-                  <div>
-                    <div class="barcode-box">
-                      ${p ? `${p.prefix}${p.first4}<b>${p.last4}</b>${p.check}${p.suffix}` : c.barcode}
+                  <div class="item-top">
+                    <div class="item-id-group">
+                      <span class="row-no">แถว ${c.rowNum}</span>
+                      <span class="barcode-box">
+                        ${p ? `${p.prefix}${p.first4}<b>${p.last4}</b>${p.check}${p.suffix}` : c.barcode}
+                      </span>
+                      <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
-                    <div class="sub-info">${c.bagTime} • ${c.operator}</div>
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็ค ±3 / QR</button>
+                      <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
+                    </div>
                   </div>
 
-                  <div class="cause-wrap">
-                    <select class="select-clean" style="max-width:155px;" onchange="if(this.value) setCause('${c.barcode}', this.value)">
-                      <option value="">เลือกสาเหตุ...</option>
+                  <div class="item-bottom">
+                    <select class="select-clean cause-select" onchange="if(this.value) setCause('${c.barcode}', this.value)">
+                      <option value="">เลือกสาเหตุที่ใช้บ่อย...</option>
                       ${CAUSES.map(x => `<option value="${x}" ${c.userCause === x ? 'selected' : ''}>${x}</option>`).join('')}
                     </select>
-                    <input type="text" class="input-clean" id="inp_${c.barcode}" placeholder="หรือพิมพ์สาเหตุ..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)">
-                  </div>
-
-                  <div style="display:flex; gap:6px;">
-                    <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็ค ±3 / QR</button>
-                    <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
+                    <input type="text" class="input-clean cause-input" id="inp_${c.barcode}" placeholder="หรือพิมพ์สาเหตุสำหรับแถว ${c.rowNum}..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)">
                   </div>
                 </div>
               `).join('')}
@@ -666,7 +771,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       `;
     }
 
-    // Actions
     function setCause(barcode, val) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
@@ -674,6 +778,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const inp = document.getElementById(`inp_${barcode}`);
       if (inp) inp.value = val;
       saveState();
+      copyText(val, `เลือกและคัดลอกสาเหตุแถว ${c.rowNum} แล้ว`);
     }
 
     function setCauseSilent(barcode, val) {
@@ -748,7 +853,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const lines = [];
       for (let r = minR; r <= maxR; r++) lines.push(map[r] || '');
 
-      copyText(lines.join('\n'), `คัดลอกสาเหตุแถว ${minR}–${maxR} แล้ว กด Ctrl+V ที่ช่อง K${minR} ได้เลย`);
+      copyText(lines.join('\n'), `คัดลอกสาเหตุแถว ${minR}–${maxR} แล้ว กดวางที่ช่อง K${minR} ได้เลย`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
       const url = gid
         ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=${gid}&range=K${minR}:K${maxR}`
@@ -767,31 +872,42 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       activeQrIndex = activeModalNeighbors.findIndex(n => n.offset === 0);
       if (activeQrIndex < 0) activeQrIndex = 0;
 
-      document.getElementById('nmTitle').textContent = `เลขข้างเคียง (±3) ของ ${barcode}`;
+      document.getElementById('nmTitle').textContent = barcode;
       document.getElementById('nmSub').textContent = c ? `แท็บ ${c.tabName} • แถวที่ ${c.rowNum} • สแกนลงถุง ${c.bagTime} (${c.operator})` : '';
       document.getElementById('nmCopy7Btn').onclick = () => copyText(activeModalNeighbors.map(n => n.code).join('\n'), 'คัดลอกทั้ง 7 เลขแล้ว');
 
-      const tbody = document.getElementById('nmTableBody');
-      tbody.innerHTML = activeModalNeighbors.map((n, idx) => {
-        const isMain = n.offset === 0;
-        const noteVal = (state.neighborState[n.code] && state.neighborState[n.code].note) || '';
-        return `
-          <tr class="${isMain ? 'n-main' : ''}">
-            <td>${isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`)}</td>
-            <td style="font-family:var(--mono);">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</td>
-            <td><button class="btn btn-sm" onclick="selectQrIndex(${idx})">📲 ดู QR</button></td>
-            <td>
-              ${isMain
-                ? `<span style="color:var(--danger); font-size:0.8rem;">ไม่มีสถานะรับฝาก</span>`
-                : `<input type="text" class="input-clean" style="width:100%; padding:4px 8px;" placeholder="บันทึกผล / เลขใบเสร็จ..." value="${noteVal.replace(/"/g, '&quot;')}" oninput="saveNeighborNote('${n.code}', this.value)">`
-              }
-            </td>
-          </tr>
-        `;
-      }).join('');
-
+      renderNeighborModalList();
       selectQrIndex(activeQrIndex);
       openModal('neighborModal');
+    }
+
+    function renderNeighborModalList() {
+      const listEl = document.getElementById('nmListBody');
+      listEl.innerHTML = activeModalNeighbors.map((n, idx) => {
+        const isMain = n.offset === 0;
+        const isSelectedQr = idx === activeQrIndex;
+        const noteVal = (state.neighborState[n.code] && state.neighborState[n.code].note) || '';
+        const roleLabel = isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`);
+
+        return `
+          <div class="n-item ${isMain ? 'n-main' : ''} ${isSelectedQr ? 'n-active-qr' : ''}" id="nItem_${idx}">
+            <div class="n-item-top">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="n-badge ${isMain ? 'main' : ''}">${roleLabel}</span>
+                <span class="barcode-box">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</span>
+              </div>
+              <div style="display:flex; gap:5px;">
+                <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
+                <button class="btn btn-sm" onclick="copyText('${n.code}')">📋</button>
+              </div>
+            </div>
+            ${isMain
+              ? `<div style="color:var(--danger); font-size:0.78rem; font-weight:600;">❌ ชิ้นงานไม่มีสถานะรับฝาก</div>`
+              : `<input type="text" class="input-clean" style="padding:6px 10px; font-size:0.8rem;" placeholder="บันทึกผล QMS / เลขใบเสร็จ 13 หลัก..." value="${noteVal.replace(/"/g, '&quot;')}" oninput="saveNeighborNote('${n.code}', this.value)">`
+            }
+          </div>
+        `;
+      }).join('');
     }
 
     function selectQrIndex(idx) {
@@ -802,11 +918,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const role = item.offset === 0 ? 'เลขหลัก (0)' : (item.offset < 0 ? `ก่อนหน้า ${item.offset}` : `ถัดไป +${item.offset}`);
       document.getElementById('nmQrLabel').textContent = `QR Code: ${role}`;
       document.getElementById('nmQrCodeText').textContent = item.code;
+
       const wrap = document.getElementById('nmQrCanvas');
-      wrap.innerHTML = '';
-      if (typeof QRCode !== 'undefined') {
-        new QRCode(wrap, { text: item.code, width: 170, height: 170, correctLevel: QRCode.CorrectLevel.M });
-      }
+      renderQrSvgInto(wrap, item.code, 175);
+      renderNeighborModalList();
     }
 
     function stepActiveQr(delta) {
@@ -890,7 +1005,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       saveState();
       render();
       const tStr = new Date().toLocaleTimeString('th-TH');
-      if (statusEl) statusEl.textContent = `ซิงค์ข้อมูลล่าสุดเมื่อ ${tStr} • บันทึกความจำอัตโนมัติ`;
+      if (statusEl) statusEl.textContent = `อัปเดตล่าสุด ${tStr} • บันทึกความจำอัตโนมัติ`;
       if (notify) showToast(`อัปเดตข้อมูลจาก Google Sheet เรียบร้อย (${tStr})`);
     }
 
@@ -906,7 +1021,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }
       const chk = calcS10CheckDigit(raw);
       const full = `${p}${raw}${chk}${s}`;
-      out.innerHTML = `ผลลัพธ์: ${full} (หลัก Check Digit = ${chk}) <button class="btn btn-sm" style="margin-left:8px;" onclick="closeModal('toolsModal'); openNeighborModal('${full}')">ดู QR & เลข ±3</button>`;
+      out.innerHTML = `ได้เลข: ${full} (Digit = ${chk}) <button class="btn btn-primary btn-sm" style="margin-top:6px; width:100%;" onclick="closeModal('toolsModal'); openNeighborModal('${full}')">📲 เปิดดู QR Code & เลข ±3</button>`;
     }
 
     function openCaposReceipt() {
@@ -950,12 +1065,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       showToast(`นำเข้าไฟล์สำเร็จ จับคู่ได้ ${matchCount} หมายเลข`);
     }
 
-    // Modal & Clipboard Helpers
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
     function copyText(text, msg) {
-      navigator.clipboard.writeText(text).then(() => showToast(msg || `คัดลอก ${text} แล้ว`));
+      navigator.clipboard.writeText(text).then(() => showToast(msg || `คัดลอก ${text} แล้ว`)).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast(msg || `คัดลอก ${text} แล้ว`);
+      });
     }
 
     function showToast(msg) {
