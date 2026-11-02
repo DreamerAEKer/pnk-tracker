@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -99,11 +99,41 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       text-decoration: none;
       transition: all 0.15s;
       white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
     }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
     .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
-    .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 7px; }
+    .btn-sm { padding: 7px 10px; font-size: 0.8rem; border-radius: 7px; }
+
+    /* Smooth Slow Marquee for Long Button Text */
+    .marquee-btn {
+      justify-content: flex-start;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .marquee-wrap {
+      display: flex;
+      width: 100%;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .marquee-track {
+      display: inline-block;
+      padding-left: 12px;
+      white-space: nowrap;
+      animation: slowMarquee 9s linear infinite;
+    }
+    .marquee-btn:hover .marquee-track,
+    .marquee-btn:active .marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes slowMarquee {
+      0%, 15% { transform: translateX(0%); }
+      85%, 100% { transform: translateX(-50%); }
+    }
 
     /* Date Card */
     .date-card {
@@ -143,13 +173,16 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       font-weight: 700;
     }
     .date-actions {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 6px;
     }
     .date-actions .btn {
-      flex: 1;
-      min-width: 135px;
+      width: 100%;
+      min-width: 0;
+    }
+    .date-actions .btn-full {
+      grid-column: 1 / -1;
     }
 
     /* Series Sub-Group */
@@ -722,9 +755,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               </div>
             </div>
             <div class="date-actions">
-              <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}')">📋 คัดลอกเลขไปค้น QMS</button>
-              <button class="btn btn-primary btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}')">🎯 คัดลอกสาเหตุไปวางช่อง K${minR}</button>
-              <button class="btn btn-success btn-sm" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
+              <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}')">📋 คัดลอกเลขค้น QMS</button>
+              <button class="btn btn-primary btn-sm marquee-btn" onclick="copyCausesAndOpenSheet('${tabKey}')" title="คัดลอกสาเหตุไปวางช่อง K${minR}">
+                <span class="marquee-wrap">
+                  <span class="marquee-track">คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp; คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                </span>
+              </button>
+              <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
             </div>
           </div>
 
