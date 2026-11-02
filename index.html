@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบติดตามและหาสาเหตุชิ้นงาน ปณก. (10501) - เชื่อม Google Sheets สด</title>
+  <title>ระบบสืบหาที่มาเลขพัสดุ ปณก. (10501) - แยกกลุ่มตามวันที่ (เฉพาะที่ยังไม่ลงสาเหตุ)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(l=4*u+17),e(0,0),e(l-7,0),e(0,l-7),i(),o(),v(t,r),7<=u&&h(t),null==n&&(n=w(u,f,c)),d(n,r)}var u=t,f=y[r],g=null,l=0,n=null,c=[],s={},e=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||l<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||l<=r+n||(g[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},o=function(){for(var t=8;t<l-8;t+=1)null==g[t][6]&&(g[t][6]=t%2==0);for(var r=8;r<l-8;r+=1)null==g[6][r]&&(g[6][r]=r%2==0)},i=function(){for(var t=B.getPatternPosition(u),r=0;r<t.length;r+=1)for(var e=0;e<t.length;e+=1){var n=t[r],o=t[e];if(null==g[n][o])for(var i=-2;i<=2;i+=1)for(var a=-2;a<=2;a+=1)g[n+i][o+a]=-2==i||2==i||-2==a||2==a||0==i&&0==a}},h=function(t){for(var r=B.getBCHTypeNumber(u),e=0;e<18;e+=1){var n=!t&&1==(r>>e&1);g[Math.floor(e/3)][e%3+l-8-3]=n}for(e=0;e<18;e+=1){n=!t&&1==(r>>e&1);g[e%3+l-8-3][Math.floor(e/3)]=n}},v=function(t,r){for(var e=f<<3|r,n=B.getBCHTypeInfo(e),o=0;o<15;o+=1){var i=!t&&1==(n>>o&1);o<6?g[o][8]=i:o<8?g[o+1][8]=i:g[l-15+o][8]=i}for(o=0;o<15;o+=1){i=!t&&1==(n>>o&1);o<8?g[8][l-o-1]=i:o<9?g[8][15-o-1+1]=i:g[8][15-o-1]=i}g[l-8][8]=!t},d=function(t,r){for(var e=-1,n=l-1,o=7,i=0,a=B.getMaskFunction(r),u=l-1;0<u;u-=2)for(6==u&&(u-=1);;){for(var f=0;f<2;f+=1)if(null==g[n][u-f]){var c=!1;i<t.length&&(c=1==(t[i]>>>o&1)),a(n,u-f)&&(c=!c),g[n][u-f]=c,-1==(o-=1)&&(i+=1,o=7)}if((n+=e)<0||l<=n){n-=e,e=-e;break}}},w=function(t,r,e){for(var n=b.getRSBlocks(t,r),o=M(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=C(i[u],l.getLength()-1).mod(l);a[u]=new Array(l.getLength()-1);for(g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=0<=s?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};s.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=x(t);break;case"Alphanumeric":e=m(t);break;case"Byte":e=L(t);break;case"Kanji":e=D(t);break;default:throw"mode:"+r}c.push(e),n=null},s.isDark=function(t,r){if(t<0||l<=t||r<0||l<=r)throw t+","+r;return g[t][r]},s.getModuleCount=function(){return l},s.make=function(){if(u<1){for(var t=1;t<40;t++){for(var r=b.getRSBlocks(t,f),e=M(),n=0;n<c.length;n++){var o=c[n];e.put(o.getMode(),4),e.put(o.getLength(),B.getLengthInBits(o.getMode(),t)),o.write(e)}var i=0;for(n=0;n<r.length;n++)i+=r[n].dataCount;if(e.getLengthInBits()<=8*i)break}u=t}a(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){a(!0,e);var n=B.getLostPoint(s);(0==e||n<t)&&(t=n,r=e)}return r}())},s.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<s.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<s.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=s.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},s.createSvgTag=function(t,r,e,n){var o={};"object"==typeof t&&(t=(o=t).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,f,c=s.getModuleCount()*t+2*r,g="";for(f="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",g+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',g+=o.scalable?"":' width="'+c+'px" height="'+c+'px"',g+=' viewBox="0 0 '+c+" "+c+'" ',g+=' preserveAspectRatio="xMinYMin meet"',g+=n.text||e.text?' role="img" aria-labelledby="'+p([n.id,e.id].join(" ").trim())+'"':"",g+=">",g+=n.text?'<title id="'+p(n.id)+'">'+p(n.text)+"</title>":"",g+=e.text?'<description id="'+p(e.id)+'">'+p(e.text)+"</description>":"",g+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',g+='<path d="',a=0;a<s.getModuleCount();a+=1)for(u=a*t+r,i=0;i<s.getModuleCount();i+=1)s.isDark(a,i)&&(g+="M"+(i*t+r)+","+u+f);return g+='" stroke="transparent" fill="black"/>',g+="</svg>"},s.createDataURL=function(o,t){o=o||2,t=void 0===t?4*o:t;var r=s.getModuleCount()*o+2*t,i=t,a=r-t;return I(r,r,function(t,r){if(i<=t&&t<a&&i<=r&&r<a){var e=Math.floor((t-i)/o),n=Math.floor((r-i)/o);return s.isDark(n,e)?0:1}return 1})},s.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=s.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=s.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=p(e),o+='"'),o+="/>"};var p=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return s.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*s.getModuleCount()+2*t,u=t,f=a-t,c={"โ–โ–":"โ–","โ– ":"โ–€"," โ–":"โ–","  ":" "},g={"โ–โ–":"โ–€","โ– ":"โ–€"," โ–":" ","  ":" "},l="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="โ–",u<=e&&e<f&&u<=r&&r<f&&s.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<f&&u<=r+1&&r+1<f&&s.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="โ–",l+=t<1&&f<=r+1?g[i]:c[i];l+="\n"}return a%2&&0<t?l.substring(0,l.length-a-1)+Array(1+a).join("โ–€"):l.substring(0,l.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=s.getModuleCount()*t+2*r,u=r,f=a-r,c=Array(t+1).join("โ–โ–"),g=Array(t+1).join("  "),l="",h="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),h="",n=0;n<a;n+=1)i=1,u<=n&&n<f&&u<=e&&e<f&&s.isDark(o,Math.floor((n-u)/t))&&(i=0),h+=i?c:g;for(o=0;o<t;o+=1)l+=h+"\n"}return l.substring(0,l.length-1)},s.renderTo2dContext=function(t,r){r=r||2;for(var e=s.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=s.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},s}i.stringToBytes=(i.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,i.createStringToBytes=function(u,f){var i=function(){function t(){var t=r.read();if(-1==t)throw"eof";return t}for(var r=S(u),e=0,n={};;){var o=r.read();if(-1==o)break;var i=t(),a=t()<<8|t();n[String.fromCharCode(o<<8|i)]=a,e+=1}if(e!=f)throw e+" != "+f;return n}(),a="?".charCodeAt(0);return function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);if(n<128)r.push(n);else{var o=i[t.charAt(e)];"number"==typeof o?(255&o)==o?r.push(o):(r.push(o>>>8),r.push(255&o)):r.push(a)}}return r}};var r,t,a=1,u=2,o=4,f=8,y={L:1,M:0,Q:3,H:2},e=0,n=1,c=2,g=3,l=4,h=5,s=6,v=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],(t={}).getBCHTypeInfo=function(t){for(var r=t<<10;0<=d(r)-d(1335);)r^=1335<<d(r)-d(1335);return 21522^(t<<10|r)},t.getBCHTypeNumber=function(t){for(var r=t<<12;0<=d(r)-d(7973);)r^=7973<<d(r)-d(7973);return t<<12|r},t.getPatternPosition=function(t){return r[t-1]},t.getMaskFunction=function(t){switch(t){case e:return function(t,r){return(t+r)%2==0};case n:return function(t,r){return t%2==0};case c:return function(t,r){return r%3==0};case g:return function(t,r){return(t+r)%3==0};case l:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case h:return function(t,r){return t*r%2+t*r%3==0};case s:return function(t,r){return(t*r%2+t*r%3)%2==0};case v:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},t.getErrorCorrectPolynomial=function(t){for(var r=C([1],0),e=0;e<t;e+=1)r=r.multiply(C([1,w.gexp(e)],0));return r},t.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case o:case f:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case o:return 16;case f:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case o:return 16;case f:return 12;default:throw"mode:"+t}}},t.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);5<i&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},t);function d(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r}var w=function(){for(var r=new Array(256),e=new Array(256),t=0;t<8;t+=1)r[t]=1<<t;for(t=8;t<256;t+=1)r[t]=r[t-4]^r[t-5]^r[t-6]^r[t-8];for(t=0;t<255;t+=1)e[r[t]]=t;var n={glog:function(t){if(t<1)throw"glog("+t+")";return e[t]},gexp:function(t){for(;t<0;)t+=255;for(;256<=t;)t-=255;return r[t]}};return n}();function C(n,o){if(void 0===n.length)throw n.length+"/"+o;var r=function(){for(var t=0;t<n.length&&0==n[t];)t+=1;for(var r=new Array(n.length-t+o),e=0;e<n.length-t;e+=1)r[e]=n[e+t];return r}(),i={getAt:function(t){return r[t]},getLength:function(){return r.length},multiply:function(t){for(var r=new Array(i.getLength()+t.getLength()-1),e=0;e<i.getLength();e+=1)for(var n=0;n<t.getLength();n+=1)r[e+n]^=w.gexp(w.glog(i.getAt(e))+w.glog(t.getAt(n)));return C(r,0)},mod:function(t){if(i.getLength()-t.getLength()<0)return i;for(var r=w.glog(i.getAt(0))-w.glog(t.getAt(0)),e=new Array(i.getLength()),n=0;n<i.getLength();n+=1)e[n]=i.getAt(n);for(n=0;n<t.getLength();n+=1)e[n]^=w.gexp(w.glog(t.getAt(n))+r);return C(e,0).mod(t)}};return i}function p(){var e=[],o={writeByte:function(t){e.push(255&t)},writeShort:function(t){o.writeByte(t),o.writeByte(t>>>8)},writeBytes:function(t,r,e){r=r||0,e=e||t.length;for(var n=0;n<e;n+=1)o.writeByte(t[n+r])},writeString:function(t){for(var r=0;r<t.length;r+=1)o.writeByte(t.charCodeAt(r))},toByteArray:function(){return e},toString:function(){var t="";t+="[";for(var r=0;r<e.length;r+=1)0<r&&(t+=","),t+=e[r];return t+="]"}};return o}var k,A,b=(k=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],(A={}).getRSBlocks=function(t,r){var e=function(t,r){switch(r){case y.L:return k[4*(t-1)+0];case y.M:return k[4*(t-1)+1];case y.Q:return k[4*(t-1)+2];case y.H:return k[4*(t-1)+3];default:return}}(t,r);if(void 0===e)throw"bad rs block @ typeNumber:"+t+"/errorCorrectionLevel:"+r;for(var n,o,i=e.length/3,a=[],u=0;u<i;u+=1)for(var f=e[3*u+0],c=e[3*u+1],g=e[3*u+2],l=0;l<f;l+=1)a.push((n=g,o=void 0,(o={}).totalCount=c,o.dataCount=n,o));return a},A),M=function(){var e=[],n=0,o={getBuffer:function(){return e},getAt:function(t){var r=Math.floor(t/8);return 1==(e[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e+=1)o.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return n},putBit:function(t){var r=Math.floor(n/8);e.length<=r&&e.push(0),t&&(e[r]|=128>>>n%8),n+=1}};return o},x=function(t){var r=a,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+2<r.length;)t.put(o(r.substring(e,e+3)),10),e+=3;e<r.length&&(r.length-e==1?t.put(o(r.substring(e,e+1)),4):r.length-e==2&&t.put(o(r.substring(e,e+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return e},m=function(t){var r=u,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+1<r.length;)t.put(45*o(r.charAt(e))+o(r.charAt(e+1)),11),e+=2;e<r.length&&t.put(o(r.charAt(e)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return e},L=function(t){var r=o,e=i.stringToBytes(t),n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=0;r<e.length;r+=1)t.put(e[r],8)}};return n},D=function(t){var r=f,e=i.stringToBytesFuncs.SJIS;if(!e)throw"sjis not supported.";!function(){var t=e("ๅ");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=e(t),n={getMode:function(){return r},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return n},S=function(t){var e=t,n=0,o=0,i=0,r={read:function(){for(;i<8;){if(n>=e.length){if(0==i)return-1;throw"unexpected end of file./"+i}var t=e.charAt(n);if(n+=1,"="==t)return i=0,-1;t.match(/^\s$/)||(o=o<<6|a(t.charCodeAt(0)),i+=6)}var r=o>>>i-8&255;return i-=8,r}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return r},I=function(t,r,e){for(var n=function(t,r){var n=t,o=r,l=new Array(t*r),e={setPixel:function(t,r,e){l[r*n+t]=e},write:function(t){t.writeString("GIF87a"),t.writeShort(n),t.writeShort(o),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(n),t.writeShort(o),t.writeByte(0);var r=i(2);t.writeByte(2);for(var e=0;255<r.length-e;)t.writeByte(255),t.writeBytes(r,e,255),e+=255;t.writeByte(r.length-e),t.writeBytes(r,e,r.length-e),t.writeByte(0),t.writeString(";")}},i=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,o=h(),i=0;i<r;i+=1)o.add(String.fromCharCode(i));o.add(String.fromCharCode(r)),o.add(String.fromCharCode(e));var a=p(),u=function(t){var e=t,n=0,o=0,r={write:function(t,r){if(t>>>r!=0)throw"length over";for(;8<=n+r;)e.writeByte(255&(t<<n|o)),r-=8-n,t>>>=8-n,n=o=0;o|=t<<n,n+=r},flush:function(){0<n&&e.writeByte(o)}};return r}(a);u.write(r,n);var f=0,c=String.fromCharCode(l[f]);for(f+=1;f<l.length;){var g=String.fromCharCode(l[f]);f+=1,o.contains(c+g)?c+=g:(u.write(o.indexOf(c),n),o.size()<4095&&(o.size()==1<<n&&(n+=1),o.add(c+g)),c=g)}return u.write(o.indexOf(c),n),u.write(e,n),u.flush(),a.toByteArray()},h=function(){var r={},e=0,n={add:function(t){if(n.contains(t))throw"dup key:"+t;r[t]=e,e+=1},size:function(){return e},indexOf:function(t){return r[t]},contains:function(t){return void 0!==r[t]}};return n};return e}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=p();n.write(a);for(var u=function(){function e(t){a+=String.fromCharCode(r(63&t))}var n=0,o=0,i=0,a="",t={},r=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return t.writeByte=function(t){for(n=n<<8|255&t,o+=8,i+=1;6<=o;)e(n>>>o-6),o-=6},t.flush=function(){if(0<o&&(e(n<<6-o),o=n=0),i%3!=0)for(var t=3-i%3,r=0;r<t;r+=1)a+="="},t.toString=function(){return a},t}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return i}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||57344<=n?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -14,26 +14,29 @@
 
   <div class="max-w-7xl mx-auto space-y-5">
 
-    <!-- Top Header & Aux Tools Toggle -->
+    <!-- Top Header -->
     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       <div>
         <div class="flex flex-wrap items-center gap-2">
           <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-600 text-white">ปณก. 10501</span>
-          <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-600 text-white">เชื่อม Google Sheets สด (Real-time)</span>
+          <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-600 text-white">คัดเฉพาะรายการที่ "ยังไม่ลงสาเหตุ" • แยกกลุ่มตามวันที่</span>
           <h1 class="text-lg md:text-xl font-bold text-white">
-            ตัวช่วยตรวจสอบชิ้นงานไม่มีสถานะรับฝาก "ปณก." (เรียงตามขั้นตอน 1 ➔ 2 ➔ 3)
+            ระบบสกัดเลขก่อนหน้า-ถัดไป (-3 ถึง +3) เฉพาะรายการที่ยังไม่ได้บันทึกเหตุผล
           </h1>
         </div>
         <p class="text-xs md:text-sm text-slate-400 mt-1">
-          ดึงรายการของ <b>ปณก. (10501)</b> จาก Google Sheets อัตโนมัติ ➔ แยกอันที่ <b>"ยังไม่ได้ลงสาเหตุ"</b> ➔ เจนเลข ±3 พร้อม QR Code / เช็ค QMS & ใบเสร็จ CA POS
+          วันไหน/รายการไหนที่มีการบันทึกเหตุผลในช่องสาเหตุ (คอลัมน์ K) แล้ว ระบบจะ<b>ข้ามไม่นำมาสกัดเลข</b> และจัดกลุ่มเฉพาะรายการที่ค้างอยู่แยกตามวันที่ให้ทันที
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
+        <button onclick="scanAllSheets()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow transition flex items-center gap-1.5">
+          <span>🔄 ซิงค์ข้อมูลทุกวันจาก Google Sheets</span>
+        </button>
         <button onclick="toggleManualCalcDrawer()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5">
           <span>🔢 เครื่องมือเสริม: หาเลข Digit / สร้าง QR เอง</span>
         </button>
         <a href="https://docs.google.com/spreadsheets/d/1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc/edit?usp=sharing" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center gap-1.5">
-          <span>📊 เปิดไฟล์ Google Sheets ต้นฉบับ ↗</span>
+          <span>📊 เปิด Google Sheets ต้นฉบับ ↗</span>
         </a>
       </div>
     </div>
@@ -62,9 +65,6 @@
               <option value="RC">RC</option>
             </select>
             <input id="calcSerialInput" type="text" value="WC99027535" oninput="runCheckDigitCalc()" placeholder="กรอกเลข 8 หลัก หรือ 13 หลัก..." class="flex-1 min-w-[220px] px-3.5 py-2 rounded-lg border border-emerald-500/50 bg-slate-950 text-white text-sm font-mono uppercase" />
-            <button onclick="addCalcResultToMainList()" class="px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold">
-              ➕ เพิ่มเข้าตารางตรวจสอบด้านล่าง
-            </button>
           </div>
           <div id="calcResultBanner" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs"></div>
         </div>
@@ -77,151 +77,68 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- STEP 1: เลือกแท็บวันที่จาก Google Sheets & ดูว่า ปณก. ลงสาเหตุหรือยัง -->
+    <!-- STEP 1: สรุปสถานะแยกตามวันที่ (วันไหนลงเหตุผลครบแล้ว จะข้ามไม่นำมาสกัดเลข!) -->
     <!-- ===================================================================== -->
     <div class="bg-slate-900 border-2 border-sky-500/40 rounded-2xl p-5 shadow-sm space-y-4">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-        <div class="space-y-1">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
+        <div>
           <div class="flex items-center gap-2">
             <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-sky-500 text-black">ขั้นตอนที่ 1</span>
             <h2 class="text-base md:text-lg font-bold text-white">
-              ดึงข้อมูล "ปณก. (10501)" จาก Google Sheets & เช็คว่าลงสาเหตุหรือยัง
+              ตรวจสอบสถานะแต่ละวันจาก Google Sheets (คัดเฉพาะวันที่ยังไม่ได้บันทึกเหตุผล)
             </h2>
           </div>
-          <p class="text-xs text-slate-400">
-            คลิกเลือกแท็บวันที่ด้านล่าง (หรือพิมพ์ชื่อแท็บวันที่ใหม่ เช่น <code class="text-sky-300">2.11.69</code>) ระบบจะดึงข้อมูลสดจาก Google Sheets และแยกให้ทันทีว่ารายการไหน <b>ยังไม่ได้ลงสาเหตุ</b>
+          <p class="text-xs text-slate-400 mt-1">
+            วันที่บันทึกเหตุผลครบแล้วจะแสดงเป็นป้ายสีเขียว (<b>ไม่ต้องสกัดเลข</b>) • ส่วนวันที่ยังมีรายการค้างอยู่จะถูกจัดเป็นกลุ่มด้านล่างเพื่อสกัดเลข ±3 ทันที
           </p>
         </div>
 
-        <!-- Live Sync Status Pill -->
-        <div class="flex items-center gap-2">
-          <span id="sheetSyncStatus" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-            🔄 กำลังดึงข้อมูลสดจาก Google Sheets...
-          </span>
-          <button onclick="loadSheetTab(currentSheetTab)" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow transition">
-            🔄 รีเฟรชข้อมูลจากชีต
-          </button>
-        </div>
-      </div>
-
-      <!-- Sheet Tab Selector & Filter Mode -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-        <!-- Date Tabs -->
+        <!-- Add Custom Date Tab Input -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class="text-xs font-bold text-slate-400">📅 เลือกแท็บวันที่ในชีต:</span>
-          <div id="sheetTabsBar" class="flex flex-wrap items-center gap-1.5"></div>
-          <div class="flex items-center gap-1 ml-1">
-            <input id="customTabNameInput" type="text" placeholder="ชื่อแท็บอื่น เช่น 2.11.69" class="w-36 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-950 text-white text-xs font-mono" />
-            <button onclick="addAndLoadCustomTab()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-xs font-bold">
-              ดึงแท็บนี้
+          <span id="syncStatusBadge" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+            ✅ ซิงค์ข้อมูลล่าสุดแล้ว
+          </span>
+          <div class="flex items-center gap-1">
+            <input id="customTabNameInput" type="text" placeholder="เพิ่มแท็บวันใหม่ เช่น 2.11.69" class="w-40 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-950 text-white text-xs font-mono" />
+            <button onclick="addCustomSheetTab()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-xs font-bold">
+              + ดึงวันเพิ่ม
             </button>
           </div>
         </div>
-
-        <!-- Filter: Unresolved Only vs All PNK -->
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-xs text-slate-400">แสดงผล:</span>
-          <button id="btnFilterPending" onclick="setFilterMode('pending')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition">
-            🔴 เฉพาะที่ "ยังไม่ได้ลงสาเหตุ"
-          </button>
-          <button id="btnFilterAll" onclick="setFilterMode('all')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition">
-            📋 แสดงทั้งหมดของ ปณก.
-          </button>
-        </div>
       </div>
 
-      <!-- Summary Overview Table of PNK Items in Current Sheet Tab -->
-      <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
-        <div class="px-4 py-2.5 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <span id="sheetOverviewTitle" class="text-xs font-bold text-slate-200">
-            สรุปรายการของ "10501 ปณก." ในแท็บ 1.11.69
-          </span>
-          <div class="flex flex-wrap items-center gap-3 text-xs">
-            <span id="badgePendingCount" class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">
-              🔴 ยังไม่ลงสาเหตุ: 0 รายการ
-            </span>
-            <span id="badgeDoneCount" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
-              🟢 ลงสาเหตุแล้ว: 0 รายการ
-            </span>
-          </div>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="text-slate-400 bg-slate-900/40 border-b border-slate-800">
-                <th class="px-3 py-2">แถวในชีต</th>
-                <th class="px-3 py-2">วันที่รายงาน</th>
-                <th class="px-3 py-2">บริการ</th>
-                <th class="px-3 py-2">หมายเลขสิ่งของ (ปณก.)</th>
-                <th class="px-3 py-2">เวลาสแกนลงถุง</th>
-                <th class="px-3 py-2">ผู้ดำเนินการ</th>
-                <th class="px-3 py-2">สถานะการลงสาเหตุ (คอลัมน์ K ในชีต)</th>
-                <th class="px-3 py-2">การทำงาน</th>
-              </tr>
-            </thead>
-            <tbody id="sheetOverviewBody"></tbody>
-          </table>
-        </div>
-      </div>
+      <!-- Date Groups Status Cards (Shows Completed Days vs Pending Days) -->
+      <div id="dateSummaryGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
     </div>
 
     <!-- ===================================================================== -->
-    <!-- STEP 2: เครื่องมือช่วยสืบหาที่มา (ก๊อปเลขไป QMS / อัปโหลดไฟล์ผลลัพธ์ / ยิง QR) -->
+    <!-- STEP 2: เครื่องมือช่วยวิเคราะห์ผล QMS & ใบเสร็จ CA POS สำหรับรายการที่ยังไม่ลงเหตุผล -->
     <!-- ===================================================================== -->
-    <div class="bg-slate-900 border-2 border-amber-500/40 rounded-2xl p-5 shadow-sm space-y-3">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-amber-500 text-black">ขั้นตอนที่ 2</span>
-            <h2 class="text-base md:text-lg font-bold text-white">
-              นำเลขก่อนหน้า-ถัดไป (-3 ถึง +3) ไปหาที่มา (ผ่าน QMS / ใบเสร็จ CA POS / ยิง QR เครื่องพิมพ์)
-            </h2>
-          </div>
-          <p class="text-xs text-slate-400">
-            เลือกทำได้ 2 ทาง: <b>ทางที่ 1:</b> ยิง QR Code ในการ์ดด้านล่างเข้าเครื่องพิมพ์ใบจ่าหน้าได้เลย • <b>ทางที่ 2:</b> กดปุ่ม <b>"1. คัดลอกชุดเลขไปวาง QMS"</b> แล้วนำไฟล์ PDF/Excel ที่ได้จาก QMS มาอัปโหลดในปุ่ม <b>"2. อัปโหลดไฟล์จาก QMS"</b>
-          </p>
+    <div class="bg-slate-900 border-2 border-amber-500/40 rounded-2xl p-4 shadow-sm">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-amber-500 text-black">ตัวช่วยเช็ค QMS / ใบเสร็จ</span>
+          <span class="text-xs md:text-sm text-slate-300">
+            เมื่อคัดลอกเลขของกลุ่มวันที่ค้างอยู่ไปค้นใน QMS แล้ว สามารถนำไฟล์ <b>PDF / Excel</b> จาก QMS มาอัปโหลดที่นี่เพื่อดึงสถานะรับฝากและเลขใบเสร็จรับเงินอัตโนมัติ:
+          </span>
         </div>
-
         <div class="flex flex-wrap items-center gap-2">
-          <button onclick="copyAll21Numbers()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white shadow transition flex items-center gap-1.5">
-            <span>📋 1. คัดลอกเลขทั้งหมด (รวม ±3) ไปวาง QMS</span>
-          </button>
-          <label class="cursor-pointer px-4 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black shadow transition flex items-center gap-1.5">
-            <span>📁 2. อัปโหลดไฟล์ PDF / Excel จาก QMS</span>
+          <label class="cursor-pointer px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black shadow transition flex items-center gap-1.5 whitespace-nowrap">
+            <span>📁 อัปโหลดไฟล์ PDF / Excel จาก QMS</span>
             <input type="file" id="qmsFileInput" accept=".pdf,.xlsx,.xls,.csv,.txt,.html" onchange="handleFileUpload(this.files)" class="hidden" />
           </label>
-          <button onclick="openCaPosPortal()" class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition flex items-center gap-1.5">
-            <span>🧾 3. เปิดเว็บใบเสร็จ CA POS</span>
+          <button onclick="openCaPosPortal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition flex items-center gap-1.5 whitespace-nowrap">
+            <span>🧾 เปิดเว็บใบเสร็จ CA POS</span>
           </button>
         </div>
       </div>
-
-      <div id="fileStatusBanner" class="hidden px-3.5 py-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs"></div>
+      <div id="fileStatusBanner" class="hidden mt-2.5 px-3.5 py-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs"></div>
     </div>
 
     <!-- ===================================================================== -->
-    <!-- STEP 3: การ์ดเจาะลึกรายการ ปณก. ทีละเลข (พร้อม QR ±3 และช่องสรุปสาเหตุใส่ชีต) -->
+    <!-- STEP 3: แสดงกลุ่มรายการที่ "ยังไม่ได้บันทึกเหตุผล" แยกตามวันที่ (Group by Date) -->
     <!-- ===================================================================== -->
-    <div class="space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-2 px-1">
-        <div class="flex items-center gap-2">
-          <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-emerald-500 text-black">ขั้นตอนที่ 3</span>
-          <h2 class="text-base md:text-lg font-bold text-white">
-            ตรวจสอบเลขก่อนหน้า-ถัดไป (-3 ถึง +3) & คัดลอกสาเหตุไปลง Google Sheets คอลัมน์ K
-          </h2>
-        </div>
-        <div class="flex items-center gap-2 text-xs">
-          <span class="text-slate-400">จำนวนเลขข้างเคียง:</span>
-          <select id="rangeSelect" onchange="changeRange(this.value)" class="px-2.5 py-1 rounded-lg border border-slate-700 bg-slate-900 text-white text-xs">
-            <option value="3" selected>±3 เลข (ก่อนหน้า 3 / ถัดไป 3)</option>
-            <option value="5">±5 เลข (ก่อนหน้า 5 / ถัดไป 5)</option>
-            <option value="10">±10 เลข (ก่อนหน้า 10 / ถัดไป 10)</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="itemsContainer" class="space-y-6"></div>
-    </div>
+    <div id="dateGroupsContainer" class="space-y-8"></div>
 
     <!-- Toast Notification -->
     <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2">
@@ -286,7 +203,6 @@
     const SPREADSHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
     const CAPOS_RECEIPT_URL = 'https://caposhelp.thailandpost.com/rcpt/receipt';
 
-    // Common cause templates used by the user in Column K
     const QUICK_CAUSES = [
       'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
       'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
@@ -355,305 +271,317 @@
     let neighborRange = 3;
     let currentCalcBarcode = 'WC990275354TH';
 
-    // Sheet Tabs Management
-    let availableTabs = ['1.11.69', '29.10.69', '28.10.69'];
-    let currentSheetTab = '1.11.69'; // Default to latest tab with pending items!
-    let filterMode = 'pending'; // 'pending' | 'all'
+    // Known + Auto-discovered Date Tabs (Newest first)
+    let tabsToScan = ['1.11.69', '29.10.69', '28.10.69'];
+    // Allow user to toggle viewing a completed date group only if they explicitly want to inspect it
+    let manuallyExpandedCompletedTabs = {};
 
-    // Fallback data per tab (so it works immediately even before JSONP completes or if offline)
-    const FALLBACK_TAB_DATA = {
-      '1.11.69': [
-        {
-          id: '1.11.69-row-342',
-          sheetTab: '1.11.69',
-          sheetRow: 342,
-          date: '01/11/2569',
-          region: 'ปน.3',
-          service: 'E (W)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'WC990275354TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '31/10/2569 15:10',
-          operator: 'kanitha.po',
-          sheetCause: '',
-          causeNote: '',
-          companyName: '',
-          showQrStrip: true
-        },
-        {
-          id: '1.11.69-row-343',
-          sheetTab: '1.11.69',
-          sheetRow: 343,
-          date: '01/11/2569',
-          region: 'ปน.3',
-          service: 'E (W)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'WB545368690TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '31/10/2569 15:10',
-          operator: 'wanchana.th',
-          sheetCause: '',
-          causeNote: '',
-          companyName: '',
-          showQrStrip: true
-        },
-        {
-          id: '1.11.69-row-344',
-          sheetTab: '1.11.69',
-          sheetRow: 344,
-          date: '01/11/2569',
-          region: 'ปน.3',
-          service: 'E (W)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'WC990269645TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '31/10/2569 15:10',
-          operator: 'kanitha.po',
-          sheetCause: '',
-          causeNote: '',
-          companyName: '',
-          showQrStrip: true
-        }
-      ],
-      '29.10.69': [
-        {
-          id: '29.10.69-row-146',
-          sheetTab: '29.10.69',
-          sheetRow: 146,
-          date: '29/10/2569',
-          region: 'ปน.3',
-          service: 'E (E)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'EQ089995853TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '28/10/2569 12:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
-          causeNote: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
-          companyName: '',
-          showQrStrip: false
-        }
-      ],
-      '28.10.69': [
-        {
-          id: '28.10.69-row-187',
-          sheetTab: '28.10.69',
-          sheetRow: 187,
-          date: '28/10/2569',
-          region: 'ปน.3',
-          service: 'E (W)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'WB327054102TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '27/10/2569 17:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
-          causeNote: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
-          companyName: '',
-          showQrStrip: false
-        },
-        {
-          id: '28.10.69-row-188',
-          sheetTab: '28.10.69',
-          sheetRow: 188,
-          date: '28/10/2569',
-          region: 'ปน.3',
-          service: 'E (E)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'ET717324835TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '19/10/2569 19:10',
-          operator: 'burapa.lu',
-          sheetCause: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
-          causeNote: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
-          companyName: '',
-          showQrStrip: false
-        },
-        {
-          id: '28.10.69-row-189',
-          sheetTab: '28.10.69',
-          sheetRow: 189,
-          date: '28/10/2569',
-          region: 'ปน.3',
-          service: 'E (E)',
-          officeCode: '10501',
-          officeName: 'ปณก.',
-          barcode: 'EQ177456925TH',
-          firstStatus: 'ใส่ของลงถุง',
-          scanTime: '27/10/2569 16:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
-          causeNote: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
-          companyName: '',
-          showQrStrip: false
-        }
-      ]
+    // Store all scanned data grouped by tabName / reportDate
+    const sheetGroupsStore = {
+      '1.11.69': {
+        tabName: '1.11.69',
+        reportDate: '01/11/2569',
+        items: [
+          {
+            id: '1.11.69-row-342',
+            sheetTab: '1.11.69',
+            sheetRow: 342,
+            date: '01/11/2569',
+            region: 'ปน.3',
+            service: 'E (W)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'WC990275354TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '31/10/2569 15:10',
+            operator: 'kanitha.po',
+            sheetCause: '',
+            causeNote: '',
+            companyName: '',
+            showQrStrip: true
+          },
+          {
+            id: '1.11.69-row-343',
+            sheetTab: '1.11.69',
+            sheetRow: 343,
+            date: '01/11/2569',
+            region: 'ปน.3',
+            service: 'E (W)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'WB545368690TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '31/10/2569 15:10',
+            operator: 'wanchana.th',
+            sheetCause: '',
+            causeNote: '',
+            companyName: '',
+            showQrStrip: true
+          },
+          {
+            id: '1.11.69-row-344',
+            sheetTab: '1.11.69',
+            sheetRow: 344,
+            date: '01/11/2569',
+            region: 'ปน.3',
+            service: 'E (W)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'WC990269645TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '31/10/2569 15:10',
+            operator: 'kanitha.po',
+            sheetCause: '',
+            causeNote: '',
+            companyName: '',
+            showQrStrip: true
+          }
+        ]
+      },
+      '29.10.69': {
+        tabName: '29.10.69',
+        reportDate: '29/10/2569',
+        items: [
+          {
+            id: '29.10.69-row-146',
+            sheetTab: '29.10.69',
+            sheetRow: 146,
+            date: '29/10/2569',
+            region: 'ปน.3',
+            service: 'E (E)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'EQ089995853TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '28/10/2569 12:10',
+            operator: 'kiattisak.pa',
+            sheetCause: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
+            causeNote: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
+            companyName: '',
+            showQrStrip: false
+          }
+        ]
+      },
+      '28.10.69': {
+        tabName: '28.10.69',
+        reportDate: '28/10/2569',
+        items: [
+          {
+            id: '28.10.69-row-187',
+            sheetTab: '28.10.69',
+            sheetRow: 187,
+            date: '28/10/2569',
+            region: 'ปน.3',
+            service: 'E (W)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'WB327054102TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '27/10/2569 17:10',
+            operator: 'kiattisak.pa',
+            sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
+            causeNote: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
+            companyName: '',
+            showQrStrip: false
+          },
+          {
+            id: '28.10.69-row-188',
+            sheetTab: '28.10.69',
+            sheetRow: 188,
+            date: '28/10/2569',
+            region: 'ปน.3',
+            service: 'E (E)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'ET717324835TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '19/10/2569 19:10',
+            operator: 'burapa.lu',
+            sheetCause: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
+            causeNote: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
+            companyName: '',
+            showQrStrip: false
+          },
+          {
+            id: '28.10.69-row-189',
+            sheetTab: '28.10.69',
+            sheetRow: 189,
+            date: '28/10/2569',
+            region: 'ปน.3',
+            service: 'E (E)',
+            officeCode: '10501',
+            officeName: 'ปณก.',
+            barcode: 'EQ177456925TH',
+            firstStatus: 'ใส่ของลงถุง',
+            scanTime: '27/10/2569 16:10',
+            operator: 'kiattisak.pa',
+            sheetCause: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
+            causeNote: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
+            companyName: '',
+            showQrStrip: false
+          }
+        ]
+      }
     };
 
-    let mainItems = JSON.parse(JSON.stringify(FALLBACK_TAB_DATA['1.11.69']));
+    // Helper to get all items across all date groups
+    function getAllItemsFlat() {
+      const list = [];
+      tabsToScan.forEach(t => {
+        if (sheetGroupsStore[t] && sheetGroupsStore[t].items) {
+          sheetGroupsStore[t].items.forEach(it => list.push(it));
+        }
+      });
+      return list;
+    }
 
-    // Live Google Sheets Loader via JSONP (works on both github.io and file:// without CORS errors)
-    function loadSheetTab(tabName) {
-      currentSheetTab = tabName;
-      const statusEl = document.getElementById('sheetSyncStatus');
-      if (statusEl) {
-        statusEl.textContent = `🔄 กำลังดึงข้อมูลสดแท็บ "${tabName}"...`;
-        statusEl.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+    function findItemById(itemId) {
+      const all = getAllItemsFlat();
+      return all.find(x => x.id === itemId);
+    }
+
+    // Live Multi-Tab Scanner via Google Sheets JSONP
+    function scanAllSheets() {
+      const badge = document.getElementById('syncStatusBadge');
+      if (badge) {
+        badge.textContent = '🔄 กำลังซิงค์ข้อมูลทุกวันจาก Google Sheets...';
+        badge.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40';
       }
 
-      if (FALLBACK_TAB_DATA[tabName]) {
-        mainItems = JSON.parse(JSON.stringify(FALLBACK_TAB_DATA[tabName]));
+      // Also auto-generate candidate tab names for recent dates (e.g. 2.11.69, 3.11.69)
+      const candidates = [...tabsToScan];
+      const now = new Date();
+      for (let d = 0; d <= 3; d++) {
+        const dt = new Date(now.getTime() - d * 86400000);
+        const day = dt.getDate();
+        const month = dt.getMonth() + 1;
+        const tabCandidate = `${day}.${month}.69`;
+        if (!candidates.includes(tabCandidate)) {
+          candidates.unshift(tabCandidate);
+        }
+      }
+
+      candidates.forEach((tabName, idx) => {
+        fetchSingleTabJsonp(tabName, idx === candidates.length - 1);
+      });
+    }
+
+    function fetchSingleTabJsonp(tabName, isLast) {
+      const cbName = 'onSheetTab_' + tabName.replace(/\W/g, '_') + '_' + Math.floor(Math.random() * 100000);
+      window[cbName] = function(res) {
+        delete window[cbName];
+        const scriptEl = document.getElementById(cbName);
+        if (scriptEl) scriptEl.remove();
+
+        if (!res || res.status !== 'ok' || !res.table || !res.table.rows) return;
+        const rows = res.table.rows;
+        if (!rows.length) return;
+
+        // Verify that the returned sheet actually matches tabName (since Google Sheets falls back to 28.10.69 if tab doesn't exist)
+        let firstDateStr = '';
+        for (let i = 0; i < Math.min(rows.length, 10); i++) {
+          const c = rows[i].c;
+          if (c && c[0]) {
+            firstDateStr = (c[0].f || String(c[0].v || '')).trim();
+            if (firstDateStr) break;
+          }
+        }
+
+        // Convert '01/11/2569' -> '1.11.69' to verify tab match
+        if (firstDateStr.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+          const parts = firstDateStr.split('/');
+          const dNum = parseInt(parts[0], 10);
+          const mNum = parseInt(parts[1], 10);
+          const yShort = parts[2].slice(-2);
+          const expectedTab = `${dNum}.${mNum}.${yShort}`;
+          if (expectedTab !== tabName && tabName !== '28.10.69') {
+            // Google Sheets returned fallback first sheet; ignore non-existent candidate tab
+            return;
+          }
+        }
+
+        const pnkItems = [];
+        for (let i = 0; i < rows.length; i++) {
+          const c = rows[i].c;
+          if (!c) continue;
+          const getVal = (idx) => (c[idx] ? (c[idx].f || (c[idx].v !== null && c[idx].v !== undefined ? String(c[idx].v) : '')) : '').trim();
+
+          const officeCode = getVal(4);
+          const officeName = getVal(5);
+          const barcode = getVal(6).toUpperCase();
+
+          if ((officeCode === '10501' || officeName.includes('ปณก')) && barcode.match(/^[A-Z]{2}\d{9}[A-Z]{2}$/)) {
+            const sheetCause = getVal(10);
+            pnkItems.push({
+              id: `${tabName}-row-${i + 2}`,
+              sheetTab: tabName,
+              sheetRow: i + 2,
+              date: getVal(0) || firstDateStr,
+              region: getVal(1),
+              service: getVal(2),
+              officeCode: officeCode || '10501',
+              officeName: officeName || 'ปณก.',
+              barcode: barcode,
+              firstStatus: getVal(7),
+              scanTime: getVal(8).replace(/\s+/g, ' '),
+              operator: getVal(9),
+              sheetCause: sheetCause,
+              causeNote: sheetCause,
+              companyName: '',
+              showQrStrip: !sheetCause
+            });
+          }
+        }
+
+        if (!tabsToScan.includes(tabName)) {
+          tabsToScan.unshift(tabName);
+        }
+
+        sheetGroupsStore[tabName] = {
+          tabName: tabName,
+          reportDate: firstDateStr || tabName,
+          items: pnkItems
+        };
+
+        if (isLast) {
+          const badge = document.getElementById('syncStatusBadge');
+          if (badge) {
+            const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+            badge.textContent = `✅ ซิงค์ข้อมูลล่าสุดแล้ว (${nowStr})`;
+            badge.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+          }
+        }
         renderAll();
-      }
-
-      // Inject JSONP script to get real-time data from Google Sheets
-      const oldScript = document.getElementById('gvizJsonpScript');
-      if (oldScript) oldScript.remove();
+      };
 
       const s = document.createElement('script');
-      s.id = 'gvizJsonpScript';
-      s.src = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=responseHandler:onGvizSheetLoaded&sheet=${encodeURIComponent(tabName)}&_ts=${Date.now()}`;
-      s.onerror = () => {
-        if (statusEl) {
-          statusEl.textContent = `⚠️ ใช้ข้อมูลสำรองของแท็บ ${tabName} (ไม่สามารถเชื่อมต่อ Google Sheets)`;
-        }
-      };
+      s.id = cbName;
+      s.src = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&sheet=${encodeURIComponent(tabName)}&_ts=${Date.now()}`;
       document.body.appendChild(s);
     }
 
-    window.onGvizSheetLoaded = function(res) {
-      const statusEl = document.getElementById('sheetSyncStatus');
-      if (!res || res.status !== 'ok' || !res.table || !res.table.rows) {
-        if (statusEl) {
-          statusEl.textContent = `⚠️ ไม่พบแท็บ "${currentSheetTab}" ในชีต`;
-        }
-        return;
-      }
-
-      const rows = res.table.rows;
-      const pnkItems = [];
-
-      for (let i = 0; i < rows.length; i++) {
-        const c = rows[i].c;
-        if (!c) continue;
-        const getVal = (idx) => (c[idx] ? (c[idx].f || (c[idx].v !== null && c[idx].v !== undefined ? String(c[idx].v) : '')) : '').trim();
-
-        const officeCode = getVal(4);
-        const officeName = getVal(5);
-        const barcode = getVal(6).toUpperCase();
-
-        if ((officeCode === '10501' || officeName.includes('ปณก')) && barcode.match(/^[A-Z]{2}\d{9}[A-Z]{2}$/)) {
-          const sheetCause = getVal(10);
-          pnkItems.push({
-            id: `${currentSheetTab}-row-${i + 2}`,
-            sheetTab: currentSheetTab,
-            sheetRow: i + 2,
-            date: getVal(0),
-            region: getVal(1),
-            service: getVal(2),
-            officeCode: officeCode || '10501',
-            officeName: officeName || 'ปณก.',
-            barcode: barcode,
-            firstStatus: getVal(7),
-            scanTime: getVal(8).replace(/\s+/g, ' '),
-            operator: getVal(9),
-            sheetCause: sheetCause,
-            causeNote: sheetCause,
-            companyName: '',
-            showQrStrip: !sheetCause // Auto-expand QR strip for unresolved items!
-          });
-        }
-      }
-
-      mainItems = pnkItems;
-      FALLBACK_TAB_DATA[currentSheetTab] = JSON.parse(JSON.stringify(pnkItems));
-
-      // Auto-switch filter mode: if all items in this tab already have causes, show 'all' so the user sees them
-      const pendingCount = mainItems.filter(x => !x.sheetCause).length;
-      if (pendingCount === 0 && mainItems.length > 0) {
-        filterMode = 'all';
-      } else if (pendingCount > 0) {
-        filterMode = 'pending';
-      }
-
-      if (statusEl) {
-        const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        statusEl.textContent = `✅ ซิงค์ข้อมูลสดจากชีตแท็บ "${currentSheetTab}" แล้ว (${nowStr})`;
-        statusEl.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
-      }
-
-      renderAll();
-    };
-
-    function addAndLoadCustomTab() {
+    function addCustomSheetTab() {
       const inp = document.getElementById('customTabNameInput');
       const val = inp.value.trim();
       if (!val) return;
-      if (!availableTabs.includes(val)) {
-        availableTabs.unshift(val);
+      if (!tabsToScan.includes(val)) {
+        tabsToScan.unshift(val);
       }
       inp.value = '';
-      loadSheetTab(val);
+      fetchSingleTabJsonp(val, true);
+      showToast(`กำลังดึงข้อมูลแท็บ "${val}" จาก Google Sheets...`);
     }
 
-    function setFilterMode(mode) {
-      filterMode = mode;
+    function toggleCompletedDayView(tabName) {
+      manuallyExpandedCompletedTabs[tabName] = !manuallyExpandedCompletedTabs[tabName];
       renderAll();
     }
 
-    function scrollToItemCard(itemId) {
-      const el = document.getElementById(`card-${itemId}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        filterMode = 'all';
-        renderAll();
-        setTimeout(() => {
-          const el2 = document.getElementById(`card-${itemId}`);
-          if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    }
-
-    // Pre-populated QMS Analysis State for 28.10.69 items
-    const DEFAULT_ANALYZED_STATE = {
-      'WB327054076TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 27/10/2569 16:44 ที่ 10501 ปณก.] -> ลงถุง 17:44 / ปิดถุง 20:05 โดย kiattisak.pa' },
-      'WB327054080TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 27/10/2569 16:44 ที่ 10501 ปณก.] -> ลงถุง 17:48 (burapa.lu) / ปิดถุง 20:05 โดย kiattisak.pa' },
-      'WB327054093TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 28/10/2569 16:19 ที่ 10501 ปณก.] -> ลงถุง 16:35 (weerapat.ku)' },
-      'WB327054102TH': { status: 'found',    receiptNo: '', note: '📌 [เลขหลัก แถว 187] ไม่มีสถานะรับฝาก เริ่มที่ ใส่ของลงถุง 27/10/2569 17:52 ที่ 10501 ปณก. โดย kiattisak.pa' },
-      'WB327054116TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 27/10/2569 16:44 ที่ 10501 ปณก.] -> ลงถุง 17:14 (burapa.lu)' },
-      'WB327054120TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 27/10/2569 16:44 ที่ 10501 ปณก.] -> ลงถุง 17:49 โดย kiattisak.pa' },
-      'WB327054133TH': { status: 'relevant', receiptNo: 'API/IPS (ไม่มีเลขใบเสร็จ POS)', note: '🎯 [รับฝาก (API/IPS) 27/10/2569 16:44 ที่ 10501 ปณก.] -> ส่งไป หาดใหญ่ DB1' },
-
-      'ET717324804TH': { status: 'found',     receiptNo: '2073826100621', note: 'รับฝาก (POS/TND) 23/10/2569 10:34 ที่ 20130 บางแสน EMS DB1' },
-      'ET717324818TH': { status: 'relevant',  receiptNo: '1050111492231', note: '🎯 [รับฝาก (POS/TND) 25/09/2569 17:47 ที่ 10501 ปณก.] โดย chonthicha.bo -> ใส่ของลงถุงโดย burapa.lu' },
-      'ET717324821TH': { status: 'not_found', receiptNo: '', note: 'ไม่พบข้อมูลในรายงาน QMS' },
-      'ET717324835TH': { status: 'found',     receiptNo: '', note: '📌 [เลขหลัก แถว 188] เริ่มที่ 19/10/2569 19:28 ใส่ของลงถุงที่ 10501 ปณก. โดย burapa.lu' },
-      'ET717324849TH': { status: 'not_found', receiptNo: '', note: 'ไม่พบข้อมูลในรายงาน QMS' },
-      'ET717324852TH': { status: 'relevant',  receiptNo: '', note: '⭐ ไม่มีสถานะรับฝากเหมือนกัน! เริ่มที่ 19/10/2569 19:24 ใส่ของลงถุงที่ 10501 ปณก. ในใบมอบหมายเดียวกันเป๊ะ' },
-      'ET717324866TH': { status: 'found',     receiptNo: '7700026100470', note: 'รับฝาก (POS/TND) 22/10/2569 12:37 ที่ 77000 ประจวบคีรีขันธ์' },
-
-      'EQ177456899TH': { status: 'relevant', receiptNo: '1050111510694', note: '🎯 [รับฝาก (POS/TND) 27/10/2569 16:27 ที่ 10501 ปณก.] โดย jutarat.sr (ผู้รับ: ฝปข_10)' },
-      'EQ177456908TH': { status: 'relevant', receiptNo: '1050111510694', note: '🎯 [รับฝาก (POS/TND) 27/10/2569 16:27 ที่ 10501 ปณก.] โดย jutarat.sr (ผู้รับ: หน.ปณ บางบ่อ)' },
-      'EQ177456911TH': { status: 'relevant', receiptNo: '1050111510694', note: '🎯 [รับฝาก (POS/TND) 27/10/2569 16:27 ที่ 10501 ปณก.] โดย jutarat.sr -> ลงถุง 17:50 โดย kiattisak.pa' },
-      'EQ177456925TH': { status: 'found',    receiptNo: '', note: '📌 [เลขหลัก แถว 189] เริ่มที่ 27/10/2569 16:41 ลงถุงที่ 10501 ปณก. โดย kiattisak.pa (ผู้รับ: หน.ปณ.สันติสุข 10113)' },
-      'EQ177456939TH': { status: 'relevant', receiptNo: '1050111511479', note: '🎯 [รับฝาก (POS/TND) 28/10/2569 16:45 ที่ 10501 ปณก.] โดย chonthicha.bo' },
-      'EQ177456942TH': { status: 'relevant', receiptNo: '1050111511479', note: '🎯 [รับฝาก (POS/TND) 28/10/2569 16:45 ที่ 10501 ปณก.] โดย chonthicha.bo' },
-      'EQ177456956TH': { status: 'relevant', receiptNo: '1050111511479', note: '🎯 [รับฝาก (POS/TND) 28/10/2569 16:45 ที่ 10501 ปณก.] โดย chonthicha.bo (ผู้รับ: หน.ปณ.บางนา)' }
-    };
-
-    const STORAGE_KEY = 'pnk_tracker_state_v5';
-    let stateStore = JSON.parse(JSON.stringify(DEFAULT_ANALYZED_STATE));
-
+    const STORAGE_KEY = 'pnk_tracker_state_v6';
+    let stateStore = {};
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) stateStore = Object.assign(stateStore, JSON.parse(saved));
+      if (saved) stateStore = JSON.parse(saved);
     } catch (e) {}
 
     function saveState() {
@@ -708,22 +636,22 @@
     }
 
     function updateMainCause(itemId, value) {
-      const item = mainItems.find(x => x.id === itemId);
+      const item = findItemById(itemId);
       if (item) item.causeNote = value;
     }
 
     function setQuickCause(itemId, causeText) {
-      const item = mainItems.find(x => x.id === itemId);
+      const item = findItemById(itemId);
       if (!item) return;
       const prefix = item.companyName && item.companyName.trim() ? `[${item.companyName.trim()}] ` : '';
       item.causeNote = prefix + causeText;
       const inputEl = document.getElementById(`cause-input-${itemId}`);
       if (inputEl) inputEl.value = item.causeNote;
-      copyTextToClipboard(item.causeNote, `เลือกและคัดลอกสาเหตุ "${item.causeNote}" แล้ว! นำไปวางในชีตแถว ${item.sheetRow} ได้เลย`);
+      copyTextToClipboard(item.causeNote, `คัดลอกสาเหตุ "${item.causeNote}" แล้ว! นำไปวางที่แท็บ ${item.sheetTab} แถว ${item.sheetRow} คอลัมน์ K ได้เลย`);
     }
 
     function applyCompanyToCause(itemId, companyStr) {
-      const item = mainItems.find(x => x.id === itemId);
+      const item = findItemById(itemId);
       if (!item) return;
       item.companyName = companyStr;
       if (companyStr.trim()) {
@@ -736,7 +664,7 @@
     }
 
     function toggleCardQrStrip(itemId) {
-      const item = mainItems.find(x => x.id === itemId);
+      const item = findItemById(itemId);
       if (!item) return;
       item.showQrStrip = !item.showQrStrip;
       renderAll();
@@ -800,30 +728,6 @@
       strip.innerHTML = stripHtml;
     }
 
-    function addCalcResultToMainList() {
-      if (!currentCalcBarcode) return;
-      mainItems.unshift({
-        id: 'custom-' + Date.now(),
-        sheetTab: currentSheetTab,
-        sheetRow: 'กำหนดเอง',
-        date: 'วันนี้',
-        region: 'ปน.3',
-        service: currentCalcBarcode.slice(0, 2),
-        officeCode: '10501',
-        officeName: 'ปณก.',
-        barcode: currentCalcBarcode,
-        firstStatus: 'ตรวจสอบที่มา',
-        scanTime: '-',
-        operator: '-',
-        sheetCause: '',
-        causeNote: '',
-        companyName: '',
-        showQrStrip: true
-      });
-      renderAll();
-      showToast(`เพิ่มชุด ${currentCalcBarcode} ลงตารางแล้ว!`);
-    }
-
     // Full-Screen QR Modal
     let modalPlaylist = [];
     let modalIndex = 0;
@@ -831,7 +735,7 @@
     function openQrModalForGroup(groupId, targetOffset = 0) {
       let centerCode = currentCalcBarcode;
       if (groupId !== 'calc') {
-        const item = mainItems.find(x => x.id === groupId);
+        const item = findItemById(groupId);
         if (item) centerCode = item.barcode;
       }
 
@@ -980,7 +884,7 @@
     }
 
     function copyGroupNumbers(itemId, openMode) {
-      const item = mainItems.find(x => x.id === itemId);
+      const item = findItemById(itemId);
       if (!item) return;
       const list = [];
       for (let off = -neighborRange; off <= neighborRange; off++) {
@@ -999,11 +903,15 @@
       }
     }
 
-    function copyAll21Numbers() {
-      const visibleItems = getFilteredItems();
-      const targetList = visibleItems.length > 0 ? visibleItems : mainItems;
+    // Copy all pending numbers for a specific Date Group
+    function copyDateGroupNumbers(tabName, openQms) {
+      const grp = sheetGroupsStore[tabName];
+      if (!grp || !grp.items) return;
+      const pendingItems = grp.items.filter(x => !x.sheetCause || !x.sheetCause.trim());
+      const targetItems = pendingItems.length > 0 ? pendingItems : grp.items;
+
       const all = [];
-      targetList.forEach(item => {
+      targetItems.forEach(item => {
         for (let off = -neighborRange; off <= neighborRange; off++) {
           const code = generateOffsetBarcode(item.barcode, off);
           if (code) {
@@ -1014,14 +922,11 @@
         }
       });
       saveState();
-      copyTextToClipboard(all.join(' '), `คัดลอกทั้งหมด ${all.length} เลขแล้ว! กำลังเปิดหน้า QMS...`);
+      copyTextToClipboard(all.join(' '), `คัดลอกเลขกลุ่มวันที่ ${grp.reportDate} รวม ${all.length} หมายเลขแล้ว!`);
       renderAll();
-      window.open('https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx', '_blank');
-    }
-
-    function changeRange(val) {
-      neighborRange = parseInt(val, 10) || 3;
-      renderAll();
+      if (openQms) {
+        window.open('https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx', '_blank');
+      }
     }
 
     async function handleFileUpload(files) {
@@ -1071,7 +976,7 @@
 
       const barcodeToParent = {};
       const allExpectedCodes = [];
-      mainItems.forEach(item => {
+      getAllItemsFlat().forEach(item => {
         for (let off = -neighborRange; off <= neighborRange; off++) {
           const code = generateOffsetBarcode(item.barcode, off);
           if (code) {
@@ -1159,389 +1064,375 @@
       showToast(`นำเข้า ${sourceName} สำเร็จ! พบข้อมูล ${matchedCount} หมายเลข`);
     }
 
-    function getFilteredItems() {
-      if (filterMode === 'pending') {
-        return mainItems.filter(x => !x.sheetCause || !x.sheetCause.trim());
-      }
-      return mainItems;
-    }
-
-    function renderStep1Overview() {
-      // Render Sheet Tabs Bar
-      const tabBar = document.getElementById('sheetTabsBar');
-      tabBar.innerHTML = availableTabs.map(t => {
-        const isActive = t === currentSheetTab;
-        return `
-          <button
-            onclick="loadSheetTab('${t}')"
-            class="px-3.5 py-1.5 rounded-xl text-xs font-bold border transition ${
-              isActive
-                ? 'bg-sky-500 text-black border-sky-400 shadow'
-                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
-            }"
-          >
-            📅 แท็บ ${t}
-          </button>
-        `;
-      }).join('');
-
-      // Render Filter Buttons
-      const pendingItems = mainItems.filter(x => !x.sheetCause || !x.sheetCause.trim());
-      const doneItems = mainItems.filter(x => x.sheetCause && x.sheetCause.trim());
-
-      document.getElementById('btnFilterPending').className =
-        `px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
-          filterMode === 'pending'
-            ? 'bg-rose-600 text-white border-rose-500 shadow'
-            : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
-        }`;
-      document.getElementById('btnFilterPending').textContent = `🔴 เฉพาะที่ "ยังไม่ได้ลงสาเหตุ" (${pendingItems.length})`;
-
-      document.getElementById('btnFilterAll').className =
-        `px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
-          filterMode === 'all'
-            ? 'bg-sky-600 text-white border-sky-500 shadow'
-            : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
-        }`;
-      document.getElementById('btnFilterAll').textContent = `📋 แสดงทั้งหมดของ ปณก. (${mainItems.length})`;
-
-      document.getElementById('sheetOverviewTitle').textContent =
-        `สรุปรายการของ "10501 ปณก." ในแท็บวันที่ ${currentSheetTab} (ทั้งหมด ${mainItems.length} รายการ)`;
-      document.getElementById('badgePendingCount').textContent = `🔴 ยังไม่ลงสาเหตุ: ${pendingItems.length} รายการ`;
-      document.getElementById('badgeDoneCount').textContent = `🟢 ลงสาเหตุแล้ว: ${doneItems.length} รายการ`;
-
-      const tbody = document.getElementById('sheetOverviewBody');
-      if (mainItems.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="px-4 py-6 text-center text-slate-400">
-              ไม่พบรายการของ 10501 ปณก. ในแท็บ "${currentSheetTab}"
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      tbody.innerHTML = mainItems.map(item => {
-        const hasCause = item.sheetCause && item.sheetCause.trim().length > 0;
-        const causeBadge = hasCause
-          ? `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold">🟢 ลงสาเหตุแล้ว: ${item.sheetCause}</span>`
-          : `<span class="px-2.5 py-1 rounded bg-rose-500/25 text-rose-300 border border-rose-500/50 font-bold">🔴 ยังไม่ได้ลงสาเหตุ (ต้องหาที่มา!)</span>`;
-
-        return `
-          <tr class="border-t border-slate-800/80 ${hasCause ? 'opacity-70 bg-slate-950' : 'bg-rose-950/15 font-medium'}">
-            <td class="px-3 py-2.5 font-mono font-bold text-white">แถวที่ ${item.sheetRow}</td>
-            <td class="px-3 py-2.5">${item.date}</td>
-            <td class="px-3 py-2.5">${item.service}</td>
-            <td class="px-3 py-2.5 font-mono text-sm font-bold text-red-400">${item.barcode}</td>
-            <td class="px-3 py-2.5">${item.scanTime}</td>
-            <td class="px-3 py-2.5 font-mono">${item.operator}</td>
-            <td class="px-3 py-2.5">${causeBadge}</td>
-            <td class="px-3 py-2.5 whitespace-nowrap">
-              <div class="flex items-center gap-1.5">
-                <button onclick="scrollToItemCard('${item.id}')" class="px-2.5 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold">
-                  👇 ไปที่ตาราง ±3 เลข
-                </button>
-                <button onclick="openQrModalForGroup('${item.id}', 0)" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold">
-                  📱 ยิง QR ชุดนี้
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
     function renderAll() {
-      renderStep1Overview();
+      const summaryGrid = document.getElementById('dateSummaryGrid');
+      const groupsContainer = document.getElementById('dateGroupsContainer');
+      summaryGrid.innerHTML = '';
+      groupsContainer.innerHTML = '';
 
-      const container = document.getElementById('itemsContainer');
-      container.innerHTML = '';
+      tabsToScan.forEach(tabName => {
+        const grp = sheetGroupsStore[tabName];
+        if (!grp) return;
 
-      const filtered = getFilteredItems();
+        const allItems = grp.items || [];
+        const pendingItems = allItems.filter(x => !x.sheetCause || !x.sheetCause.trim());
+        const doneItems = allItems.filter(x => x.sheetCause && x.sheetCause.trim());
+        const isAllDone = pendingItems.length === 0 && allItems.length > 0;
 
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl p-8 text-center space-y-3">
-            <div class="text-lg font-bold text-emerald-400">🎉 รายการของ ปณก. ในแท็บ "${currentSheetTab}" ลงสาเหตุครบหมดแล้ว!</div>
-            <p class="text-xs text-slate-400">หากต้องการดูรายการที่ลงสาเหตุไปแล้ว สามารถกดปุ่มด้านล่างนี้ได้เลยครับ</p>
-            <button onclick="setFilterMode('all')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold">
-              📋 แสดงรายการทั้งหมดของ ปณก. ในแท็บนี้ (${mainItems.length} รายการ)
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      filtered.forEach(item => {
-        const hasSheetCause = item.sheetCause && item.sheetCause.trim().length > 0;
-        const card = document.createElement('div');
-        card.id = `card-${item.id}`;
-        card.className = `bg-slate-900 border-2 ${hasSheetCause ? 'border-slate-800' : 'border-rose-500/40'} rounded-2xl overflow-hidden shadow-sm`;
-
-        const groupReceipts = new Set();
-        let hasApiIps = false;
-        let qrStripCardsHtml = '';
-        let rowsHtml = '';
-
-        for (let off = -neighborRange; off <= neighborRange; off++) {
-          const code = generateOffsetBarcode(item.barcode, off);
-          if (!code) continue;
-          const isCenter = off === 0;
-          const st = getTrackState(code, isCenter);
-          const cfg = statusConfig[st.status] || statusConfig.unchecked;
-
-          const rcpt = (st.receiptNo || '').trim();
-          const isNumericReceipt = /^\d{10,16}$/.test(rcpt);
-          if (isNumericReceipt) groupReceipts.add(rcpt);
-          if (rcpt.includes('API/IPS')) hasApiIps = true;
-
-          const offsetBadge = isCenter
-            ? `<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white">เลขหลัก (0)</span>`
-            : off < 0
-              ? `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">ก่อนหน้า ${off}</span>`
-              : `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">ถัดไป +${off}</span>`;
-
-          const stripLabel = isCenter ? 'เลขหลัก (0)' : off < 0 ? `ก่อนหน้า ${off}` : `ถัดไป +${off}`;
-          const stripBadgeCls = isCenter
-            ? 'bg-red-600 text-white'
-            : off < 0
-              ? 'bg-amber-500 text-black'
-              : 'bg-sky-500 text-black';
-
-          qrStripCardsHtml += `
-            <div
-              onclick="openQrModalForGroup('${item.id}', ${off})"
-              class="cursor-pointer rounded-xl p-2.5 flex flex-col items-center transition border-2 ${
-                isCenter
-                  ? 'bg-red-950/30 border-red-500'
-                  : st.status === 'relevant'
-                    ? 'bg-amber-950/20 border-amber-500/60 hover:border-amber-400'
-                    : 'bg-slate-950 border-slate-800 hover:border-emerald-400'
-              }"
-              title="คลิกเพื่อขยายใหญ่เต็มจอสำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า"
-            >
-              <div class="flex items-center justify-between w-full mb-1.5">
-                <span class="px-1.5 py-0.5 rounded text-xs font-bold ${stripBadgeCls}">${stripLabel}</span>
-                <span class="text-xs">${st.status === 'relevant' ? '⭐' : st.status === 'found' ? '✅' : st.status === 'not_found' ? '❌' : ''}</span>
+        // 1. Render Top Date Summary Card
+        const summaryCard = document.createElement('div');
+        if (isAllDone) {
+          summaryCard.className = 'bg-slate-950 border border-emerald-500/30 rounded-xl p-4 flex flex-col justify-between gap-2 opacity-80';
+          summaryCard.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  📅 วันที่ ${grp.reportDate} (แท็บ ${tabName})
+                </span>
+                <span class="text-xs font-bold text-emerald-400">✓ บันทึกเหตุผลครบแล้ว</span>
               </div>
-              <div class="bg-white p-1.5 rounded-lg shadow">
-                ${createQrSvg(code, 3, 1)}
+              <div class="text-xs text-slate-400 mt-2">
+                พบรายการ ปณก. <b>${allItems.length} รายการ</b> • บันทึกเหตุผลในช่องสาเหตุครบทั้งหมดแล้ว (<b>ข้ามไม่ต้องสกัดเลข</b>)
               </div>
-              <div class="font-mono text-xs font-bold text-white mt-1.5 tracking-tight">
-                ${code.slice(0,8)}<span class="text-emerald-400 underline">${code.slice(8,10)}</span><span class="text-amber-300">${code.slice(10,11)}</span>${code.slice(11)}
+              <div class="mt-2 space-y-1">
+                ${doneItems.map(d => `
+                  <div class="text-xs text-slate-400 truncate">
+                    • แถว ${d.sheetRow} (<span class="font-mono text-slate-300">${d.barcode}</span>): <span class="text-emerald-300">${d.sheetCause}</span>
+                  </div>
+                `).join('')}
               </div>
             </div>
-          `;
-
-          const prefix = code.slice(0, 2);
-          const body6 = code.slice(2, 8);
-          const last2Serial = code.slice(8, 10);
-          const checkChar = code.slice(10, 11);
-          const suffix = code.slice(11, 13);
-
-          const receiptCellHtml = isNumericReceipt
-            ? `
-              <button
-                onclick="checkReceiptInCaPos('${rcpt}')"
-                class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition flex items-center gap-1"
-              >
-                <span>🧾 ${rcpt}</span>
-                <span class="text-xs bg-indigo-800 px-1 rounded">เช็คบริษัท ↗</span>
+            <div class="pt-2 border-t border-slate-800/80 flex justify-end">
+              <button onclick="toggleCompletedDayView('${tabName}')" class="text-xs text-slate-400 hover:text-white underline">
+                ${manuallyExpandedCompletedTabs[tabName] ? 'ซ่อนตารางของวันนี้ ▲' : 'กดดูย้อนหลัง ▼'}
               </button>
-            `
-            : rcpt
-              ? `<span class="px-2 py-1 rounded text-xs bg-purple-500/15 text-purple-300 border border-purple-500/30">${rcpt}</span>`
-              : `<input
-                   type="text"
-                   placeholder="วางเลขใบเสร็จ..."
-                   value=""
-                   onchange="updateReceiptNo('${code}', this.value); renderAll();"
-                   class="w-32 px-2 py-1 rounded border border-slate-800 bg-slate-950 text-slate-300 text-xs font-mono"
-                 />`;
+            </div>
+          `;
+        } else {
+          summaryCard.className = 'bg-rose-950/20 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col justify-between gap-2 shadow-sm';
+          summaryCard.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-rose-600 text-white">
+                  📅 วันที่ ${grp.reportDate} (แท็บ ${tabName})
+                </span>
+                <span class="text-xs font-bold text-rose-300 animate-pulse">🔴 รอหาสาเหตุ ${pendingItems.length} รายการ!</span>
+              </div>
+              <div class="text-xs text-slate-300 mt-2">
+                พบรายการของ ปณก. ที่<b>ยังไม่ได้บันทึกเหตุผล ${pendingItems.length} รายการ</b> (สกัดเลข ±3 ไว้ให้ด้านล่างแล้ว)
+              </div>
+              <div class="mt-2 space-y-1">
+                ${pendingItems.map(p => `
+                  <div class="text-xs text-rose-200 font-medium">
+                    • แถว ${p.sheetRow}: <span class="font-mono font-bold text-white">${p.barcode}</span> (สแกน ${p.scanTime} โดย ${p.operator})
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="pt-2 border-t border-rose-500/20 flex items-center justify-between gap-2">
+              <button onclick="copyDateGroupNumbers('${tabName}', true)" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow">
+                📋 คัดลอกทั้งกลุ่มวันนี้ (${pendingItems.length * (neighborRange * 2 + 1)} เลข) ไปวาง QMS
+              </button>
+            </div>
+          `;
+        }
+        summaryGrid.appendChild(summaryCard);
 
-          rowsHtml += `
-            <tr class="border-t border-slate-800 transition ${isCenter ? 'bg-red-500/10 font-semibold' : cfg.rowClass}">
-              <td class="px-3 py-2.5 whitespace-nowrap">${offsetBadge}</td>
-              <td class="px-3 py-2.5 whitespace-nowrap font-mono text-sm">
-                <span class="text-slate-400">${prefix}${body6}</span><span class="font-bold text-white underline decoration-dotted">${last2Serial}</span><span class="text-xs px-1 rounded bg-slate-800 text-amber-300" title="หลัก Check Digit (S10)">${checkChar}</span><span class="text-slate-400">${suffix}</span>
-              </td>
-              <td class="px-3 py-2.5 whitespace-nowrap">
+        // 2. Skip extracting ±3 cards if all items in this Date Group already have causes recorded (unless user clicked "กดดูย้อนหลัง")
+        const itemsToExtract = isAllDone
+          ? (manuallyExpandedCompletedTabs[tabName] ? allItems : [])
+          : pendingItems;
+
+        if (itemsToExtract.length === 0) return;
+
+        // Render Date Group Section Header + Extracted Cards
+        const groupSection = document.createElement('div');
+        groupSection.className = 'bg-slate-900/60 border-2 border-slate-800 rounded-2xl p-4 md:p-5 space-y-5';
+
+        groupSection.innerHTML = `
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="px-3 py-1 rounded-xl text-sm font-black ${isAllDone ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                📂 กลุ่มรายงานวันที่ ${grp.reportDate} (แท็บ ${tabName})
+              </span>
+              <span class="text-sm font-bold text-white">
+                ${isAllDone ? `รายการย้อนหลังที่ลงเหตุผลแล้ว (${itemsToExtract.length} รายการ)` : `รายการที่ยังไม่ได้ลงสาเหตุ (${itemsToExtract.length} รายการ ➔ สกัดเป็น ${itemsToExtract.length * (neighborRange * 2 + 1)} หมายเลข)`}
+              </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="copyDateGroupNumbers('${tabName}', true)" class="px-4 py-2 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white shadow transition flex items-center gap-1.5">
+                <span>📋 คัดลอกเลขทั้งกลุ่มวันที่ ${grp.reportDate} (${itemsToExtract.length * (neighborRange * 2 + 1)} เลข) + เปิด QMS</span>
+              </button>
+            </div>
+          </div>
+          <div class="space-y-6" id="group-cards-${tabName.replace(/\W/g, '_')}"></div>
+        `;
+
+        groupsContainer.appendChild(groupSection);
+        const cardsHolder = groupSection.querySelector(`#group-cards-${tabName.replace(/\W/g, '_')}`);
+
+        itemsToExtract.forEach((item, idxInGroup) => {
+          const card = document.createElement('div');
+          card.id = `card-${item.id}`;
+          card.className = 'bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-md';
+
+          const groupReceipts = new Set();
+          let qrStripCardsHtml = '';
+          let rowsHtml = '';
+
+          for (let off = -neighborRange; off <= neighborRange; off++) {
+            const code = generateOffsetBarcode(item.barcode, off);
+            if (!code) continue;
+            const isCenter = off === 0;
+            const st = getTrackState(code, isCenter);
+            const cfg = statusConfig[st.status] || statusConfig.unchecked;
+
+            const rcpt = (st.receiptNo || '').trim();
+            const isNumericReceipt = /^\d{10,16}$/.test(rcpt);
+            if (isNumericReceipt) groupReceipts.add(rcpt);
+
+            const offsetBadge = isCenter
+              ? `<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white">เลขหลัก (0)</span>`
+              : off < 0
+                ? `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">ก่อนหน้า ${off}</span>`
+                : `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">ถัดไป +${off}</span>`;
+
+            const stripLabel = isCenter ? 'เลขหลัก (0)' : off < 0 ? `ก่อนหน้า ${off}` : `ถัดไป +${off}`;
+            const stripBadgeCls = isCenter
+              ? 'bg-red-600 text-white'
+              : off < 0
+                ? 'bg-amber-500 text-black'
+                : 'bg-sky-500 text-black';
+
+            qrStripCardsHtml += `
+              <div
+                onclick="openQrModalForGroup('${item.id}', ${off})"
+                class="cursor-pointer rounded-xl p-2.5 flex flex-col items-center transition border-2 ${
+                  isCenter
+                    ? 'bg-red-950/30 border-red-500'
+                    : st.status === 'relevant'
+                      ? 'bg-amber-950/20 border-amber-500/60 hover:border-amber-400'
+                      : 'bg-slate-950 border-slate-800 hover:border-emerald-400'
+                }"
+                title="คลิกเพื่อขยายใหญ่เต็มจอสำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า"
+              >
+                <div class="flex items-center justify-between w-full mb-1.5">
+                  <span class="px-1.5 py-0.5 rounded text-xs font-bold ${stripBadgeCls}">${stripLabel}</span>
+                  <span class="text-xs">${st.status === 'relevant' ? '⭐' : st.status === 'found' ? '✅' : st.status === 'not_found' ? '❌' : ''}</span>
+                </div>
+                <div class="bg-white p-1.5 rounded-lg shadow">
+                  ${createQrSvg(code, 3, 1)}
+                </div>
+                <div class="font-mono text-xs font-bold text-white mt-1.5 tracking-tight">
+                  ${code.slice(0,8)}<span class="text-emerald-400 underline">${code.slice(8,10)}</span><span class="text-amber-300">${code.slice(10,11)}</span>${code.slice(11)}
+                </div>
+              </div>
+            `;
+
+            const prefix = code.slice(0, 2);
+            const body6 = code.slice(2, 8);
+            const last2Serial = code.slice(8, 10);
+            const checkChar = code.slice(10, 11);
+            const suffix = code.slice(11, 13);
+
+            const receiptCellHtml = isNumericReceipt
+              ? `
                 <button
-                  onclick="openQrModalForGroup('${item.id}', ${off})"
-                  class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center gap-1"
+                  onclick="checkReceiptInCaPos('${rcpt}')"
+                  class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition flex items-center gap-1"
                 >
-                  <span>📱 ยิง QR</span>
+                  <span>🧾 ${rcpt}</span>
+                  <span class="text-xs bg-indigo-800 px-1 rounded">เช็คบริษัท ↗</span>
                 </button>
-              </td>
-              <td class="px-3 py-2.5 whitespace-nowrap">
-                ${receiptCellHtml}
-              </td>
-              <td class="px-3 py-2.5 whitespace-nowrap">
-                <div class="flex items-center gap-1">
-                  <button onclick="cycleStatus('${code}')" class="px-2.5 py-1 rounded text-xs border transition ${cfg.badgeClass}">
-                    ${cfg.label}
+              `
+              : rcpt
+                ? `<span class="px-2 py-1 rounded text-xs bg-purple-500/15 text-purple-300 border border-purple-500/30">${rcpt}</span>`
+                : `<input
+                     type="text"
+                     placeholder="วางเลขใบเสร็จ..."
+                     value=""
+                     onchange="updateReceiptNo('${code}', this.value); renderAll();"
+                     class="w-32 px-2 py-1 rounded border border-slate-800 bg-slate-950 text-slate-300 text-xs font-mono"
+                   />`;
+
+            rowsHtml += `
+              <tr class="border-t border-slate-800 transition ${isCenter ? 'bg-red-500/10 font-semibold' : cfg.rowClass}">
+                <td class="px-3 py-2.5 whitespace-nowrap">${offsetBadge}</td>
+                <td class="px-3 py-2.5 whitespace-nowrap font-mono text-sm">
+                  <span class="text-slate-400">${prefix}${body6}</span><span class="font-bold text-white underline decoration-dotted">${last2Serial}</span><span class="text-xs px-1 rounded bg-slate-800 text-amber-300" title="หลัก Check Digit (S10)">${checkChar}</span><span class="text-slate-400">${suffix}</span>
+                </td>
+                <td class="px-3 py-2.5 whitespace-nowrap">
+                  <button
+                    onclick="openQrModalForGroup('${item.id}', ${off})"
+                    class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center gap-1"
+                  >
+                    <span>📱 ยิง QR</span>
                   </button>
-                  <button onclick="trackSingleOnWeb('${code}')" class="px-2 py-1 rounded text-xs bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700" title="คัดลอกเลขพัสดุ">
-                    📋
+                </td>
+                <td class="px-3 py-2.5 whitespace-nowrap">
+                  ${receiptCellHtml}
+                </td>
+                <td class="px-3 py-2.5 whitespace-nowrap">
+                  <div class="flex items-center gap-1">
+                    <button onclick="cycleStatus('${code}')" class="px-2.5 py-1 rounded text-xs border transition ${cfg.badgeClass}">
+                      ${cfg.label}
+                    </button>
+                    <button onclick="trackSingleOnWeb('${code}')" class="px-2 py-1 rounded text-xs bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700" title="คัดลอกเลขพัสดุ">
+                      📋
+                    </button>
+                  </div>
+                </td>
+                <td class="px-3 py-2.5 w-full min-w-[280px]">
+                  <input
+                    type="text"
+                    value="${(st.note || '').replace(/"/g, '&quot;')}"
+                    oninput="updateNote('${code}', this.value)"
+                    placeholder="จดสิ่งที่พบ เช่น รับฝากที่ไหน / งานบริษัทอะไร..."
+                    class="w-full px-2.5 py-1 rounded border border-slate-700 bg-slate-950 text-white text-xs focus:outline-none focus:ring-1 focus:ring-red-500"
+                  />
+                </td>
+              </tr>
+            `;
+          }
+
+          let receiptSummaryHtml = '';
+          if (groupReceipts.size > 0) {
+            const btns = Array.from(groupReceipts).map(r => `
+              <button
+                onclick="checkReceiptInCaPos('${r}')"
+                class="px-3 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition flex items-center gap-1.5"
+              >
+                <span>🧾 ใบเสร็จ ${r} (คลิกคัดลอก + เปิด CA POS เช็คชื่อบริษัท)</span>
+              </button>
+            `).join('');
+            receiptSummaryHtml = `
+              <div class="px-4 py-2.5 bg-indigo-950/50 border-b border-indigo-500/30 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-xs font-bold text-indigo-300">🔑 เลขใบเสร็จรับเงินของกลุ่มนี้:</span>
+                  ${btns}
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-indigo-200">🏢 ชื่อบริษัท/ลูกค้าที่พบ:</span>
+                  <input
+                    type="text"
+                    placeholder="พิมพ์ชื่อบริษัท..."
+                    value="${(item.companyName || '').replace(/"/g, '&quot;')}"
+                    oninput="applyCompanyToCause('${item.id}', this.value)"
+                    class="px-2.5 py-1 rounded border border-indigo-500/40 bg-slate-950 text-white text-xs w-56"
+                  />
+                </div>
+              </div>
+            `;
+          }
+
+          const qrStripSection = item.showQrStrip
+            ? `
+              <div class="p-4 bg-slate-950/80 border-b border-slate-800 space-y-2.5">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-xs font-bold text-emerald-400">
+                    📱 แผง QR Code สำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า (ก่อนหน้า -${neighborRange} ➔ เลขหลัก ➔ ถัดไป +${neighborRange}):
+                  </span>
+                  <button onclick="openQrModalForGroup('${item.id}', -${neighborRange})" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow">
+                    🔍 เปิดโหมดสไลด์ QR ใหญ่เต็มจอ (กดลูกศรซ้าย-ขวาเลื่อนยิงทีละเลข)
                   </button>
                 </div>
-              </td>
-              <td class="px-3 py-2.5 w-full min-w-[280px]">
-                <input
-                  type="text"
-                  value="${(st.note || '').replace(/"/g, '&quot;')}"
-                  oninput="updateNote('${code}', this.value)"
-                  placeholder="จดสิ่งที่พบ เช่น รับฝากที่ไหน / งานบริษัทอะไร..."
-                  class="w-full px-2.5 py-1 rounded border border-slate-700 bg-slate-950 text-white text-xs focus:outline-none focus:ring-1 focus:ring-red-500"
-                />
-              </td>
-            </tr>
-          `;
-        }
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
+                  ${qrStripCardsHtml}
+                </div>
+              </div>
+            `
+            : '';
 
-        let receiptSummaryHtml = '';
-        if (groupReceipts.size > 0) {
-          const btns = Array.from(groupReceipts).map(r => `
+          const quickCauseBtns = QUICK_CAUSES.map(c => `
             <button
-              onclick="checkReceiptInCaPos('${r}')"
-              class="px-3 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition flex items-center gap-1.5"
+              onclick="setQuickCause('${item.id}', '${c}')"
+              class="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 border border-slate-700 transition"
             >
-              <span>🧾 ใบเสร็จ ${r} (คลิกคัดลอก + เปิด CA POS เช็คชื่อบริษัท)</span>
+              + ${c}
             </button>
           `).join('');
-          receiptSummaryHtml = `
-            <div class="px-4 py-2.5 bg-indigo-950/50 border-b border-indigo-500/30 flex flex-wrap items-center justify-between gap-2">
+
+          card.innerHTML = `
+            <div class="p-4 bg-slate-800/60 border-b border-slate-700 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
               <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-bold text-indigo-300">🔑 เลขใบเสร็จรับเงินของกลุ่มนี้:</span>
-                ${btns}
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-xs text-indigo-200">🏢 ชื่อบริษัท/ลูกค้าที่พบ:</span>
-                <input
-                  type="text"
-                  placeholder="พิมพ์ชื่อบริษัท เช่น บ.ช้อปปี้ / หน่วยงาน..."
-                  value="${(item.companyName || '').replace(/"/g, '&quot;')}"
-                  oninput="applyCompanyToCause('${item.id}', this.value)"
-                  class="px-2.5 py-1 rounded border border-indigo-500/40 bg-slate-950 text-white text-xs w-56"
-                />
-              </div>
-            </div>
-          `;
-        }
-
-        const qrStripSection = item.showQrStrip
-          ? `
-            <div class="p-4 bg-slate-950/80 border-b border-slate-800 space-y-2.5">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="text-xs font-bold text-emerald-400">
-                  📱 แผง QR Code สำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า (เรียงจาก ก่อนหน้า -${neighborRange} ➔ เลขหลัก ➔ ถัดไป +${neighborRange}):
+                <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-sky-500 text-black">
+                  วันที่ ${item.date} (แท็บ ${item.sheetTab}) • รายการที่ ${idxInGroup + 1}/${itemsToExtract.length}
                 </span>
-                <button onclick="openQrModalForGroup('${item.id}', -${neighborRange})" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow">
-                  🔍 เปิดโหมดสไลด์ QR ใหญ่เต็มจอ (กดลูกศรซ้าย-ขวาเลื่อนยิงทีละเลข)
-                </button>
-              </div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
-                ${qrStripCardsHtml}
-              </div>
-            </div>
-          `
-          : '';
-
-        const statusPill = hasSheetCause
-          ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🟢 ลงสาเหตุในชีตแล้ว</span>`
-          : `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500 text-white animate-pulse">🔴 ยังไม่ได้ลงสาเหตุในชีต!</span>`;
-
-        const quickCauseBtns = QUICK_CAUSES.map(c => `
-          <button
-            onclick="setQuickCause('${item.id}', '${c}')"
-            class="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 border border-slate-700 transition"
-          >
-            + ${c}
-          </button>
-        `).join('');
-
-        card.innerHTML = `
-          <div class="p-4 bg-slate-800/50 border-b border-slate-800 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-            <div class="space-y-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-white text-slate-900">
-                  แท็บ ${item.sheetTab} • แถวที่ ${item.sheetRow}
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900">
+                  แถวในชีต: ${item.sheetRow}
                 </span>
-                <span class="font-mono text-base font-bold text-red-400">${item.barcode}</span>
-                ${statusPill}
+                <span class="font-mono text-lg font-black text-red-400">${item.barcode}</span>
                 <span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">
                   บริการ: <b>${item.service}</b>
                 </span>
                 <span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">
-                  เวลาสแกน: <b>${item.scanTime}</b>
+                  เวลาสแกนลงถุง: <b>${item.scanTime}</b>
                 </span>
                 <span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">
                   ผู้ดำเนินการ: <b>${item.operator}</b>
                 </span>
               </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="toggleCardQrStrip('${item.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition">
+                  📱 ${item.showQrStrip ? 'ซ่อนแผง QR Code' : 'แสดงแผง QR Code'}
+                </button>
+                <button onclick="copyGroupNumbers('${item.id}', 'qms_web')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-500 text-white transition">
+                  📋 คัดลอกชุดนี้ (7 เลข) + เปิด QMS
+                </button>
+              </div>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="toggleCardQrStrip('${item.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition">
-                📱 ${item.showQrStrip ? 'ซ่อนแผง QR Code' : 'แสดงแผง QR Code ทั้งชุด'}
-              </button>
-              <button onclick="copyGroupNumbers('${item.id}', 'qms_web')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-500 text-white transition">
-                📋 คัดลอกชุดนี้ (${neighborRange * 2 + 1} เลข) + เปิด QMS
-              </button>
+            ${receiptSummaryHtml}
+            ${qrStripSection}
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="text-xs text-slate-400 bg-slate-950/60">
+                    <th class="px-3 py-2">ลำดับ</th>
+                    <th class="px-3 py-2">หมายเลขสิ่งของ (S10)</th>
+                    <th class="px-3 py-2 text-emerald-400">📱 QR Code</th>
+                    <th class="px-3 py-2 text-indigo-300">🧾 เลขที่ใบเสร็จรับเงิน (CA POS)</th>
+                    <th class="px-3 py-2">สถานะการเช็ค</th>
+                    <th class="px-3 py-2">ข้อมูลที่พบ / จุดสังเกตความเกี่ยวข้อง</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
             </div>
-          </div>
 
-          ${receiptSummaryHtml}
-          ${qrStripSection}
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="text-xs text-slate-400 bg-slate-950/60">
-                  <th class="px-3 py-2">ลำดับ</th>
-                  <th class="px-3 py-2">หมายเลขสิ่งของ (S10)</th>
-                  <th class="px-3 py-2 text-emerald-400">📱 QR Code</th>
-                  <th class="px-3 py-2 text-indigo-300">🧾 เลขที่ใบเสร็จรับเงิน (CA POS)</th>
-                  <th class="px-3 py-2">สถานะการเช็ค</th>
-                  <th class="px-3 py-2">ข้อมูลที่พบ / จุดสังเกตความเกี่ยวข้อง</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rowsHtml}
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Step 3 Cause Conclusion Footer with Quick Templates -->
-          <div class="p-4 bg-emerald-950/30 border-t border-emerald-500/30 space-y-2.5">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-xs font-bold text-emerald-300 mr-1">⚡ คลิกเลือกสาเหตุที่ใช้บ่อย:</span>
-              ${quickCauseBtns}
+            <div class="p-4 bg-emerald-950/30 border-t border-emerald-500/30 space-y-2.5">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-xs font-bold text-emerald-300 mr-1">⚡ คลิกเลือกสาเหตุที่ใช้บ่อย:</span>
+                ${quickCauseBtns}
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span class="text-xs font-bold text-emerald-300 whitespace-nowrap">📝 สาเหตุสำหรับวางในแท็บ ${item.sheetTab} แถว ${item.sheetRow} (คอลัมน์ K):</span>
+                <input
+                  id="cause-input-${item.id}"
+                  type="text"
+                  value="${(item.causeNote || '').replace(/"/g, '&quot;')}"
+                  oninput="updateMainCause('${item.id}', this.value)"
+                  placeholder="คลิกปุ่มด้านบน หรือพิมพ์สาเหตุที่นี่..."
+                  class="flex-1 px-3 py-2 rounded-lg border border-emerald-500/40 bg-slate-950 text-emerald-200 text-xs font-medium"
+                />
+                <button onclick="copyTextToClipboard(document.getElementById('cause-input-${item.id}').value, 'คัดลอกสาเหตุแล้ว! นำไปวางที่แท็บ ${item.sheetTab} แถว ${item.sheetRow} คอลัมน์ K ได้เลย')" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white whitespace-nowrap shadow">
+                  📋 คัดลอกสาเหตุ (แถว ${item.sheetRow})
+                </button>
+              </div>
             </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-              <span class="text-xs font-bold text-emerald-300 whitespace-nowrap">📝 สาเหตุสำหรับวางในชีต (แถวที่ ${item.sheetRow} คอลัมน์ K):</span>
-              <input
-                id="cause-input-${item.id}"
-                type="text"
-                value="${(item.causeNote || '').replace(/"/g, '&quot;')}"
-                oninput="updateMainCause('${item.id}', this.value)"
-                placeholder="คลิกปุ่มด้านบน หรือพิมพ์สาเหตุที่นี่..."
-                class="flex-1 px-3 py-2 rounded-lg border border-emerald-500/40 bg-slate-950 text-emerald-200 text-xs font-medium"
-              />
-              <button onclick="copyTextToClipboard(document.getElementById('cause-input-${item.id}').value, 'คัดลอกสาเหตุแล้ว! นำไปวางที่แถว ${item.sheetRow} คอลัมน์ K ใน Google Sheets ได้เลย')" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white whitespace-nowrap shadow">
-                📋 คัดลอกสาเหตุ (แถว ${item.sheetRow})
-              </button>
-            </div>
-          </div>
-        `;
+          `;
 
-        container.appendChild(card);
+          cardsHolder.appendChild(card);
+        });
       });
     }
 
-    // Initialize by loading the latest tab '1.11.69' live from Google Sheets!
-    loadSheetTab('1.11.69');
+    renderAll();
+    scanAllSheets();
   </script>
 </body>
 </html>
