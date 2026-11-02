@@ -457,10 +457,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         <div class="qr-box-white" id="nmQrCanvas"></div>
         <div class="qr-nav-grid">
           <button class="btn btn-sm" onclick="stepActiveQr(-1)">⬅️ ก่อนหน้า</button>
-          <button class="btn btn-primary btn-sm" onclick="copyText(currentModalQrCode)">📋 คัดลอกเลขนี้</button>
+          <button class="btn btn-primary btn-sm" onclick="trackSingleBarcode(currentModalQrCode)">🌐 Track เลขนี้</button>
           <button class="btn btn-sm" onclick="stepActiveQr(1)">ถัดไป ➡️</button>
         </div>
-        <button class="btn btn-sm" id="nmCopy7Btn" style="width:100%; margin-top:6px;">📋 คัดลอกทั้ง 7 เลขไปค้น QMS</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
+          <button class="btn btn-sm" id="nmCopy7QmsBtn">📋 7 เลข + เปิด QMS</button>
+          <button class="btn btn-sm" id="nmCopy7TrackBtn">🌐 7 เลข + เปิด Track</button>
+        </div>
       </div>
 
       <!-- Mobile-friendly Neighbor Cards -->
@@ -755,7 +758,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               </div>
             </div>
             <div class="date-actions">
-              <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}')">📋 คัดลอกเลขค้น QMS</button>
+              <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">📋 คัดลอกเลข + เปิด Track</button>
               <button class="btn btn-primary btn-sm marquee-btn" onclick="copyCausesAndOpenSheet('${tabKey}')" title="คัดลอกสาเหตุไปวางช่อง K${minR}">
                 <span class="marquee-wrap">
                   <span class="marquee-track">คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp; คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
@@ -787,8 +790,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       </span>
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
-                    <div style="display:flex; gap:6px;">
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
                       <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็ค ±3 / QR</button>
+                      <button class="btn btn-sm" onclick="copy7AndOpenTrack('${c.barcode}')">🌐 Track 7 เลข</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
                   </div>
@@ -867,7 +871,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       showToast(`ปิดงานวันที่ ${tabKey} เรียบร้อย`);
     }
 
-    function copyDateNeighbors(tabKey) {
+    function copyDateNeighbors(tabKey, openWeb = true) {
       const set = new Set();
       Object.values(state.casesByBarcode).forEach(c => {
         if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
@@ -876,6 +880,24 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       });
       const list = Array.from(set);
       copyText(list.join('\n'), `คัดลอกเลขค้นหา ${list.length} หมายเลขแล้ว`);
+      if (openWeb) {
+        window.open('https://track.thailandpost.co.th/', '_blank', 'noopener');
+      }
+    }
+
+    function copy7AndOpenTrack(barcode, useQms = false) {
+      const list = getNeighbors(barcode).map(n => n.code);
+      copyText(list.join('\n'), `คัดลอกทั้ง 7 เลขของ ${barcode} แล้ว`);
+      const targetUrl = useQms
+        ? 'https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx'
+        : 'https://track.thailandpost.co.th/';
+      window.open(targetUrl, '_blank', 'noopener');
+    }
+
+    function trackSingleBarcode(code) {
+      if (!code) return;
+      copyText(code, `คัดลอก ${code} + เปิดหน้า Track แล้ว`);
+      window.open(`https://track.thailandpost.co.th/?trackNumber=${encodeURIComponent(code)}`, '_blank', 'noopener');
     }
 
     function copyCausesAndOpenSheet(tabKey) {
@@ -911,7 +933,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       document.getElementById('nmTitle').textContent = barcode;
       document.getElementById('nmSub').textContent = c ? `แท็บ ${c.tabName} • แถวที่ ${c.rowNum} • สแกนลงถุง ${c.bagTime} (${c.operator})` : '';
-      document.getElementById('nmCopy7Btn').onclick = () => copyText(activeModalNeighbors.map(n => n.code).join('\n'), 'คัดลอกทั้ง 7 เลขแล้ว');
+      document.getElementById('nmCopy7QmsBtn').onclick = () => copy7AndOpenTrack(barcode, true);
+      document.getElementById('nmCopy7TrackBtn').onclick = () => copy7AndOpenTrack(barcode, false);
 
       renderNeighborModalList();
       selectQrIndex(activeQrIndex);
@@ -931,11 +954,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             <div class="n-item-top">
               <div style="display:flex; align-items:center; gap:8px;">
                 <span class="n-badge ${isMain ? 'main' : ''}">${roleLabel}</span>
-                <span class="barcode-box">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</span>
+                <span class="barcode-box" style="cursor:pointer;" onclick="trackSingleBarcode('${n.code}')" title="คลิกเพื่อไปหน้า Track">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</span>
               </div>
               <div style="display:flex; gap:5px;">
                 <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
-                <button class="btn btn-sm" onclick="copyText('${n.code}')">📋</button>
+                <button class="btn btn-sm" onclick="trackSingleBarcode('${n.code}')">🌐 Track</button>
               </div>
             </div>
             ${isMain
