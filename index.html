@@ -459,33 +459,25 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       <!-- Scannable QR Preview Box -->
       <div class="qr-center">
-        <div style="font-size:0.8rem; font-weight:700; color:var(--primary);" id="nmQrLabel">QR Code: เลขหลัก (0)</div>
-        <div style="font-family:var(--mono); font-size:1.3rem; font-weight:800; margin-top:2px; letter-spacing:0.5px;" id="nmQrCodeText">-</div>
-        <div class="qr-box-white" id="nmQrCanvas"></div>
-        <div class="qr-nav-grid">
-          <button class="btn btn-sm" onclick="stepActiveQr(-1)">⬅️ ก่อนหน้า</button>
-          <button class="btn btn-primary btn-sm" id="nmTrackSingleBtn" onclick="executeTrack([currentModalQrCode])">🌐 Track เลขนี้</button>
-          <button class="btn btn-sm" onclick="stepActiveQr(1)">ถัดไป ➡️</button>
+        <div style="font-size:0.78rem; font-weight:700; color:var(--primary);" id="nmQrLabel">QR Code: เลขหลัก (0)</div>
+        <div style="font-family:var(--mono); font-size:1.2rem; font-weight:800; margin-top:2px; letter-spacing:0.5px;" id="nmQrCodeText">-</div>
+        <div class="qr-box-white" id="nmQrCanvas" style="min-width:155px; min-height:155px; padding:8px; margin:6px auto;"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:4px;">
+          <button class="btn btn-sm" onclick="stepActiveQr(-1)">⬅️ QR ก่อนหน้า</button>
+          <button class="btn btn-sm" onclick="stepActiveQr(1)">QR ถัดไป ➡️</button>
         </div>
       </div>
 
-      <!-- Custom Selection Bar for the 7 Numbers -->
+      <!-- Clean & Simple Selection Bar -->
       <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
-          <span style="font-size:0.78rem; font-weight:700; color:#334155;">☑️ เลือกชุดหมายเลขที่จะ Track:</span>
-          <select id="modalTrackTargetSelect" class="select-clean" style="width:auto; padding:4px 8px; font-size:0.76rem; font-weight:600;" onchange="setTrackTarget(this.value)">
-            <option value="qms">🏢 ระบบ QMS (ละเอียดสุด)</option>
-            <option value="web">🌍 เว็บ Track ปณท.</option>
-          </select>
-        </div>
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:5px; margin-bottom:8px;">
+          <button class="btn btn-sm" onclick="selectNeighborPreset('none')">⬜ ล้าง</button>
           <button class="btn btn-sm" onclick="selectNeighborPreset('before')">⬅️ ก่อนหน้า</button>
           <button class="btn btn-sm" onclick="selectNeighborPreset('after')">➡️ ถัดไป</button>
-          <button class="btn btn-sm" onclick="selectNeighborPreset('both')">↔️ ±2</button>
-          <button class="btn btn-sm" onclick="selectNeighborPreset('all')">📋 ทั้ง 7 เลข</button>
+          <button class="btn btn-sm" onclick="selectNeighborPreset('all')">☑️ ทั้ง 7</button>
         </div>
-        <button class="btn btn-primary btn-sm" style="width:100%;" id="nmTrackSelectedBtn" onclick="handleTrackSelectedClick()">
-          🌐 Track ที่เลือก (<span id="nmSelectedCount">3</span> เลข)
+        <button class="btn btn-primary btn-sm" style="width:100%; padding:10px;" id="nmTrackSelectedBtn" onclick="handleTrackSelectedClick()">
+          🌐 Track ที่เลือก (<span id="nmSelectedCount">0</span> เลข)
         </button>
       </div>
 
@@ -619,13 +611,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function syncTrackTargetSelects() {
       const s1 = document.getElementById('trackTargetSelect');
-      const s2 = document.getElementById('modalTrackTargetSelect');
       if (s1) s1.value = state.trackTarget;
-      if (s2) s2.value = state.trackTarget;
-      const singleBtn = document.getElementById('nmTrackSingleBtn');
-      if (singleBtn) {
-        singleBtn.textContent = state.trackTarget === 'qms' ? '🏢 Track เลขนี้ (QMS)' : '🌍 Track เลขนี้ (เว็บ)';
-      }
     }
 
     function executeTrack(codesArray, customLabel) {
@@ -862,9 +848,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                      <button class="btn btn-sm" onclick="trackNeighborDirection('${c.barcode}', 'before')">⬅️ Track ก่อนหน้า</button>
-                      <button class="btn btn-sm" onclick="trackNeighborDirection('${c.barcode}', 'after')">➡️ Track ถัดไป</button>
-                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เลือกเลข / QR</button>
+                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็คเลข / QR</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
                   </div>
@@ -1003,12 +987,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       document.getElementById('nmTitle').textContent = barcode;
       document.getElementById('nmSub').textContent = c ? `แท็บ ${c.tabName} • แถวที่ ${c.rowNum} • สแกนลงถุง ${c.bagTime} (${c.operator})` : '';
 
-      // Default selection: all 7 for QMS, or preceding 3 (-3..-1) for public web track
-      if (state.trackTarget === 'qms') {
-        selectedModalCodes = new Set(activeModalNeighbors.map(n => n.code));
-      } else {
-        selectedModalCodes = new Set(activeModalNeighbors.filter(n => n.offset < 0).map(n => n.code));
-      }
+      // เริ่มต้นแบบว่าง (ไม่ติ๊กเลือกไว้ก่อน) เพื่อให้เลือกเองตามต้องการ
+      selectedModalCodes = new Set();
 
       syncTrackTargetSelects();
       renderNeighborModalList();
@@ -1047,7 +1027,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     function handleTrackSelectedClick() {
       const codes = activeModalNeighbors.filter(n => selectedModalCodes.has(n.code)).map(n => n.code);
       if (!codes.length) {
-        showToast('กรุณาติ๊กเลือกหมายเลขที่ต้องการ Track อย่างน้อย 1 เลขครับ');
+        showToast('กรุณาติ๊กเลือกหมายเลขด้านล่าง หรือกดปุ่มลัด ก่อนนะครับ');
         return;
       }
       executeTrack(codes);
@@ -1055,7 +1035,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function renderNeighborModalList() {
       const listEl = document.getElementById('nmListBody');
-      const trackBtnText = state.trackTarget === 'qms' ? '🏢 QMS' : '🌍 Track';
       listEl.innerHTML = activeModalNeighbors.map((n, idx) => {
         const isMain = n.offset === 0;
         const isSelectedQr = idx === activeQrIndex;
@@ -1066,15 +1045,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         return `
           <div class="n-item ${isMain ? 'n-main' : ''} ${isSelectedQr ? 'n-active-qr' : ''}" id="nItem_${idx}">
             <div class="n-item-top">
-              <label style="display:flex; align-items:center; gap:7px; cursor:pointer;">
+              <label style="display:flex; align-items:center; gap:7px; cursor:pointer; flex:1;">
                 <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);" ${isChecked ? 'checked' : ''} onchange="toggleNeighborCheck('${n.code}', this.checked)">
                 <span class="n-badge ${isMain ? 'main' : ''}">${roleLabel}</span>
                 <span class="barcode-box">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</span>
               </label>
-              <div style="display:flex; gap:5px;">
-                <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
-                <button class="btn btn-sm" onclick="executeTrack(['${n.code}'])">${trackBtnText}</button>
-              </div>
+              <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
             </div>
             ${isMain
               ? `<div style="color:var(--danger); font-size:0.78rem; font-weight:600; padding-left:25px;">❌ ชิ้นงานไม่มีสถานะรับฝาก</div>`
@@ -1093,10 +1069,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const role = item.offset === 0 ? 'เลขหลัก (0)' : (item.offset < 0 ? `ก่อนหน้า ${item.offset}` : `ถัดไป +${item.offset}`);
       document.getElementById('nmQrLabel').textContent = `QR Code: ${role}`;
       document.getElementById('nmQrCodeText').textContent = item.code;
-      syncTrackTargetSelects();
 
       const wrap = document.getElementById('nmQrCanvas');
-      renderQrSvgInto(wrap, item.code, 175);
+      renderQrSvgInto(wrap, item.code, 140);
       renderNeighborModalList();
     }
 
