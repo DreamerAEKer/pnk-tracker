@@ -879,18 +879,20 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         }
       });
       const list = Array.from(set);
-      copyText(list.join('\n'), `คัดลอกเลขค้นหา ${list.length} หมายเลขแล้ว`);
-      if (openWeb) {
-        window.open('https://track.thailandpost.co.th/', '_blank', 'noopener');
+      copyText(list.join(','), `คัดลอกเลขค้นหา ${list.length} หมายเลข + สั่ง Track อัตโนมัติแล้ว`);
+      if (openWeb && list.length > 0) {
+        // track.thailandpost.co.th supports up to 10 comma-separated numbers in ?trackNumber= for auto-tracking
+        const autoBatch = list.slice(0, 10).join(',');
+        window.open(`https://track.thailandpost.co.th/?trackNumber=${encodeURIComponent(autoBatch)}`, '_blank', 'noopener');
       }
     }
 
     function copy7AndOpenTrack(barcode, useQms = false) {
       const list = getNeighbors(barcode).map(n => n.code);
-      copyText(list.join('\n'), `คัดลอกทั้ง 7 เลขของ ${barcode} แล้ว`);
+      copyText(list.join(','), `กำลังสั่ง Track ทั้ง 7 เลขของ ${barcode} อัตโนมัติ...`);
       const targetUrl = useQms
         ? 'https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx'
-        : 'https://track.thailandpost.co.th/';
+        : `https://track.thailandpost.co.th/?trackNumber=${encodeURIComponent(list.join(','))}`;
       window.open(targetUrl, '_blank', 'noopener');
     }
 
