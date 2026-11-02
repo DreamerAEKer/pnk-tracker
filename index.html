@@ -460,14 +460,29 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           <a class="btn btn-primary btn-sm" id="nmTrackSingleLink" href="https://track.thailandpost.co.th/" target="_blank" rel="noopener" onclick="copyText(currentModalQrCode, 'คัดลอก + เปิดหน้า Track แล้ว')">🌐 Track เลขนี้</a>
           <button class="btn btn-sm" onclick="stepActiveQr(1)">ถัดไป ➡️</button>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
-          <a class="btn btn-sm" id="nmTrackBeforeLink" href="#" target="_blank" rel="noopener">🌐 Track ก่อนหน้า (-3..0)</a>
-          <a class="btn btn-sm" id="nmTrackAfterLink" href="#" target="_blank" rel="noopener">🌐 Track ถัดไป (0..+3)</a>
-        </div>
-        <button class="btn btn-sm" id="nmCopy7QmsBtn" style="width:100%; margin-top:6px;">📋 คัดลอกทั้ง 7 เลข + เปิด QMS</button>
       </div>
 
-      <!-- Mobile-friendly Neighbor Cards -->
+      <!-- Custom Selection Bar for the 7 Numbers -->
+      <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:10px;">
+        <div style="font-size:0.78rem; font-weight:700; color:#334155; margin-bottom:6px;">
+          ☑️ เลือกชุดหมายเลขที่ต้องการ Track (ติ๊กเลือกเองด้านล่าง หรือกดปุ่มลัด):
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px; margin-bottom:8px;">
+          <button class="btn btn-sm" onclick="selectNeighborPreset('before')">⬅️ ก่อนหน้า (-3..-1)</button>
+          <button class="btn btn-sm" onclick="selectNeighborPreset('after')">➡️ ถัดไป (+1..+3)</button>
+          <button class="btn btn-sm" onclick="selectNeighborPreset('both')">↔️ ก่อน+ถัดไป (±2)</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:6px;">
+          <a class="btn btn-primary btn-sm" id="nmTrackSelectedLink" href="https://track.thailandpost.co.th/" target="_blank" rel="noopener" onclick="return handleTrackSelectedClick(event)">
+            🌐 Track ที่เลือก (<span id="nmSelectedCount">3</span> เลข)
+          </a>
+          <button class="btn btn-sm" id="nmCopySelectedQmsBtn" onclick="copySelectedAndOpenQms()">
+            📋 คัดลอกที่เลือก + QMS
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile-friendly Neighbor Cards with Checkboxes -->
       <div class="neighbor-list" id="nmListBody"></div>
     </div>
   </div>
@@ -792,8 +807,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็ค ±3 / QR</button>
-                      <a class="btn btn-sm" href="https://track.thailandpost.co.th/?trackNumber=${getNeighbors(c.barcode).filter(n => Math.abs(n.offset) <= 2).map(n => n.code).join(',')}" target="_blank" rel="noopener" onclick="copyText('${getNeighbors(c.barcode).filter(n => Math.abs(n.offset) <= 2).map(n => n.code).join(',')}', 'เปิดหน้า Track 5 เลขใกล้สุดแล้ว')">🌐 Track (±2)</a>
+                      <a class="btn btn-sm" href="https://track.thailandpost.co.th/?trackNumber=${getNeighbors(c.barcode).filter(n => n.offset < 0).map(n => n.code).join(',')}" target="_blank" rel="noopener" onclick="copyText('${getNeighbors(c.barcode).filter(n => n.offset < 0).map(n => n.code).join(',')}', 'เปิด Track เลขก่อนหน้า (-3 ถึง -1)')">⬅️ Track ก่อนหน้า</a>
+                      <a class="btn btn-sm" href="https://track.thailandpost.co.th/?trackNumber=${getNeighbors(c.barcode).filter(n => n.offset > 0).map(n => n.code).join(',')}" target="_blank" rel="noopener" onclick="copyText('${getNeighbors(c.barcode).filter(n => n.offset > 0).map(n => n.code).join(',')}', 'เปิด Track เลขถัดไป (+1 ถึง +3)')">➡️ Track ถัดไป</a>
+                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เลือกเลข / QR</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
                   </div>
@@ -920,10 +936,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       window.open(url, '_blank', 'noopener');
     }
 
-    // Neighbor & QR Modal
+    // Neighbor & QR Modal with Custom Checkbox Selection
     let activeModalNeighbors = [];
     let activeQrIndex = 3;
     let currentModalQrCode = '';
+    let selectedModalCodes = new Set();
 
     function openNeighborModal(barcode) {
       const c = state.casesByBarcode[barcode];
@@ -933,25 +950,63 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       document.getElementById('nmTitle').textContent = barcode;
       document.getElementById('nmSub').textContent = c ? `แท็บ ${c.tabName} • แถวที่ ${c.rowNum} • สแกนลงถุง ${c.bagTime} (${c.operator})` : '';
-      document.getElementById('nmCopy7QmsBtn').onclick = () => copy7AndOpenQms(barcode);
 
-      // เว็บ Track สาธารณะจำกัด 5 เลขต่อครั้ง จึงแบ่งเป็น ก่อนหน้า (-3 ถึง 0 = 4 เลข) และ ถัดไป (0 ถึง +3 = 4 เลข) โดยไม่แปลงลูกน้ำเป็น %2C
-      const beforeCodes = activeModalNeighbors.filter(n => n.offset <= 0).map(n => n.code).join(',');
-      const afterCodes = activeModalNeighbors.filter(n => n.offset >= 0).map(n => n.code).join(',');
-      const beforeLink = document.getElementById('nmTrackBeforeLink');
-      const afterLink = document.getElementById('nmTrackAfterLink');
-      if (beforeLink) {
-        beforeLink.href = `https://track.thailandpost.co.th/?trackNumber=${beforeCodes}`;
-        beforeLink.onclick = () => copyText(beforeCodes, 'เปิดหน้า Track เลขก่อนหน้า (-3 ถึง 0) แล้ว');
-      }
-      if (afterLink) {
-        afterLink.href = `https://track.thailandpost.co.th/?trackNumber=${afterCodes}`;
-        afterLink.onclick = () => copyText(afterCodes, 'เปิดหน้า Track เลขถัดไป (0 ถึง +3) แล้ว');
-      }
+      // Default selection: preceding 3 numbers (-3, -2, -1)
+      selectedModalCodes = new Set(activeModalNeighbors.filter(n => n.offset < 0).map(n => n.code));
 
       renderNeighborModalList();
       selectQrIndex(activeQrIndex);
+      updateSelectedTrackButton();
       openModal('neighborModal');
+    }
+
+    function selectNeighborPreset(mode) {
+      selectedModalCodes.clear();
+      activeModalNeighbors.forEach(n => {
+        if (mode === 'before' && n.offset < 0) selectedModalCodes.add(n.code);
+        else if (mode === 'after' && n.offset > 0) selectedModalCodes.add(n.code);
+        else if (mode === 'both' && n.offset !== 0 && Math.abs(n.offset) <= 2) selectedModalCodes.add(n.code);
+      });
+      renderNeighborModalList();
+      updateSelectedTrackButton();
+    }
+
+    function toggleNeighborCheck(code, checked) {
+      if (checked) selectedModalCodes.add(code);
+      else selectedModalCodes.delete(code);
+      updateSelectedTrackButton();
+    }
+
+    function updateSelectedTrackButton() {
+      const codes = activeModalNeighbors.filter(n => selectedModalCodes.has(n.code)).map(n => n.code);
+      const countEl = document.getElementById('nmSelectedCount');
+      const linkEl = document.getElementById('nmTrackSelectedLink');
+      if (countEl) countEl.textContent = codes.length;
+      if (linkEl) {
+        if (codes.length > 0) {
+          linkEl.href = `https://track.thailandpost.co.th/?trackNumber=${codes.slice(0, 5).join(',')}`;
+        } else {
+          linkEl.href = 'https://track.thailandpost.co.th/';
+        }
+      }
+    }
+
+    function handleTrackSelectedClick(ev) {
+      const codes = activeModalNeighbors.filter(n => selectedModalCodes.has(n.code)).map(n => n.code);
+      if (!codes.length) {
+        ev.preventDefault();
+        showToast('กรุณาติ๊กเลือกหมายเลขที่ต้องการ Track อย่างน้อย 1 เลขครับ');
+        return false;
+      }
+      copyText(codes.join(','), `คัดลอกและเปิด Track ${Math.min(codes.length, 5)} หมายเลขแล้ว`);
+      return true;
+    }
+
+    function copySelectedAndOpenQms() {
+      const codes = activeModalNeighbors.filter(n => selectedModalCodes.has(n.code)).map(n => n.code);
+      const target = codes.length ? codes : activeModalNeighbors.map(n => n.code);
+      copyText(target.join(' '), `คัดลอก ${target.length} หมายเลขสำหรับวางใน QMS แล้ว`);
+      window.open('https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx', '_blank', 'noopener');
     }
 
     function renderNeighborModalList() {
@@ -959,23 +1014,25 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       listEl.innerHTML = activeModalNeighbors.map((n, idx) => {
         const isMain = n.offset === 0;
         const isSelectedQr = idx === activeQrIndex;
+        const isChecked = selectedModalCodes.has(n.code);
         const noteVal = (state.neighborState[n.code] && state.neighborState[n.code].note) || '';
         const roleLabel = isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`);
 
         return `
           <div class="n-item ${isMain ? 'n-main' : ''} ${isSelectedQr ? 'n-active-qr' : ''}" id="nItem_${idx}">
             <div class="n-item-top">
-              <div style="display:flex; align-items:center; gap:8px;">
+              <label style="display:flex; align-items:center; gap:7px; cursor:pointer;">
+                <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);" ${isChecked ? 'checked' : ''} onchange="toggleNeighborCheck('${n.code}', this.checked)">
                 <span class="n-badge ${isMain ? 'main' : ''}">${roleLabel}</span>
-                <a href="https://track.thailandpost.co.th/?trackNumber=${n.code}" target="_blank" rel="noopener" class="barcode-box" style="text-decoration:none;" onclick="copyText('${n.code}')">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</a>
-              </div>
+                <span class="barcode-box">${n.prefix}${n.first4}<b>${n.last4}</b>${n.check}${n.suffix}</span>
+              </label>
               <div style="display:flex; gap:5px;">
                 <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
                 <a class="btn btn-sm" href="https://track.thailandpost.co.th/?trackNumber=${n.code}" target="_blank" rel="noopener" onclick="copyText('${n.code}')">🌐 Track</a>
               </div>
             </div>
             ${isMain
-              ? `<div style="color:var(--danger); font-size:0.78rem; font-weight:600;">❌ ชิ้นงานไม่มีสถานะรับฝาก</div>`
+              ? `<div style="color:var(--danger); font-size:0.78rem; font-weight:600; padding-left:25px;">❌ ชิ้นงานไม่มีสถานะรับฝาก</div>`
               : `<input type="text" class="input-clean" style="padding:6px 10px; font-size:0.8rem;" placeholder="บันทึกผล QMS / เลขใบเสร็จ 13 หลัก..." value="${noteVal.replace(/"/g, '&quot;')}" oninput="saveNeighborNote('${n.code}', this.value)">`
             }
           </div>
