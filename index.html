@@ -3,202 +3,655 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบจัดการเคสชิ้นงาน ปณก. (10501) - จำค่าอัตโนมัติ & ปิดงานรายเคส</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>ระบบจัดการชิ้นงานไม่มีสถานะรับฝาก (ปณก. 10501)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(l=4*u+17),e(0,0),e(l-7,0),e(0,l-7),i(),o(),v(t,r),7<=u&&h(t),null==n&&(n=w(u,f,c)),d(n,r)}var u=t,f=y[r],g=null,l=0,n=null,c=[],s={},e=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||l<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||l<=r+n||(g[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},o=function(){for(var t=8;t<l-8;t+=1)null==g[t][6]&&(g[t][6]=t%2==0);for(var r=8;r<l-8;r+=1)null==g[6][r]&&(g[6][r]=r%2==0)},i=function(){for(var t=B.getPatternPosition(u),r=0;r<t.length;r+=1)for(var e=0;e<t.length;e+=1){var n=t[r],o=t[e];if(null==g[n][o])for(var i=-2;i<=2;i+=1)for(var a=-2;a<=2;a+=1)g[n+i][o+a]=-2==i||2==i||-2==a||2==a||0==i&&0==a}},h=function(t){for(var r=B.getBCHTypeNumber(u),e=0;e<18;e+=1){var n=!t&&1==(r>>e&1);g[Math.floor(e/3)][e%3+l-8-3]=n}for(e=0;e<18;e+=1){n=!t&&1==(r>>e&1);g[e%3+l-8-3][Math.floor(e/3)]=n}},v=function(t,r){for(var e=f<<3|r,n=B.getBCHTypeInfo(e),o=0;o<15;o+=1){var i=!t&&1==(n>>o&1);o<6?g[o][8]=i:o<8?g[o+1][8]=i:g[l-15+o][8]=i}for(o=0;o<15;o+=1){i=!t&&1==(n>>o&1);o<8?g[8][l-o-1]=i:o<9?g[8][15-o-1+1]=i:g[8][15-o-1]=i}g[l-8][8]=!t},d=function(t,r){for(var e=-1,n=l-1,o=7,i=0,a=B.getMaskFunction(r),u=l-1;0<u;u-=2)for(6==u&&(u-=1);;){for(var f=0;f<2;f+=1)if(null==g[n][u-f]){var c=!1;i<t.length&&(c=1==(t[i]>>>o&1)),a(n,u-f)&&(c=!c),g[n][u-f]=c,-1==(o-=1)&&(i+=1,o=7)}if((n+=e)<0||l<=n){n-=e,e=-e;break}}},w=function(t,r,e){for(var n=b.getRSBlocks(t,r),o=M(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=C(i[u],l.getLength()-1).mod(l);a[u]=new Array(l.getLength()-1);for(g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=0<=s?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};s.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=x(t);break;case"Alphanumeric":e=m(t);break;case"Byte":e=L(t);break;case"Kanji":e=D(t);break;default:throw"mode:"+r}c.push(e),n=null},s.isDark=function(t,r){if(t<0||l<=t||r<0||l<=r)throw t+","+r;return g[t][r]},s.getModuleCount=function(){return l},s.make=function(){if(u<1){for(var t=1;t<40;t++){for(var r=b.getRSBlocks(t,f),e=M(),n=0;n<c.length;n++){var o=c[n];e.put(o.getMode(),4),e.put(o.getLength(),B.getLengthInBits(o.getMode(),t)),o.write(e)}var i=0;for(n=0;n<r.length;n++)i+=r[n].dataCount;if(e.getLengthInBits()<=8*i)break}u=t}a(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){a(!0,e);var n=B.getLostPoint(s);(0==e||n<t)&&(t=n,r=e)}return r}())},s.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<s.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<s.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=s.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},s.createSvgTag=function(t,r,e,n){var o={};"object"==typeof t&&(t=(o=t).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,f,c=s.getModuleCount()*t+2*r,g="";for(f="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",g+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',g+=o.scalable?"":' width="'+c+'px" height="'+c+'px"',g+=' viewBox="0 0 '+c+" "+c+'" ',g+=' preserveAspectRatio="xMinYMin meet"',g+=n.text||e.text?' role="img" aria-labelledby="'+p([n.id,e.id].join(" ").trim())+'"':"",g+=">",g+=n.text?'<title id="'+p(n.id)+'">'+p(n.text)+"</title>":"",g+=e.text?'<description id="'+p(e.id)+'">'+p(e.text)+"</description>":"",g+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',g+='<path d="',a=0;a<s.getModuleCount();a+=1)for(u=a*t+r,i=0;i<s.getModuleCount();i+=1)s.isDark(a,i)&&(g+="M"+(i*t+r)+","+u+f);return g+='" stroke="transparent" fill="black"/>',g+="</svg>"},s.createDataURL=function(o,t){o=o||2,t=void 0===t?4*o:t;var r=s.getModuleCount()*o+2*t,i=t,a=r-t;return I(r,r,function(t,r){if(i<=t&&t<a&&i<=r&&r<a){var e=Math.floor((t-i)/o),n=Math.floor((r-i)/o);return s.isDark(n,e)?0:1}return 1})},s.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=s.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=s.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=p(e),o+='"'),o+="/>"};var p=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return s.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*s.getModuleCount()+2*t,u=t,f=a-t,c={"██":"█","█ ":"▀"," █":"▄","  ":" "},g={"██":"▀","█ ":"▀"," █":" ","  ":" "},l="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<f&&u<=r&&r<f&&s.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<f&&u<=r+1&&r+1<f&&s.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",l+=t<1&&f<=r+1?g[i]:c[i];l+="\n"}return a%2&&0<t?l.substring(0,l.length-a-1)+Array(1+a).join("▀"):l.substring(0,l.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=s.getModuleCount()*t+2*r,u=r,f=a-r,c=Array(t+1).join("██"),g=Array(t+1).join("  "),l="",h="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),h="",n=0;n<a;n+=1)i=1,u<=n&&n<f&&u<=e&&e<f&&s.isDark(o,Math.floor((n-u)/t))&&(i=0),h+=i?c:g;for(o=0;o<t;o+=1)l+=h+"\n"}return l.substring(0,l.length-1)},s.renderTo2dContext=function(t,r){r=r||2;for(var e=s.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=s.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},s}i.stringToBytes=(i.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,i.createStringToBytes=function(u,f){var i=function(){function t(){var t=r.read();if(-1==t)throw"eof";return t}for(var r=S(u),e=0,n={};;){var o=r.read();if(-1==o)break;var i=t(),a=t()<<8|t();n[String.fromCharCode(o<<8|i)]=a,e+=1}if(e!=f)throw e+" != "+f;return n}(),a="?".charCodeAt(0);return function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);if(n<128)r.push(n);else{var o=i[t.charAt(e)];"number"==typeof o?(255&o)==o?r.push(o):(r.push(o>>>8),r.push(255&o)):r.push(a)}}return r}};var r,t,a=1,u=2,o=4,f=8,y={L:1,M:0,Q:3,H:2},e=0,n=1,c=2,g=3,l=4,h=5,s=6,v=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],(t={}).getBCHTypeInfo=function(t){for(var r=t<<10;0<=d(r)-d(1335);)r^=1335<<d(r)-d(1335);return 21522^(t<<10|r)},t.getBCHTypeNumber=function(t){for(var r=t<<12;0<=d(r)-d(7973);)r^=7973<<d(r)-d(7973);return t<<12|r},t.getPatternPosition=function(t){return r[t-1]},t.getMaskFunction=function(t){switch(t){case e:return function(t,r){return(t+r)%2==0};case n:return function(t,r){return t%2==0};case c:return function(t,r){return r%3==0};case g:return function(t,r){return(t+r)%3==0};case l:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case h:return function(t,r){return t*r%2+t*r%3==0};case s:return function(t,r){return(t*r%2+t*r%3)%2==0};case v:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},t.getErrorCorrectPolynomial=function(t){for(var r=C([1],0),e=0;e<t;e+=1)r=r.multiply(C([1,w.gexp(e)],0));return r},t.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case o:case f:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case o:return 16;case f:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case o:return 16;case f:return 12;default:throw"mode:"+t}}},t.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);5<i&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},t);function d(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r}var w=function(){for(var r=new Array(256),e=new Array(256),t=0;t<8;t+=1)r[t]=1<<t;for(t=8;t<256;t+=1)r[t]=r[t-4]^r[t-5]^r[t-6]^r[t-8];for(t=0;t<255;t+=1)e[r[t]]=t;var n={glog:function(t){if(t<1)throw"glog("+t+")";return e[t]},gexp:function(t){for(;t<0;)t+=255;for(;256<=t;)t-=255;return r[t]}};return n}();function C(n,o){if(void 0===n.length)throw n.length+"/"+o;var r=function(){for(var t=0;t<n.length&&0==n[t];)t+=1;for(var r=new Array(n.length-t+o),e=0;e<n.length-t;e+=1)r[e]=n[e+t];return r}(),i={getAt:function(t){return r[t]},getLength:function(){return r.length},multiply:function(t){for(var r=new Array(i.getLength()+t.getLength()-1),e=0;e<i.getLength();e+=1)for(var n=0;n<t.getLength();n+=1)r[e+n]^=w.gexp(w.glog(i.getAt(e))+w.glog(t.getAt(n)));return C(r,0)},mod:function(t){if(i.getLength()-t.getLength()<0)return i;for(var r=w.glog(i.getAt(0))-w.glog(t.getAt(0)),e=new Array(i.getLength()),n=0;n<i.getLength();n+=1)e[n]=i.getAt(n);for(n=0;n<t.getLength();n+=1)e[n]^=w.gexp(w.glog(t.getAt(n))+r);return C(e,0).mod(t)}};return i}function p(){var e=[],o={writeByte:function(t){e.push(255&t)},writeShort:function(t){o.writeByte(t),o.writeByte(t>>>8)},writeBytes:function(t,r,e){r=r||0,e=e||t.length;for(var n=0;n<e;n+=1)o.writeByte(t[n+r])},writeString:function(t){for(var r=0;r<t.length;r+=1)o.writeByte(t.charCodeAt(r))},toByteArray:function(){return e},toString:function(){var t="";t+="[";for(var r=0;r<e.length;r+=1)0<r&&(t+=","),t+=e[r];return t+="]"}};return o}var k,A,b=(k=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],(A={}).getRSBlocks=function(t,r){var e=function(t,r){switch(r){case y.L:return k[4*(t-1)+0];case y.M:return k[4*(t-1)+1];case y.Q:return k[4*(t-1)+2];case y.H:return k[4*(t-1)+3];default:return}}(t,r);if(void 0===e)throw"bad rs block @ typeNumber:"+t+"/errorCorrectionLevel:"+r;for(var n,o,i=e.length/3,a=[],u=0;u<i;u+=1)for(var f=e[3*u+0],c=e[3*u+1],g=e[3*u+2],l=0;l<f;l+=1)a.push((n=g,o=void 0,(o={}).totalCount=c,o.dataCount=n,o));return a},A),M=function(){var e=[],n=0,o={getBuffer:function(){return e},getAt:function(t){var r=Math.floor(t/8);return 1==(e[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e+=1)o.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return n},putBit:function(t){var r=Math.floor(n/8);e.length<=r&&e.push(0),t&&(e[r]|=128>>>n%8),n+=1}};return o},x=function(t){var r=a,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+2<r.length;)t.put(o(r.substring(e,e+3)),10),e+=3;e<r.length&&(r.length-e==1?t.put(o(r.substring(e,e+1)),4):r.length-e==2&&t.put(o(r.substring(e,e+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return e},m=function(t){var r=u,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+1<r.length;)t.put(45*o(r.charAt(e))+o(r.charAt(e+1)),11),e+=2;e<r.length&&t.put(o(r.charAt(e)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return e},L=function(t){var r=o,e=i.stringToBytes(t),n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=0;r<e.length;r+=1)t.put(e[r],8)}};return n},D=function(t){var r=f,e=i.stringToBytesFuncs.SJIS;if(!e)throw"sjis not supported.";!function(){var t=e("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=e(t),n={getMode:function(){return r},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return n},S=function(t){var e=t,n=0,o=0,i=0,r={read:function(){for(;i<8;){if(n>=e.length){if(0==i)return-1;throw"unexpected end of file./"+i}var t=e.charAt(n);if(n+=1,"="==t)return i=0,-1;t.match(/^\s$/)||(o=o<<6|a(t.charCodeAt(0)),i+=6)}var r=o>>>i-8&255;return i-=8,r}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return r},I=function(t,r,e){for(var n=function(t,r){var n=t,o=r,l=new Array(t*r),e={setPixel:function(t,r,e){l[r*n+t]=e},write:function(t){t.writeString("GIF87a"),t.writeShort(n),t.writeShort(o),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(n),t.writeShort(o),t.writeByte(0);var r=i(2);t.writeByte(2);for(var e=0;255<r.length-e;)t.writeByte(255),t.writeBytes(r,e,255),e+=255;t.writeByte(r.length-e),t.writeBytes(r,e,r.length-e),t.writeByte(0),t.writeString(";")}},i=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,o=h(),i=0;i<r;i+=1)o.add(String.fromCharCode(i));o.add(String.fromCharCode(r)),o.add(String.fromCharCode(e));var a=p(),u=function(t){var e=t,n=0,o=0,r={write:function(t,r){if(t>>>r!=0)throw"length over";for(;8<=n+r;)e.writeByte(255&(t<<n|o)),r-=8-n,t>>>=8-n,n=o=0;o|=t<<n,n+=r},flush:function(){0<n&&e.writeByte(o)}};return r}(a);u.write(r,n);var f=0,c=String.fromCharCode(l[f]);for(f+=1;f<l.length;){var g=String.fromCharCode(l[f]);f+=1,o.contains(c+g)?c+=g:(u.write(o.indexOf(c),n),o.size()<4095&&(o.size()==1<<n&&(n+=1),o.add(c+g)),c=g)}return u.write(o.indexOf(c),n),u.write(e,n),u.flush(),a.toByteArray()},h=function(){var r={},e=0,n={add:function(t){if(n.contains(t))throw"dup key:"+t;r[t]=e,e+=1},size:function(){return e},indexOf:function(t){return r[t]},contains:function(t){return void 0!==r[t]}};return n};return e}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=p();n.write(a);for(var u=function(){function e(t){a+=String.fromCharCode(r(63&t))}var n=0,o=0,i=0,a="",t={},r=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return t.writeByte=function(t){for(n=n<<8|255&t,o+=8,i+=1;6<=o;)e(n>>>o-6),o-=6},t.flush=function(){if(0<o&&(e(n<<6-o),o=n=0),i%3!=0)for(var t=3-i%3,r=0;r<t;r+=1)a+="="},t.toString=function(){return a},t}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return i}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||57344<=n?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
 </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --surface-3: #334155;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #dc2626;
+      --primary-hover: #b91c1c;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --purple: #8b5cf6;
+      --font: 'Segoe UI', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', 'Consolas', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.45;
+      padding: 12px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Compact Header */
+    header {
+      background: linear-gradient(135deg, #111827 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-pnk {
+      background: var(--primary);
+      color: white;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+
+    .save-indicator {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 11px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--surface-2);
+      white-space: nowrap;
+    }
+    .btn:hover { filter: brightness(1.12); }
+    .btn-xs { padding: 4px 8px; font-size: 0.74rem; border-radius: 6px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-purple { background: var(--purple); color: white; }
+    .btn-warning { background: var(--warning); color: #111827; font-weight: 700; }
+    .btn-outline { border-color: var(--border); background: rgba(30, 41, 59, 0.7); }
+
+    /* Compact KPI & Tool Bar */
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    .kpi-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+    .kpi-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface-2);
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .kpi-pill b { font-size: 0.95rem; }
+
+    /* Collapsible Tool Drawers */
+    .tool-drawer {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .tool-drawer.open { display: block; }
+
+    /* Date Group Container */
+    .date-section {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .date-header {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.16) 0%, rgba(17, 24, 39, 0.95) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      cursor: pointer;
+    }
+
+    .date-badge {
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .date-body {
+      padding: 10px;
+    }
+    .date-body.collapsed {
+      display: none;
+    }
+
+    /* Series / Prefix Batch Group (e.g., WC 9902xxxx) */
+    .series-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid #38bdf8;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .series-header {
+      background: rgba(30, 41, 59, 0.75);
+      padding: 8px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .series-title-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      cursor: pointer;
+    }
+
+    .series-prefix-badge {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+
+    .series-batch-bar {
+      display: none;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .series-batch-bar.open {
+      display: block;
+    }
+
+    .series-items.collapsed {
+      display: none;
+    }
+
+    /* Ultra-Compact Single-Line Case Row */
+    .case-row {
+      border-bottom: 1px solid rgba(51, 65, 85, 0.45);
+      transition: background 0.12s;
+    }
+    .case-row:last-child { border-bottom: none; }
+    .case-row:hover { background: rgba(30, 41, 59, 0.4); }
+
+    .case-summary-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    .case-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .row-num-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: #1e293b;
+      border: 1px solid #475569;
+      padding: 1px 6px;
+      border-radius: 4px;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    /* Highlighted Barcode so the 4 changing digits stand out */
+    .barcode-split {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 2px 8px;
+      border-radius: 5px;
+      border: 1px solid #334155;
+    }
+    .bc-prefix { color: #94a3b8; font-weight: 600; }
+    .bc-mid { color: #f8fafc; font-weight: 800; font-size: 1.02rem; text-decoration: underline; text-decoration-color: #f59e0b; }
+    .bc-check { color: #fbbf24; font-weight: 700; }
+    .bc-suffix { color: #64748b; font-size: 0.82rem; }
+
+    .gap-badge {
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .gap-contiguous {
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .gap-near {
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .gap-far {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+    }
+
+    .meta-mini {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .case-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .cause-preview {
+      font-size: 0.76rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cause-preview.filled {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      font-weight: 600;
+    }
+    .cause-preview.empty {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    /* Expandable Case Detail Drawer */
+    .case-detail-drawer {
+      display: none;
+      background: #0f172a;
+      border-top: 1px dashed #334155;
+      padding: 10px 14px;
+    }
+    .case-detail-drawer.open {
+      display: block;
+    }
+
+    /* Compact Neighbor Table inside expanded drawer */
+    .neighbor-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .neighbor-table th {
+      text-align: left;
+      padding: 5px 8px;
+      background: #1e293b;
+      color: var(--text-muted);
+      font-size: 0.73rem;
+    }
+    .neighbor-table td {
+      padding: 5px 8px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      vertical-align: middle;
+    }
+    .row-main { background: rgba(220, 38, 38, 0.12); }
+
+    .offset-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 58px;
+      text-align: center;
+    }
+    .offset-neg { background: rgba(56, 189, 248, 0.12); color: #38bdf8; }
+    .offset-zero { background: var(--primary); color: white; }
+    .offset-pos { background: rgba(52, 211, 153, 0.12); color: #34d399; }
+
+    /* Cause Chips & Inputs */
+    .chip {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 99px;
+      background: var(--surface-2);
+      color: #cbd5e1;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      display: inline-block;
+    }
+    .chip:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+    .note-input {
+      background: #111827;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 9px;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 0.8rem;
+      font-family: var(--font);
+    }
+    .note-input:focus { outline: none; border-color: var(--accent); }
+
+    /* QR Grid Strip */
+    .qr-strip {
+      display: none;
+      background: #0b1120;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 8px;
+    }
+    .qr-strip.open { display: block; }
+    .qr-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 6px;
+    }
+    .qr-mini-card {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 6px;
+      padding: 6px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .qr-mini-card.is-main { border-color: #dc2626; background: #fff5f5; }
+    .qr-mini-box { display: flex; justify-content: center; margin: 3px 0; }
+    .qr-mini-box img, .qr-mini-box canvas { width: 88px !important; height: 88px !important; }
+
+    /* Modal */
+    .qr-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .qr-modal-backdrop.open { display: flex; }
+    .qr-modal {
+      background: #1e293b;
+      border: 2px solid #475569;
+      border-radius: 14px;
+      max-width: 420px;
+      width: 100%;
+      padding: 16px;
+      text-align: center;
+    }
+    .qr-white-box {
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 8px auto;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      background: #10b981;
+      color: #052e16;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s;
+      z-index: 10000;
+      max-width: 420px;
+      font-size: 0.84rem;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased p-4 md:p-6 min-h-screen">
+<body>
 
-  <div class="max-w-7xl mx-auto space-y-5">
+  <header>
+    <div class="title-group">
+      <h1>
+        <span class="badge-pnk">ปณก. 10501</span>
+        ระบบจัดกลุ่มเลขพัสดุ & สืบค้นเลขข้างเคียง (±3)
+        <span class="save-indicator" id="saveStatusBadge">💾 จำค่าอัตโนมัติ</span>
+      </h1>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <button class="btn btn-primary btn-xs" onclick="copyAllActiveBarcodes()">
+        📋 คัดลอกเลขค้างทั้งหมด (<span id="btnTotalActiveCount">0</span> เลข)
+      </button>
+      <button class="btn btn-accent btn-xs" onclick="syncGoogleSheets(true)">
+        🔄 ซิงค์ชีตล่าสุด
+      </button>
+      <a class="btn btn-outline btn-xs" href="https://docs.google.com/spreadsheets/d/1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc/edit?usp=sharing" target="_blank" rel="noopener">
+        📊 เปิด Google Sheet
+      </a>
+    </div>
+  </header>
 
-    <!-- Top Header Bar (Clean & Non-Redundant) -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <div>
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-600 text-white">ปณก. 10501</span>
-          <span id="autoSaveIndicator" class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-            💾 จำค่าอัตโนมัติ (เปิดใหม่ข้อมูลไม่หาย)
-          </span>
-          <h1 class="text-lg md:text-xl font-bold text-white">
-            ระบบสืบหาสาเหตุชิ้นงาน "ปณก." (แยกตามวัน • ตัดตัวซ้ำ • ปิดงานรายเคส)
-          </h1>
-        </div>
-        <p class="text-xs text-slate-400 mt-1">
-          วันไหนเคยตรวจพบว่าลงเหตุผลแล้วระบบจะจำไว้และ<b>ไม่ค้นหาซ้ำ</b> • เคสไหนทำเสร็จแล้วกด <b>"✅ ปิดงานเคสนี้"</b> เพื่อพับเก็บได้เลย
-        </p>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2">
-        <button onclick="scanNewAndPendingSheets(true)" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow transition flex items-center gap-1.5" title="เช็คเฉพาะวันที่ยังค้างอยู่และวันที่ใหม่ๆ โดยไม่ค้นหาวันที่จบไปแล้วซ้ำ">
-          <span>🔄 เช็ควันใหม่จากชีต</span>
-        </button>
-        <label class="cursor-pointer px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-black shadow transition flex items-center gap-1.5">
-          <span>📁 อัปโหลดไฟล์ PDF/Excel จาก QMS</span>
-          <input type="file" id="qmsFileInput" accept=".pdf,.xlsx,.xls,.csv,.txt,.html" onchange="handleFileUpload(this.files)" class="hidden" />
-        </label>
-        <button onclick="openCaPosPortal()" class="px-3 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
-          🧾 เว็บใบเสร็จ CA POS
-        </button>
-        <button onclick="toggleManualCalcDrawer()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/40 transition">
-          🔢 หา Digit / QR เอง
-        </button>
-        <a href="https://docs.google.com/spreadsheets/d/1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc/edit?usp=sharing" target="_blank" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-          📊 เปิดชีต ↗
-        </a>
-      </div>
+  <!-- Compact Single-Line Status + Collapsible Tool Triggers -->
+  <div class="top-bar">
+    <div class="kpi-inline">
+      <span class="kpi-pill">🔥 งานค้าง: <b id="statActiveCount" style="color:#f87171;">0</b> เคส</span>
+      <span class="kpi-pill">📦 จัดได้: <b id="statSeriesCount" style="color:#38bdf8;">0</b> กลุ่มหมวดเลข</span>
+      <span class="kpi-pill">✅ ปิดเคสแล้ว: <b id="statClosedCount" style="color:#34d399;">0</b> เคส</span>
+      <span id="syncStatusText" style="font-size:0.76rem; color:#93c5fd;">กำลังซิงค์ Google Sheet...</span>
     </div>
 
-    <!-- File Upload Status Banner -->
-    <div id="fileStatusBanner" class="hidden px-4 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between"></div>
-
-    <!-- Collapsible Aux Tool: Manual Check Digit & QR Calculator -->
-    <div id="manualCalcDrawer" class="hidden bg-slate-900 border-2 border-emerald-500/40 rounded-2xl p-5 shadow-md space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500 text-black">เครื่องมือเสริม</span>
-          <h2 class="text-sm font-bold text-emerald-300">🔢 คำนวณหาเลข Check Digit (หลักที่ 9) & สร้าง QR Code ด่วน</h2>
-        </div>
-        <button onclick="toggleManualCalcDrawer()" class="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded border border-slate-700">ซ่อน ✕</button>
-      </div>
-      <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-        <div class="flex-1 space-y-3">
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="calcPrefix" onchange="runCheckDigitCalc()" class="px-3 py-2 rounded-lg border border-slate-700 bg-slate-950 text-white text-sm font-mono font-bold">
-              <option value="WC">WC</option>
-              <option value="WB">WB</option>
-              <option value="EQ">EQ</option>
-              <option value="ET">ET</option>
-              <option value="EM">EM</option>
-              <option value="WA">WA</option>
-              <option value="JD">JD</option>
-              <option value="JM">JM</option>
-              <option value="RC">RC</option>
-            </select>
-            <input id="calcSerialInput" type="text" value="WC99027535" oninput="runCheckDigitCalc()" placeholder="กรอกเลข 8 หลัก หรือ 13 หลัก..." class="flex-1 min-w-[220px] px-3.5 py-2 rounded-lg border border-emerald-500/50 bg-slate-950 text-white text-sm font-mono uppercase" />
-          </div>
-          <div id="calcResultBanner" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs"></div>
-        </div>
-        <div class="bg-white text-slate-900 rounded-xl p-3 flex flex-col items-center min-w-[150px]">
-          <div id="calcMainQrBox" class="p-1 bg-white"></div>
-          <div id="calcMainQrLabel" class="font-mono text-xs font-black mt-1"></div>
-        </div>
-      </div>
-      <div id="calcNeighborsQrStrip" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 pt-2 border-t border-slate-800"></div>
+    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerImport')">📂 อัปโหลด QMS/Excel</button>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerDigit')">🔢 หาเลข Digit & QR</button>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerPos')">🧾 เช็คใบเสร็จ POS</button>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerSettings')">⚙️ เพิ่มแท็บวัน / สำรองข้อมูล</button>
+      <button class="btn btn-outline btn-xs" onclick="collapseAllDetails()">📁 ย่อทุกรายการ</button>
+      <button class="btn btn-outline btn-xs" onclick="expandAllDetails()">📂 กางทั้งหมด</button>
     </div>
-
-    <!-- Compact Date Control & Summary Strip -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-xs font-bold text-slate-300">📅 สถานะรายวันในชีต:</span>
-          <div id="datePillsContainer" class="flex flex-wrap items-center gap-2"></div>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <input id="customTabNameInput" type="text" placeholder="ระบุแท็บวันใหม่ เช่น 2.11.69" class="w-40 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-950 text-white text-xs font-mono" />
-          <button onclick="addCustomSheetTab()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-xs font-bold">
-            + ดึงแท็บวันใหม่
-          </button>
-        </div>
-      </div>
-      <div id="dedupNotice" class="hidden text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-1.5"></div>
-    </div>
-
-    <!-- ACTIVE / OPEN CASES CONTAINER (Grouped by Date) -->
-    <div id="openGroupsContainer" class="space-y-8"></div>
-
-    <!-- CLOSED / COMPLETED CASES ARCHIVE (Collapsible at bottom so it never clutters active work) -->
-    <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 space-y-3">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600/20 text-emerald-300 border border-emerald-500/30">
-            🗂️ ประวัติเคสที่ปิดงานแล้ว / ลงสาเหตุในชีตแล้ว
-          </span>
-          <span id="closedCasesCountText" class="text-xs text-slate-400">0 เคส (ระบบจำไว้แล้ว ไม่นำมาค้นหาหรือสกัดเลขซ้ำ)</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="toggleClosedArchive()" id="btnToggleArchive" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
-            แสดงประวัติเคสที่ปิดแล้ว ▼
-          </button>
-          <button onclick="exportBackupJson()" class="px-3 py-1.5 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700" title="ดาวน์โหลดไฟล์สำรองข้อมูลที่ทำไว้ทั้งหมด">
-            💾 สำรองข้อมูล
-          </button>
-        </div>
-      </div>
-
-      <div id="closedArchivePanel" class="hidden pt-3 border-t border-slate-800 space-y-2"></div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2">
-      <span id="toastText">บันทึกเรียบร้อย!</span>
-    </div>
-
   </div>
 
-  <!-- FULL-SCREEN QR CODE SCANNER MODAL -->
-  <div id="qrModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <span id="qrModalOffsetBadge" class="px-2.5 py-1 rounded text-xs font-bold bg-red-600 text-white">เลขหลัก (0)</span>
-          <span id="qrModalStepText" class="text-xs text-slate-400 ml-2">ลำดับที่ 4 / 7</span>
-        </div>
-        <button onclick="closeQrModal()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold">
-          ปิดหน้าต่าง (ESC) ✕
-        </button>
-      </div>
+  <!-- Drawer 1: Upload QMS File -->
+  <div id="drawerImport" class="tool-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <b style="color:#f59e0b; font-size:0.88rem;">📂 อัปโหลดไฟล์ผลลัพธ์จาก QMS (.pdf / .xlsx / .csv) หรือวางข้อความ</b>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerImport')">✕ ย่อเก็บ</button>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <input type="file" id="qmsFileInput" accept=".pdf,.xlsx,.xls,.csv" multiple style="font-size:0.8rem;" onchange="handleFileUpload(event)">
+      <span id="uploadStatusText" style="font-size:0.78rem; color:#6ee7b7;"></span>
+      <input type="text" id="pasteArea" class="note-input" style="max-width:340px;" placeholder="หรือวางข้อความตาราง QMS ที่นี่แล้วกดวิเคราะห์...">
+      <button class="btn btn-warning btn-xs" onclick="parsePastedResults()">⚡ วิเคราะห์</button>
+    </div>
+  </div>
 
-      <div class="bg-white text-slate-900 rounded-2xl p-6 flex flex-col items-center justify-center shadow-inner">
-        <div id="qrModalSvgContainer" class="p-2 bg-white flex items-center justify-center"></div>
-        <div id="qrModalBarcodeText" class="font-mono text-2xl font-black tracking-widest text-slate-950 mt-3 select-all"></div>
-        <div id="qrModalCheckDigitHint" class="text-xs font-semibold text-slate-600 mt-1"></div>
-      </div>
+  <!-- Drawer 2: Check Digit & QR Generator -->
+  <div id="drawerDigit" class="tool-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <b style="color:#34d399; font-size:0.88rem;">🔢 เครื่องคำนวณเลข Check Digit (UPU S10) & สร้าง QR Code ยิงเครื่องพิมพ์ใบจ่าหน้า</b>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerDigit')">✕ ย่อเก็บ</button>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <input type="text" id="s10Prefix" class="note-input" style="width:65px; text-transform:uppercase; text-align:center; font-family:var(--mono); font-weight:700;" maxlength="2" value="WC" oninput="runCustomS10Tool()">
+      <input type="text" id="s10Serial" class="note-input" style="width:165px; font-family:var(--mono); font-weight:700;" placeholder="เลข 8 หลัก หรือ 13 หลัก" maxlength="13" oninput="runCustomS10Tool()">
+      <input type="text" id="s10Suffix" class="note-input" style="width:65px; text-transform:uppercase; text-align:center; font-family:var(--mono); font-weight:700;" maxlength="2" value="TH" oninput="runCustomS10Tool()">
+      <button class="btn btn-success btn-xs" onclick="runCustomS10Tool()">⚡ คำนวณ Digit & ดู QR ±3</button>
+      <span id="customS10ResultSummary" style="font-family:var(--mono); font-size:0.85rem; color:#6ee7b7; font-weight:700;"></span>
+    </div>
+    <div id="customS10Output" style="display:none; margin-top:8px;">
+      <div id="customS10Neighbors" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:6px;"></div>
+    </div>
+  </div>
 
-      <div class="flex items-center justify-between gap-3">
-        <button onclick="stepQrModal(-1)" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 transition">
-          ◀ เลขก่อนหน้า (ลูกศรซ้าย)
-        </button>
-        <button onclick="stepQrModal(1)" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow transition">
-          เลขถัดไป (ลูกศรขวา) ▶
-        </button>
-      </div>
+  <!-- Drawer 3: Intranet CA POS Receipt -->
+  <div id="drawerPos" class="tool-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <b style="color:#c4b5fd; font-size:0.88rem;">🧾 ระบบค้นหาใบเสร็จรับเงิน 13 หลัก (Intranet CA POS)</b>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerPos')">✕ ย่อเก็บ</button>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <input type="text" id="quickReceiptInput" class="note-input" style="max-width:240px; font-family:var(--mono);" placeholder="กรอกเลขใบเสร็จ 13 หลัก...">
+      <button class="btn btn-purple btn-xs" onclick="copyAndOpenCapos(document.getElementById('quickReceiptInput').value)">
+        📋 คัดลอก + 🌐 เปิดหน้าค้นหาใบเสร็จ
+      </button>
+    </div>
+  </div>
 
-      <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
-        <div class="text-xs text-slate-400 font-semibold">มาร์คผลการยิงเช็คจากเครื่องพิมพ์ใบจ่าหน้าทันที:</div>
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="markModalBarcodeStatus('relevant')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40">
-            ⭐ เกี่ยวข้อง / มีประโยชน์!
-          </button>
-          <button onclick="markModalBarcodeStatus('found')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40">
-            ✅ พบข้อมูล
-          </button>
-          <button onclick="markModalBarcodeStatus('not_found')" class="flex-1 py-2 rounded-lg text-xs font-bold bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40">
-            ❌ ไม่พบข้อมูล
-          </button>
-        </div>
-        <input
-          id="qrModalNoteInput"
-          type="text"
-          oninput="updateModalBarcodeNote(this.value)"
-          placeholder="บันทึกชื่อผู้ฝากส่ง/บริษัทที่ขึ้นบนเครื่องพิมพ์ใบจ่าหน้า..."
-          class="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-900 text-white text-xs"
-        />
+  <!-- Drawer 4: Manual Tab & Backup Settings -->
+  <div id="drawerSettings" class="tool-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <b style="color:#93c5fd; font-size:0.88rem;">⚙️ เพิ่มแท็บวันที่ใหม่ด้วยตนเอง & สำรองข้อมูลความจำเครื่อง</b>
+      <button class="btn btn-outline btn-xs" onclick="toggleToolDrawer('drawerSettings')">✕ ย่อเก็บ</button>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <input type="text" id="manualTabInput" class="note-input" style="width:180px;" placeholder="ชื่อแท็บวันที่ เช่น 3.11.69">
+      <button class="btn btn-accent btn-xs" onclick="addManualDateTab()">+ ดึงแท็บวันที่นี้</button>
+      <button class="btn btn-outline btn-xs" onclick="exportWorkspaceJson()">💾 ดาวน์โหลดไฟล์สำรองข้อมูล (.json)</button>
+      <span style="font-size:0.75rem; color:#94a3b8;">แท็บที่ตรวจเสร็จแล้วในประวัติ: <span id="skippedTabsList">-</span></span>
+    </div>
+  </div>
+
+  <!-- ACTIVE CASES CONTAINER -->
+  <div id="activeCasesContainer"></div>
+
+  <!-- ARCHIVED / CLOSED CASES SECTION (Collapsed at bottom) -->
+  <div style="margin-top:16px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleArchiveDrawer()">
+      <div style="font-weight:700; font-size:0.88rem; color:#94a3b8;">
+        🗂️ ประวัติเคสที่ปิดงานแล้ว / ลงสาเหตุในชีตแล้ว (<span id="archiveTotalCount">0</span> เคส)
+      </div>
+      <span id="archiveToggleLabel" style="font-size:0.78rem; color:#38bdf8;">คลิกเพื่อดูประวัติ ▼</span>
+    </div>
+    <div id="archiveDrawer" style="display:none; margin-top:10px; border-top:1px solid var(--border); padding-top:8px;">
+      <div id="archiveListContainer"></div>
+    </div>
+  </div>
+
+  <!-- QR Code Popup Modal -->
+  <div id="qrModalBackdrop" class="qr-modal-backdrop" onclick="if(event.target===this) closeQrModal()">
+    <div class="qr-modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span id="qrModalRoleBadge" class="offset-tag offset-zero">เลขหลัก (0)</span>
+        <button class="btn btn-outline btn-xs" onclick="closeQrModal()">✕ ปิด (Esc)</button>
+      </div>
+      <div id="qrModalBarcodeText" style="font-family:var(--mono); font-size:1.3rem; font-weight:800; color:#f8fafc; margin-bottom:4px;">-</div>
+      <div id="qrModalSubText" style="font-size:0.76rem; color:#94a3b8; margin-bottom:6px;">สแกนด้วยหัวอ่านบาร์โค้ด/เครื่องพิมพ์ใบจ่าหน้า</div>
+      <div class="qr-white-box">
+        <div id="qrModalCanvasWrap"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; gap:6px; margin-top:10px;">
+        <button class="btn btn-outline btn-xs" id="qrPrevBtn" onclick="stepQrModal(-1)">⬅️ ก่อนหน้า (-1)</button>
+        <button class="btn btn-accent btn-xs" onclick="copyCurrentModalBarcode()">📋 คัดลอกเลขนี้</button>
+        <button class="btn btn-outline btn-xs" id="qrNextBtn" onclick="stepQrModal(1)">ถัดไป (+1) ➡️</button>
       </div>
     </div>
   </div>
+
+  <div id="toast" class="toast">คัดลอกลงคลิปบอร์ดแล้ว!</div>
 
   <script>
-    const SPREADSHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
-    const CAPOS_RECEIPT_URL = 'https://caposhelp.thailandpost.com/rcpt/receipt';
-    const APP_STORAGE_KEY = 'pnk_persistent_workspace_v7';
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
 
-    const QUICK_CAUSES = [
+    const SHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
+    const TARGET_OFFICE_CODE = '10501';
+    const STORAGE_KEY = 'pnk_persistent_workspace_v8';
+
+    const COMMON_CAUSES = [
       'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
       'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
       'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
@@ -206,696 +659,1212 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       'ใบตอบรับ'
     ];
 
-    if (window.pdfjsLib) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
+    const SEED_RESOLVED_HISTORY = [
+      { tabName: '28.10.69', date: '28/10/2569', rowNum: 187, service: 'E (W)', barcode: 'WB327054102TH', bagTime: '27/10/2569 17:10', operator: 'kiattisak.pa', sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก' },
+      { tabName: '28.10.69', date: '28/10/2569', rowNum: 188, service: 'E (E)', barcode: 'ET717324835TH', bagTime: '19/10/2569 19:10', operator: 'burapa.lu', sheetCause: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง' },
+      { tabName: '28.10.69', date: '28/10/2569', rowNum: 189, service: 'E (E)', barcode: 'EQ177456925TH', bagTime: '27/10/2569 16:10', operator: 'kiattisak.pa', sheetCause: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน' },
+      { tabName: '29.10.69', date: '29/10/2569', rowNum: 205, service: 'E (E)', barcode: 'EQ089995853TH', bagTime: '28/10/2569 15:10', operator: 'kiattisak.pa', sheetCause: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น' }
+    ];
 
-    function createQrSvg(text, cellSize = 4, margin = 2) {
-      if (typeof qrcode === 'function') {
-        const qr = qrcode(0, 'M');
-        qr.addData(text);
-        qr.make();
-        return qr.createSvgTag({ cellSize: cellSize, margin: margin });
+    const SEED_UNRESOLVED = [
+      { tabName: '1.11.69', date: '01/11/2569', rowNum: 342, service: 'E (W)', barcode: 'WC990275354TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' },
+      { tabName: '1.11.69', date: '01/11/2569', rowNum: 343, service: 'E (W)', barcode: 'WB545368690TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' },
+      { tabName: '1.11.69', date: '01/11/2569', rowNum: 344, service: 'E (W)', barcode: 'WC990269645TH', bagTime: '31/10/2569 15:10', operator: 'wanchana.th', sheetCause: '' }
+    ];
+
+    let state = {
+      casesByBarcode: {},
+      neighborState: {},
+      resolvedTabsCache: { '28.10.69': true, '29.10.69': true },
+      customTabs: [],
+      expandedCases: {},     // barcode -> boolean (default false = collapsed!)
+      collapsedDates: {},    // tabName -> boolean
+      collapsedSeries: {},   // seriesKey -> boolean
+      openBatchBar: {}       // seriesKey -> boolean
+    };
+
+    function loadState() {
+      try {
+        // Migrate from v7 if present
+        const savedV8 = localStorage.getItem(STORAGE_KEY);
+        const savedV7 = localStorage.getItem('pnk_persistent_workspace_v7');
+        const raw = savedV8 || savedV7;
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.casesByBarcode = parsed.casesByBarcode || {};
+          state.neighborState = parsed.neighborState || {};
+          state.resolvedTabsCache = parsed.resolvedTabsCache || { '28.10.69': true, '29.10.69': true };
+          state.customTabs = parsed.customTabs || [];
+        }
+      } catch (e) {
+        console.error(e);
       }
-      return `<div class="text-xs text-red-500 p-2 font-mono">${text}</div>`;
+
+      SEED_RESOLVED_HISTORY.forEach(item => upsertSheetCase(item, true));
+      SEED_UNRESOLVED.forEach(item => upsertSheetCase(item, false));
     }
 
-    function calculateS10CheckDigit(eightDigitsStr) {
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          casesByBarcode: state.casesByBarcode,
+          neighborState: state.neighborState,
+          resolvedTabsCache: state.resolvedTabsCache,
+          customTabs: state.customTabs
+        }));
+        const badge = document.getElementById('saveStatusBadge');
+        if (badge) {
+          const now = new Date();
+          const t = now.toTimeString().slice(0, 8);
+          badge.innerHTML = `💾 บันทึกอัตโนมัติ (${t})`;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function upsertSheetCase(item, forceResolvedFromSeed) {
+      const bc = item.barcode;
+      if (!bc) return;
+      const existing = state.casesByBarcode[bc];
+      const hasSheetCause = Boolean(item.sheetCause && item.sheetCause.trim());
+
+      if (!existing) {
+        state.casesByBarcode[bc] = {
+          barcode: bc,
+          tabName: item.tabName,
+          date: item.date,
+          rowNum: item.rowNum,
+          service: item.service || '-',
+          bagTime: item.bagTime || '-',
+          operator: item.operator || '-',
+          sheetCause: item.sheetCause || '',
+          userCause: item.sheetCause || '',
+          receiptNo: '',
+          companyName: '',
+          closedByUser: Boolean(forceResolvedFromSeed || hasSheetCause),
+          closedAt: (forceResolvedFromSeed || hasSheetCause) ? 'บันทึกในชีตแล้ว' : ''
+        };
+      } else {
+        existing.tabName = item.tabName || existing.tabName;
+        existing.date = item.date || existing.date;
+        existing.rowNum = item.rowNum || existing.rowNum;
+        existing.service = item.service || existing.service;
+        existing.bagTime = item.bagTime || existing.bagTime;
+        existing.operator = item.operator || existing.operator;
+        if (hasSheetCause) {
+          existing.sheetCause = item.sheetCause;
+          if (!existing.userCause) existing.userCause = item.sheetCause;
+          existing.closedByUser = true;
+          existing.closedAt = 'บันทึกในชีตแล้ว';
+        }
+      }
+    }
+
+    // UPU S10 Check Digit
+    function calcS10CheckDigit(eightDigitsStr) {
       const weights = [8, 6, 4, 2, 3, 5, 9, 7];
       let sum = 0;
       for (let i = 0; i < 8; i++) {
         sum += parseInt(eightDigitsStr[i], 10) * weights[i];
       }
-      const rem = sum % 11;
-      const check = 11 - rem;
-      if (check === 10) return '0';
-      if (check === 11) return '5';
-      return String(check);
+      const r = sum % 11;
+      if (r === 0) return 5;
+      if (r === 1) return 0;
+      return 11 - r;
     }
 
-    function calculateS10Details(eightDigitsStr) {
-      const weights = [8, 6, 4, 2, 3, 5, 9, 7];
-      let sum = 0;
-      const parts = [];
-      for (let i = 0; i < 8; i++) {
-        const d = parseInt(eightDigitsStr[i], 10);
-        sum += d * weights[i];
-        parts.push(`${d}×${weights[i]}`);
+    // Parse S10 Barcode into structured parts for grouping & highlighting
+    function parseS10(barcode) {
+      const m = /^([A-Z]{2})(\d{8})(\d)([A-Z]{2})$/i.exec((barcode || '').trim());
+      if (!m) return null;
+      const prefix = m[1].toUpperCase();
+      const serialStr = m[2];
+      const serialNum = parseInt(serialStr, 10);
+      const checkDigit = m[3];
+      const suffix = m[4].toUpperCase();
+      const seriesPrefix4 = serialStr.slice(0, 4); // first 4 digits e.g. 9902 or 1234
+      const last4Digits = serialStr.slice(4, 8);   // last 4 digits e.g. 7535 or 0001
+      const seriesKey = `${prefix} ${seriesPrefix4}xxxx`;
+      return {
+        prefix,
+        serialStr,
+        serialNum,
+        checkDigit,
+        suffix,
+        seriesPrefix4,
+        last4Digits,
+        seriesKey
+      };
+    }
+
+    function generateNeighbors(barcode, range = 3) {
+      const parsed = parseS10(barcode);
+      if (!parsed) return [];
+      const list = [];
+      for (let offset = -range; offset <= range; offset++) {
+        const currentNum = parsed.serialNum + offset;
+        if (currentNum < 0 || currentNum > 99999999) continue;
+        const eightStr = String(currentNum).padStart(8, '0');
+        const check = calcS10CheckDigit(eightStr);
+        const fullCode = `${parsed.prefix}${eightStr}${check}${parsed.suffix}`;
+        list.push({
+          offset,
+          code: fullCode,
+          prefix: parsed.prefix,
+          seriesPrefix4: eightStr.slice(0, 4),
+          last4: eightStr.slice(4, 8),
+          check,
+          suffix: parsed.suffix
+        });
       }
-      const rem = sum % 11;
-      const rawCheck = 11 - rem;
-      const checkDigit = rawCheck === 10 ? '0' : rawCheck === 11 ? '5' : String(rawCheck);
-      return { sum, rem, rawCheck, checkDigit, formulaText: parts.join(' + ') + ` = ${sum}` };
+      return list;
     }
 
-    function generateOffsetBarcode(barcode, offset) {
-      const clean = (barcode || '').trim().toUpperCase();
-      const match = clean.match(/^([A-Z]{2})(\d{8})(\d)([A-Z]{2})$/);
-      if (!match) return null;
-      const prefix = match[1];
-      const serial = parseInt(match[2], 10);
-      const suffix = match[4];
-
-      const newSerial = serial + offset;
-      if (newSerial < 0 || newSerial > 99999999) return null;
-      const paddedSerial = String(newSerial).padStart(8, '0');
-      const checkDigit = calculateS10CheckDigit(paddedSerial);
-      return `${prefix}${paddedSerial}${checkDigit}${suffix}`;
+    function getNeighborEntry(code) {
+      if (!state.neighborState[code]) {
+        state.neighborState[code] = { checked: false, status: 'unknown', note: '' };
+      }
+      return state.neighborState[code];
     }
 
-    let neighborRange = 3;
-    let currentCalcBarcode = 'WC990275354TH';
-
-    // Default initial state with known history
-    const DEFAULT_WORKSPACE = {
-      knownTabs: ['1.11.69', '29.10.69', '28.10.69'],
-      // Tabs that were already verified as 100% resolved -> never re-fetch them unless forced!
-      resolvedTabsCache: {
-        '28.10.69': true,
-        '29.10.69': true
-      },
-      // Main cases indexed by barcode (automatically deduplicates identical barcodes!)
-      casesByBarcode: {
-        'WC990275354TH': {
-          barcode: 'WC990275354TH',
-          sheetTab: '1.11.69',
-          sheetRow: 342,
-          date: '01/11/2569',
-          service: 'E (W)',
-          scanTime: '31/10/2569 15:10',
-          operator: 'kanitha.po',
-          sheetCause: '',
-          userCauseNote: '',
-          companyName: '',
-          isClosed: false,
-          closedAt: null,
-          showQrStrip: true
-        },
-        'WB545368690TH': {
-          barcode: 'WB545368690TH',
-          sheetTab: '1.11.69',
-          sheetRow: 343,
-          date: '01/11/2569',
-          service: 'E (W)',
-          scanTime: '31/10/2569 15:10',
-          operator: 'wanchana.th',
-          sheetCause: '',
-          userCauseNote: '',
-          companyName: '',
-          isClosed: false,
-          closedAt: null,
-          showQrStrip: true
-        },
-        'WC990269645TH': {
-          barcode: 'WC990269645TH',
-          sheetTab: '1.11.69',
-          sheetRow: 344,
-          date: '01/11/2569',
-          service: 'E (W)',
-          scanTime: '31/10/2569 15:10',
-          operator: 'kanitha.po',
-          sheetCause: '',
-          userCauseNote: '',
-          companyName: '',
-          isClosed: false,
-          closedAt: null,
-          showQrStrip: true
-        },
-        'EQ089995853TH': {
-          barcode: 'EQ089995853TH',
-          sheetTab: '29.10.69',
-          sheetRow: 146,
-          date: '29/10/2569',
-          service: 'E (E)',
-          scanTime: '28/10/2569 12:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
-          userCauseNote: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
-          companyName: '',
-          isClosed: true,
-          closedAt: 'บันทึกในชีตแล้ว',
-          showQrStrip: false
-        },
-        'WB327054102TH': {
-          barcode: 'WB327054102TH',
-          sheetTab: '28.10.69',
-          sheetRow: 187,
-          date: '28/10/2569',
-          service: 'E (W)',
-          scanTime: '27/10/2569 17:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
-          userCauseNote: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
-          companyName: '',
-          isClosed: true,
-          closedAt: 'บันทึกในชีตแล้ว',
-          showQrStrip: false
-        },
-        'ET717324835TH': {
-          barcode: 'ET717324835TH',
-          sheetTab: '28.10.69',
-          sheetRow: 188,
-          date: '28/10/2569',
-          service: 'E (E)',
-          scanTime: '19/10/2569 19:10',
-          operator: 'burapa.lu',
-          sheetCause: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
-          userCauseNote: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
-          companyName: '',
-          isClosed: true,
-          closedAt: 'บันทึกในชีตแล้ว',
-          showQrStrip: false
-        },
-        'EQ177456925TH': {
-          barcode: 'EQ177456925TH',
-          sheetTab: '28.10.69',
-          sheetRow: 189,
-          date: '28/10/2569',
-          service: 'E (E)',
-          scanTime: '27/10/2569 16:10',
-          operator: 'kiattisak.pa',
-          sheetCause: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
-          userCauseNote: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
-          companyName: '',
-          isClosed: true,
-          closedAt: 'บันทึกในชีตแล้ว',
-          showQrStrip: false
+    // Group active cases for a date tab by Series Key (`WC 9902xxxx`) and sort by serial ascending
+    function groupCasesBySeries(casesList) {
+      const groupsMap = {};
+      casesList.forEach(c => {
+        const p = parseS10(c.barcode);
+        const key = p ? p.seriesKey : 'หมวดอื่นๆ';
+        if (!groupsMap[key]) {
+          groupsMap[key] = {
+            seriesKey: key,
+            prefix: p ? p.prefix : '',
+            seriesPrefix4: p ? p.seriesPrefix4 : '',
+            items: []
+          };
         }
-      },
-      // Neighbor ±3 statuses and notes
-      neighborStore: {},
-      dedupCount: 0
-    };
+        groupsMap[key].items.push({ caseObj: c, parsed: p });
+      });
 
-    let workspace = JSON.parse(JSON.stringify(DEFAULT_WORKSPACE));
+      const groups = Object.values(groupsMap);
+      groups.forEach(g => {
+        // Sort by 8-digit serial ascending so contiguous/near numbers sit next to each other
+        g.items.sort((a, b) => {
+          if (a.parsed && b.parsed) return a.parsed.serialNum - b.parsed.serialNum;
+          return a.caseObj.rowNum - b.caseObj.rowNum;
+        });
 
-    // Load saved workspace from localStorage on startup
-    function loadWorkspace() {
-      try {
-        const raw = localStorage.getItem(APP_STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && parsed.casesByBarcode) {
-            workspace.knownTabs = Array.from(new Set([...(parsed.knownTabs || []), ...DEFAULT_WORKSPACE.knownTabs]));
-            workspace.resolvedTabsCache = Object.assign({}, DEFAULT_WORKSPACE.resolvedTabsCache, parsed.resolvedTabsCache || {});
-            workspace.casesByBarcode = Object.assign({}, DEFAULT_WORKSPACE.casesByBarcode, parsed.casesByBarcode || {});
-            workspace.neighborStore = Object.assign({}, DEFAULT_WORKSPACE.neighborStore, parsed.neighborStore || {});
+        // Compute gap between consecutive items in the same series group
+        g.items.forEach((entry, idx) => {
+          if (idx === 0 || !entry.parsed || !g.items[idx - 1].parsed) {
+            entry.gap = null;
+          } else {
+            entry.gap = entry.parsed.serialNum - g.items[idx - 1].parsed.serialNum;
+          }
+        });
+      });
+
+      // Sort series groups by item count descending, then by first rowNum
+      groups.sort((a, b) => (b.items.length - a.items.length) || (a.items[0].caseObj.rowNum - b.items[0].caseObj.rowNum));
+      return groups;
+    }
+
+    // Google Sheets Live Sync (with Resolved History Cache)
+    function generateCandidateDateTabs() {
+      const candidates = ['28.10.69', '29.10.69', '30.10.69', '31.10.69', '1.11.69', '2.11.69', '3.11.69', '4.11.69', '5.11.69'];
+      const now = new Date();
+      for (let diff = -5; diff <= 3; diff++) {
+        const d = new Date(now.getTime() + diff * 86400000);
+        const day = d.getDate();
+        const month = d.getMonth() + 1;
+        const thaiYearShort = (d.getFullYear() + 543) % 100;
+        const tab = `${day}.${month}.${thaiYearShort}`;
+        if (!candidates.includes(tab)) candidates.push(tab);
+      }
+      state.customTabs.forEach(t => {
+        if (!candidates.includes(t)) candidates.push(t);
+      });
+      return candidates;
+    }
+
+    function fetchSheetTabGviz(tabName) {
+      return new Promise((resolve) => {
+        const cbName = 'gvizCb_' + tabName.replace(/[^a-zA-Z0-9]/g, '_') + '_' + Math.floor(Math.random() * 100000);
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          resolve(null);
+        }, 6500);
+
+        function cleanup() {
+          clearTimeout(timeout);
+          if (script.parentNode) script.parentNode.removeChild(script);
+          delete window[cbName];
+        }
+
+        window[cbName] = function(res) {
+          cleanup();
+          if (!res || !res.table || !res.table.rows) return resolve(null);
+          resolve(res.table.rows);
+        };
+
+        script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&sheet=${encodeURIComponent(tabName)}`;
+        script.onerror = () => {
+          cleanup();
+          resolve(null);
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    function doesRowDateMatchTab(dateCellStr, tabName) {
+      if (!dateCellStr) return false;
+      const parts = dateCellStr.trim().split('/');
+      if (parts.length !== 3) return true;
+      const d = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      const yShort = parseInt(parts[2], 10) % 100;
+      return `${d}.${m}.${yShort}` === tabName.trim();
+    }
+
+    async function syncGoogleSheets(forceAll = false) {
+      const statusEl = document.getElementById('syncStatusText');
+      if (statusEl) statusEl.textContent = '🔄 กำลังตรวจแท็บวันที่ใหม่...';
+
+      const candidates = generateCandidateDateTabs();
+      const tabsToFetch = candidates.filter(t => forceAll ? true : !state.resolvedTabsCache[t]);
+
+      let newFoundCount = 0;
+
+      await Promise.all(tabsToFetch.map(async (tabName) => {
+        const rows = await fetchSheetTabGviz(tabName);
+        if (!rows || !rows.length) return;
+
+        let firstDateStr = '';
+        for (let i = 0; i < Math.min(rows.length, 10); i++) {
+          const c0 = rows[i].c && rows[i].c[0] ? String(rows[i].c[0].f || rows[i].c[0].v || '').trim() : '';
+          if (c0 && c0.includes('/')) {
+            firstDateStr = c0;
+            break;
           }
         }
-      } catch (e) {}
-    }
+        if (firstDateStr && !doesRowDateMatchTab(firstDateStr, tabName)) return;
 
-    function saveWorkspace(silent = false) {
-      try {
-        localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(workspace));
-        const ind = document.getElementById('autoSaveIndicator');
-        if (ind) {
-          const t = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-          ind.textContent = `💾 บันทึกความจำอัตโนมัติแล้ว (${t})`;
+        let pnkTotalInTab = 0;
+        let pnkUnresolvedInTab = 0;
+
+        rows.forEach((r, idx) => {
+          const c = r.c || [];
+          const val = (i) => (c[i] ? String(c[i].f || c[i].v || '').trim() : '');
+          const officeCode = val(4);
+          const officeName = val(5);
+          if (officeCode === TARGET_OFFICE_CODE || officeName.includes('ปณก')) {
+            const barcode = val(6).toUpperCase();
+            if (!barcode) return;
+            pnkTotalInTab++;
+            const sheetCause = val(10);
+            upsertSheetCase({
+              tabName,
+              date: val(0) || tabName,
+              rowNum: idx + 2,
+              service: val(2),
+              barcode,
+              bagTime: val(8),
+              operator: val(9),
+              sheetCause
+            }, false);
+
+            const caseObj = state.casesByBarcode[barcode];
+            if (!caseObj.closedByUser && !sheetCause) {
+              pnkUnresolvedInTab++;
+              newFoundCount++;
+            }
+          }
+        });
+
+        if (pnkTotalInTab > 0 && pnkUnresolvedInTab === 0) {
+          state.resolvedTabsCache[tabName] = true;
         }
-      } catch (e) {}
-    }
+      }));
 
-    function getTrackState(code, isCenter) {
-      if (!workspace.neighborStore[code]) {
-        workspace.neighborStore[code] = {
-          status: isCenter ? 'found' : 'unchecked',
-          receiptNo: '',
-          note: isCenter ? 'เลขหลักในชีต (ขึ้นสถานะแรก: ใส่ของลงถุง ไม่มีสถานะรับฝาก)' : ''
-        };
+      saveState();
+      renderAll();
+
+      if (statusEl) {
+        statusEl.textContent = `✅ ซิงค์ล่าสุดแล้ว (ข้ามวันในประวัติ ${Object.keys(state.resolvedTabsCache).length} วัน)`;
       }
-      return workspace.neighborStore[code];
     }
 
-    // Close / Complete a Case (or Reopen it)
-    function closeCase(barcode) {
-      const item = workspace.casesByBarcode[barcode];
-      if (!item) return;
-      item.isClosed = true;
-      item.closedAt = new Date().toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
-
-      // Check if all cases in that sheetTab are now closed -> mark tab as resolved in cache!
-      const tabCases = Object.values(workspace.casesByBarcode).filter(x => x.sheetTab === item.sheetTab);
-      if (tabCases.length > 0 && tabCases.every(x => x.isClosed || (x.sheetCause && x.sheetCause.trim()))) {
-        workspace.resolvedTabsCache[item.sheetTab] = true;
-      }
-
-      saveWorkspace();
-      renderAll();
-      showToast(`✅ ปิดงานเคส ${barcode} เรียบร้อยแล้ว! (ย้ายไปเก็บในประวัติเคสที่ทำเสร็จแล้ว)`);
+    function addManualDateTab() {
+      const inp = document.getElementById('manualTabInput');
+      const tabName = (inp ? inp.value : '').trim();
+      if (!tabName) return showToast('กรุณาพิมพ์ชื่อแท็บวันที่ เช่น 3.11.69');
+      if (!state.customTabs.includes(tabName)) state.customTabs.push(tabName);
+      delete state.resolvedTabsCache[tabName];
+      saveState();
+      inp.value = '';
+      syncGoogleSheets(false);
     }
 
-    function reopenCase(barcode) {
-      const item = workspace.casesByBarcode[barcode];
-      if (!item) return;
-      item.isClosed = false;
-      workspace.resolvedTabsCache[item.sheetTab] = false;
-      saveWorkspace();
-      renderAll();
-      showToast(`↩️ เปิดเคส ${barcode} กลับมาแก้ไขแล้ว`);
-    }
+    // Main Render
+    function renderAll() {
+      const allCases = Object.values(state.casesByBarcode);
+      const activeCases = allCases.filter(c => !c.closedByUser && !(c.sheetCause && c.sheetCause.trim()));
+      const archivedCases = allCases.filter(c => c.closedByUser || (c.sheetCause && c.sheetCause.trim()));
 
-    function closeAllCasesInDateGroup(tabName) {
-      const list = Object.values(workspace.casesByBarcode).filter(x => x.sheetTab === tabName && !x.isClosed);
-      list.forEach(item => {
-        item.isClosed = true;
-        item.closedAt = new Date().toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
-      });
-      workspace.resolvedTabsCache[tabName] = true;
-      saveWorkspace();
-      renderAll();
-      showToast(`🎉 ปิดงานทั้งกลุ่มแท็บ ${tabName} (${list.length} เคส) เรียบร้อยแล้ว!`);
-    }
-
-    // Scan ONLY Pending Tabs & Future Date Tabs (Never re-queries already resolved tabs!)
-    function scanNewAndPendingSheets(manualTrigger = false) {
-      const candidates = new Set();
-
-      // 1. Add known tabs that are NOT yet marked as 100% resolved
-      workspace.knownTabs.forEach(t => {
-        if (!workspace.resolvedTabsCache[t]) {
-          candidates.add(t);
-        }
+      // Group active cases by Date Tab
+      const byDate = {};
+      activeCases.forEach(c => {
+        const key = c.tabName || c.date || 'ไม่ระบุวัน';
+        if (!byDate[key]) byDate[key] = [];
+        byDate[key].push(c);
       });
 
-      // 2. Auto-probe future/recent date tabs (Today and the past 5 days in D.M.YY format)
-      const now = new Date();
-      for (let d = -1; d <= 5; d++) {
-        const dt = new Date(now.getTime() - d * 86400000);
-        const day = dt.getDate();
-        const month = dt.getMonth() + 1;
-        // Support Buddhist Year 2-digit (e.g. 2026 -> 2569 -> '69', or if real year is 2025 -> '68')
-        const ceYear = dt.getFullYear();
-        const be2Digit = String(ceYear + 543).slice(-2);
-        const tabCandidate = `${day}.${month}.${be2Digit}`;
-        if (!workspace.resolvedTabsCache[tabCandidate]) {
-          candidates.add(tabCandidate);
+      // Count unique series groups across all active dates
+      let totalSeriesGroups = 0;
+      const uniqueNeighborSet = new Set();
+      Object.values(byDate).forEach(list => {
+        totalSeriesGroups += groupCasesBySeries(list).length;
+        list.forEach(c => {
+          generateNeighbors(c.barcode, 3).forEach(n => uniqueNeighborSet.add(n.code));
+        });
+      });
+
+      document.getElementById('statActiveCount').textContent = activeCases.length;
+      document.getElementById('statSeriesCount').textContent = totalSeriesGroups;
+      document.getElementById('statClosedCount').textContent = archivedCases.length;
+      document.getElementById('btnTotalActiveCount').textContent = uniqueNeighborSet.size;
+
+      const skippedEl = document.getElementById('skippedTabsList');
+      if (skippedEl) {
+        const tabs = Object.keys(state.resolvedTabsCache);
+        skippedEl.textContent = tabs.length ? tabs.join(', ') : '-';
+      }
+
+      const container = document.getElementById('activeCasesContainer');
+      const tabKeys = Object.keys(byDate);
+
+      if (tabKeys.length === 0) {
+        container.innerHTML = `
+          <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.35); border-radius:10px; padding:18px; text-align:center;">
+            <h3 style="color:#6ee7b7; font-size:1.05rem;">🎉 ไม่มีงานค้าง! ปณก. 10501 ปิดเคสและลงสาเหตุครบทุกหมายเลขแล้ว</h3>
+            <p style="font-size:0.82rem; color:#94a3b8; margin-top:4px;">เมื่อมีแท็บวันที่ใหม่เพิ่มใน Google Sheet ระบบจะดึงเฉพาะรายการที่ยังไม่มีสาเหตุขึ้นมาแสดงอัตโนมัติ</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = tabKeys.map(tabKey => renderDateSection(tabKey, byDate[tabKey])).join('');
+      }
+
+      renderArchiveSection(archivedCases);
+    }
+
+    function renderDateSection(tabKey, casesInDate) {
+      const isDateCollapsed = Boolean(state.collapsedDates[tabKey]);
+      const seriesGroups = groupCasesBySeries(casesInDate);
+
+      // Compute row range in sheet for 1-click multi-row paste
+      const rowNums = casesInDate.map(c => c.rowNum).filter(Boolean).sort((a, b) => a - b);
+      const minRow = rowNums.length ? rowNums[0] : '-';
+      const maxRow = rowNums.length ? rowNums[rowNums.length - 1] : '-';
+
+      const uniqueCodes = new Set();
+      casesInDate.forEach(c => generateNeighbors(c.barcode, 3).forEach(n => uniqueCodes.add(n.code)));
+
+      return `
+        <div class="date-section">
+          <div class="date-header">
+            <div class="date-title" onclick="toggleDateCollapse('${tabKey}')">
+              <span class="date-badge">📅 แท็บวันที่ ${tabKey}</span>
+              <span style="font-size:0.84rem; font-weight:700; color:#e2e8f0;">
+                ค้าง ${casesInDate.length} หมายเลข • จัดได้ ${seriesGroups.length} กลุ่มหมวดเลข
+              </span>
+              <span style="font-size:0.75rem; color:#94a3b8;">(แถวในชีต ${minRow}–${maxRow})</span>
+              <span style="font-size:0.75rem; color:#38bdf8;">${isDateCollapsed ? '[คลิกเพื่อกาง ▼]' : '[คลิกเพื่อย่อ ▲]'}</span>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn btn-primary btn-xs" onclick="copyDateGroupBarcodes('${tabKey}')">
+                📋 ก๊อปปี้เลขค้นหาวันนี้ (${uniqueCodes.size} เลข)
+              </button>
+              <button class="btn btn-success btn-xs" onclick="copyDateCausesForSheetPaste('${tabKey}')" title="เรียงตามบรรทัดในชีต เพื่อกด Ctrl+V ที่ช่อง K${minRow} ครั้งเดียวลงครบทุกแถว">
+                📋 ก๊อปปี้สาเหตุเรียงตามแถว (${minRow}–${maxRow}) ไปกด Ctrl+V ช่อง K${minRow}
+              </button>
+              <button class="btn btn-outline btn-xs" onclick="closeAllCasesInDate('${tabKey}')">
+                ✅ ปิดงานทั้งวัน (${tabKey})
+              </button>
+            </div>
+          </div>
+
+          <div class="date-body ${isDateCollapsed ? 'collapsed' : ''}">
+            ${seriesGroups.map(sg => renderSeriesGroup(tabKey, sg)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSeriesGroup(tabKey, sg) {
+      const groupId = `${tabKey}__${sg.seriesKey}`;
+      const isSeriesCollapsed = Boolean(state.collapsedSeries[groupId]);
+      const isBatchBarOpen = Boolean(state.openBatchBar[groupId]);
+
+      const firstItem = sg.items[0];
+      const lastItem = sg.items[sg.items.length - 1];
+      const serialRangeText = (firstItem.parsed && lastItem.parsed && sg.items.length > 1)
+        ? `ช่วงเลขท้าย ${firstItem.parsed.last4Digits} ถึง ${lastItem.parsed.last4Digits}`
+        : `เลขท้าย ${firstItem.parsed ? firstItem.parsed.last4Digits : ''}`;
+
+      // Count unique ±3 numbers for this series group (smartly deduplicated!)
+      const groupNeighborSet = new Set();
+      sg.items.forEach(e => generateNeighbors(e.caseObj.barcode, 3).forEach(n => groupNeighborSet.add(n.code)));
+
+      return `
+        <div class="series-group">
+          <div class="series-header">
+            <div class="series-title-area" onclick="toggleSeriesCollapse('${groupId}')">
+              <span class="series-prefix-badge">📦 หมวด ${sg.seriesKey}</span>
+              <span style="font-size:0.82rem; font-weight:700; color:#f8fafc;">
+                ${sg.items.length} รายการ
+              </span>
+              <span style="font-size:0.76rem; color:#94a3b8;">(${serialRangeText})</span>
+              <span style="font-size:0.74rem; color:#38bdf8;">${isSeriesCollapsed ? '▼ กางหมวดนี้' : '▲ ย่อหมวดนี้'}</span>
+            </div>
+
+            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+              <button class="btn btn-primary btn-xs" onclick="copySeriesGroupBarcodes('${tabKey}', '${sg.seriesKey}')">
+                📋 ก๊อปปี้เลข ±3 กลุ่มนี้ (${groupNeighborSet.size} เลข)
+              </button>
+              ${sg.items.length > 1 ? `
+              <button class="btn btn-outline btn-xs" onclick="copySeriesBoundaryBarcodes('${tabKey}', '${sg.seriesKey}')" title="คัดลอกเฉพาะ 3 เลขก่อนตัวแรก และ 3 เลขหลังตัวสุดท้ายของกลุ่มนี้">
+                ⚡ ก๊อปปี้เฉพาะหัว-ท้ายกลุ่ม
+              </button>` : ''}
+              <button class="btn btn-warning btn-xs" onclick="toggleSeriesBatchBar('${groupId}')">
+                ✍️ ใส่สาเหตุทั้งกลุ่ม (${sg.items.length})
+              </button>
+              <button class="btn btn-success btn-xs" onclick="closeSeriesGroup('${tabKey}', '${sg.seriesKey}')">
+                ✅ ปิดงานกลุ่มนี้
+              </button>
+            </div>
+          </div>
+
+          <!-- Batch Cause Drawer for Entire Series Group -->
+          <div class="series-batch-bar ${isBatchBarOpen ? 'open' : ''}">
+            <div style="font-size:0.78rem; font-weight:700; color:#fcd34d; margin-bottom:5px;">
+              ⚡ เลือกหรือพิมพ์สาเหตุเพื่อใช้กับทั้ง ${sg.items.length} หมายเลขในหมวด ${sg.seriesKey} พร้อมกัน:
+            </div>
+            <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
+              ${COMMON_CAUSES.map(text => `
+                <span class="chip" onclick="applyBatchCauseToSeries('${tabKey}', '${sg.seriesKey}', '${text.replace(/'/g, "\\'")}')">+ ${text}</span>
+              `).join('')}
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <input type="text" id="batchInput_${groupId}" class="note-input" style="max-width:420px;" placeholder="พิมพ์สาเหตุสำหรับทั้งกลุ่ม ${sg.seriesKey}...">
+              <button class="btn btn-success btn-xs" onclick="applyBatchCauseToSeries('${tabKey}', '${sg.seriesKey}', document.getElementById('batchInput_${groupId}').value)">
+                ✅ ใช้สาเหตุนี้ทั้งกลุ่ม (${sg.items.length} เคส)
+              </button>
+            </div>
+          </div>
+
+          <div class="series-items ${isSeriesCollapsed ? 'collapsed' : ''}">
+            ${sg.items.map(entry => renderCompactCaseRow(entry)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCompactCaseRow(entry) {
+      const c = entry.caseObj;
+      const p = entry.parsed;
+      const isExpanded = Boolean(state.expandedCases[c.barcode]);
+
+      // Formatted barcode highlighting the changing 4 digits
+      const barcodeHtml = p
+        ? `<span class="barcode-split"><span class="bc-prefix">${p.prefix} ${p.seriesPrefix4}</span> <span class="bc-mid">${p.last4Digits}</span> <span class="bc-check">${p.checkDigit}</span> <span class="bc-suffix">${p.suffix}</span></span>`
+        : `<span class="barcode-split">${c.barcode}</span>`;
+
+      // Gap badge showing relation to previous item in the same series group
+      let gapHtml = '';
+      if (entry.gap !== null) {
+        if (entry.gap === 1) {
+          gapHtml = `<span class="gap-badge gap-contiguous">🔗 เรียงติดกัน (+1)</span>`;
+        } else if (entry.gap <= 15) {
+          gapHtml = `<span class="gap-badge gap-near">🔗 ใกล้กัน (ข้าม ${entry.gap - 1} เลข / +${entry.gap})</span>`;
+        } else {
+          gapHtml = `<span class="gap-badge gap-far">↔️ ห่าง +${entry.gap.toLocaleString()}</span>`;
         }
       }
 
-      const listToFetch = Array.from(candidates);
-      if (listToFetch.length === 0 && manualTrigger) {
-        showToast('ทุกแท็บวันที่ที่มีอยู่ถูกปิดงาน/ลงสาเหตุครบแล้ว! หากมีแท็บชื่ออื่น พิมพ์เพิ่มในช่องด้านขวาได้เลยครับ');
+      const hasCause = Boolean(c.userCause && c.userCause.trim());
+      const causeBadgeHtml = hasCause
+        ? `<span class="cause-preview filled" title="${c.userCause.replace(/"/g, '&quot;')}">✓ ${c.userCause}</span>`
+        : `<span class="cause-preview empty">รอระบุสาเหตุ</span>`;
+
+      return `
+        <div class="case-row" id="caseRow_${c.barcode}">
+          <!-- Single-Line Summary (Always Visible) -->
+          <div class="case-summary-line" onclick="toggleCaseDetail('${c.barcode}')">
+            <div class="case-left">
+              <span class="row-num-pill">แถว ${c.rowNum}</span>
+              ${barcodeHtml}
+              ${gapHtml}
+              <span class="meta-mini">${c.service} • ${c.bagTime} • <b>${c.operator}</b></span>
+              ${c.companyName ? `<span style="font-size:0.74rem; color:#c4b5fd;">🏢 ${c.companyName}</span>` : ''}
+            </div>
+
+            <div class="case-right" onclick="event.stopPropagation()">
+              ${causeBadgeHtml}
+              <button class="btn btn-outline btn-xs" onclick="toggleCaseDetail('${c.barcode}')">
+                ${isExpanded ? '▲ ย่อเก็บ' : '🔍 กางดู ±3 / QR'}
+              </button>
+              <button class="btn btn-success btn-xs" onclick="copyCauseAndCloseCase('${c.barcode}')" title="คัดลอกสาเหตุและปิดเคสนี้">
+                ✅ ปิดเคส
+              </button>
+            </div>
+          </div>
+
+          <!-- Detailed Drawer (Collapsed by default, rendered when open) -->
+          <div class="case-detail-drawer ${isExpanded ? 'open' : ''}" id="drawer_${c.barcode}">
+            ${isExpanded ? renderExpandedCaseDetails(c) : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExpandedCaseDetails(c) {
+      const neighbors = generateNeighbors(c.barcode, 3);
+      return `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+          <div style="font-size:0.8rem; color:#93c5fd; font-weight:600;">
+            📌 เลขข้างเคียง -3 ถึง +3 ของ <b>${c.barcode}</b> (แถวในชีต: ${c.rowNum})
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-success btn-xs" onclick="toggleQrStrip('${c.barcode}')">📲 แสดงแผง QR Code ทั้ง 7 เลข</button>
+            <button class="btn btn-primary btn-xs" onclick="copySingleCaseNeighbors('${c.barcode}')">📋 คัดลอกชุดนี้ (7 เลข)</button>
+          </div>
+        </div>
+
+        <div id="qrStrip_${c.barcode}" class="qr-strip">
+          <div class="qr-strip-grid" id="qrGrid_${c.barcode}"></div>
+        </div>
+
+        <table class="neighbor-table">
+          <thead>
+            <tr>
+              <th style="width:90px;">ลำดับ</th>
+              <th style="width:190px;">หมายเลขพัสดุ (S10)</th>
+              <th style="width:120px;">ยิง QR / คัดลอก</th>
+              <th style="width:130px;">สถานะตรวจพบ</th>
+              <th>บันทึกผล QMS / เลขใบเสร็จ 13 หลัก</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${neighbors.map(n => {
+              const isMain = n.offset === 0;
+              const ns = getNeighborEntry(n.code);
+              const offsetClass = isMain ? 'offset-zero' : (n.offset < 0 ? 'offset-neg' : 'offset-pos');
+              const offsetLabel = isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`);
+
+              return `
+                <tr class="${isMain ? 'row-main' : ''}">
+                  <td><span class="offset-tag ${offsetClass}">${offsetLabel}</span></td>
+                  <td>
+                    <span class="barcode-split">
+                      <span class="bc-prefix">${n.prefix} ${n.seriesPrefix4}</span>
+                      <span class="bc-mid">${n.last4}</span>
+                      <span class="bc-check">${n.check}</span>
+                      <span class="bc-suffix">${n.suffix}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <div style="display:flex; gap:4px;">
+                      <button class="btn btn-success btn-xs" onclick="openQrModal('${c.barcode}', '${n.code}')">📲 QR</button>
+                      <button class="btn btn-outline btn-xs" onclick="copySingleNeighbor('${n.code}')">📋</button>
+                    </div>
+                  </td>
+                  <td>
+                    ${isMain
+                      ? `<span style="color:#f87171; font-size:0.75rem; font-weight:700;">❌ ไม่มีสถานะรับฝาก</span>`
+                      : `
+                        <select class="note-input" style="padding:2px 4px; font-size:0.74rem;" onchange="updateNeighborStatus('${n.code}', this.value)">
+                          <option value="unknown" ${ns.status === 'unknown' ? 'selected' : ''}>⏳ รอตรวจ</option>
+                          <option value="found" ${ns.status === 'found' ? 'selected' : ''}>✅ มีรับฝาก</option>
+                          <option value="missing" ${ns.status === 'missing' ? 'selected' : ''}>❌ ไม่มีรับฝาก</option>
+                        </select>
+                      `
+                    }
+                  </td>
+                  <td>
+                    ${isMain
+                      ? `<span style="font-size:0.76rem; color:#fca5a5;">สแกนลงถุง ${c.bagTime} โดย <b>${c.operator}</b></span>`
+                      : `<input type="text" class="note-input" style="padding:3px 6px; font-size:0.75rem;" placeholder="วางผล QMS / เลขใบเสร็จ..." value="${(ns.note || '').replace(/"/g, '&quot;')}" oninput="updateNeighborNote('${n.code}', this.value)">`
+                    }
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+
+        <!-- Individual Cause & Receipt Input -->
+        <div style="background:#111827; border:1px solid #334155; border-radius:8px; padding:8px 10px;">
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
+            <span style="font-size:0.74rem; color:#fcd34d; font-weight:600;">⚡ จิ้มเลือกสาเหตุ:</span>
+            ${COMMON_CAUSES.map(text => `
+              <span class="chip" onclick="setCaseCause('${c.barcode}', '${text.replace(/'/g, "\\'")}')">+ ${text}</span>
+            `).join('')}
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="causeInput_${c.barcode}" class="note-input" style="flex:2; min-width:220px;" placeholder="สาเหตุสำหรับวางในแท็บ ${c.tabName} แถว ${c.rowNum} (คอลัมน์ K)..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="updateCaseField('${c.barcode}', 'userCause', this.value)">
+            <input type="text" class="note-input" style="flex:1; min-width:140px; font-family:var(--mono);" placeholder="เลขใบเสร็จ 13 หลัก (ถ้ามี)" value="${(c.receiptNo || '').replace(/"/g, '&quot;')}" oninput="updateCaseField('${c.barcode}', 'receiptNo', this.value)">
+            <input type="text" class="note-input" style="flex:1; min-width:140px;" placeholder="ชื่อบริษัท/ลูกค้า" value="${(c.companyName || '').replace(/"/g, '&quot;')}" oninput="updateCaseField('${c.barcode}', 'companyName', this.value)">
+            <button class="btn btn-accent btn-xs" onclick="copyCauseOnly('${c.barcode}')">📋 คัดลอกสาเหตุ</button>
+            <button class="btn btn-success btn-xs" onclick="copyCauseAndCloseCase('${c.barcode}')">📋 คัดลอก + ✅ ปิดเคสนี้</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderArchiveSection(archivedCases) {
+      document.getElementById('archiveTotalCount').textContent = archivedCases.length;
+      const container = document.getElementById('archiveListContainer');
+      if (!archivedCases.length) {
+        container.innerHTML = `<div style="color:#64748b; font-size:0.8rem;">ยังไม่มีเคสที่ปิดงานแล้ว</div>`;
         return;
       }
 
-      listToFetch.forEach((tabName, idx) => {
-        fetchSingleTabJsonp(tabName, idx === listToFetch.length - 1);
-      });
+      container.innerHTML = archivedCases.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; padding:6px 8px; border-bottom:1px solid rgba(51,65,85,0.4); font-size:0.8rem;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span class="row-num-pill">แท็บ ${c.tabName} • แถว ${c.rowNum}</span>
+            <b style="font-family:var(--mono); color:#6ee7b7;">${c.barcode}</b>
+            <span style="color:#cbd5e1;">สาเหตุ: <b>${c.userCause || c.sheetCause || '-'}</b></span>
+          </div>
+          <button class="btn btn-outline btn-xs" onclick="reopenCase('${c.barcode}')">↩️ เปิดกลับมาทำใหม่</button>
+        </div>
+      `).join('');
     }
 
-    function fetchSingleTabJsonp(tabName, isLast) {
-      const cbName = 'onSheetTab_' + tabName.replace(/\W/g, '_') + '_' + Math.floor(Math.random() * 100000);
-      window[cbName] = function(res) {
-        delete window[cbName];
-        const scriptEl = document.getElementById(cbName);
-        if (scriptEl) scriptEl.remove();
+    // Collapse / Expand Handlers
+    function toggleToolDrawer(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
 
-        if (!res || res.status !== 'ok' || !res.table || !res.table.rows) return;
-        const rows = res.table.rows;
-        if (!rows.length) return;
+    function toggleDateCollapse(tabKey) {
+      state.collapsedDates[tabKey] = !state.collapsedDates[tabKey];
+      renderAll();
+    }
 
-        // Verify that the returned sheet actually matches tabName (Google Sheets returns first tab 28.10.69 if tabName doesn't exist)
-        let firstDateStr = '';
-        for (let i = 0; i < Math.min(rows.length, 10); i++) {
-          const c = rows[i].c;
-          if (c && c[0]) {
-            firstDateStr = (c[0].f || String(c[0].v || '')).trim();
-            if (firstDateStr) break;
+    function toggleSeriesCollapse(groupId) {
+      state.collapsedSeries[groupId] = !state.collapsedSeries[groupId];
+      renderAll();
+    }
+
+    function toggleSeriesBatchBar(groupId) {
+      state.openBatchBar[groupId] = !state.openBatchBar[groupId];
+      renderAll();
+    }
+
+    function toggleCaseDetail(barcode) {
+      state.expandedCases[barcode] = !state.expandedCases[barcode];
+      renderAll();
+    }
+
+    function collapseAllDetails() {
+      state.expandedCases = {};
+      state.openBatchBar = {};
+      renderAll();
+      showToast('📁 ย่อเก็บรายละเอียดทุกรายการแล้ว');
+    }
+
+    function expandAllDetails() {
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          state.expandedCases[c.barcode] = true;
+        }
+      });
+      renderAll();
+      showToast('📂 กางรายละเอียดทุกรายการแล้ว');
+    }
+
+    // Group & Batch Actions
+    function applyBatchCauseToSeries(tabKey, seriesKey, causeText) {
+      const clean = (causeText || '').trim();
+      if (!clean) return showToast('กรุณาเลือกหรือพิมพ์สาเหตุก่อนครับ');
+      let count = 0;
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          const p = parseS10(c.barcode);
+          const k = p ? p.seriesKey : 'หมวดอื่นๆ';
+          if (k === seriesKey) {
+            c.userCause = clean;
+            count++;
           }
         }
+      });
+      saveState();
+      renderAll();
+      showToast(`✅ ใส่สาเหตุให้หมวด ${seriesKey} ทั้ง ${count} หมายเลขเรียบร้อย!`);
+    }
 
-        if (firstDateStr.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
-          const parts = firstDateStr.split('/');
-          const dNum = parseInt(parts[0], 10);
-          const mNum = parseInt(parts[1], 10);
-          const yShort = parts[2].slice(-2);
-          const expectedTab = `${dNum}.${mNum}.${yShort}`;
-          if (expectedTab !== tabName && tabName !== '28.10.69') {
-            // Non-existent future tab returned fallback first sheet; ignore
-            return;
+    function copySeriesGroupBarcodes(tabKey, seriesKey) {
+      const codes = new Set();
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          const p = parseS10(c.barcode);
+          const k = p ? p.seriesKey : 'หมวดอื่นๆ';
+          if (k === seriesKey) {
+            generateNeighbors(c.barcode, 3).forEach(n => {
+              codes.add(n.code);
+              getNeighborEntry(n.code).checked = true;
+            });
           }
         }
+      });
+      const arr = Array.from(codes);
+      copyTextToClipboard(arr.join('\n'), `คัดลอกเลขหมวด ${seriesKey} (${arr.length} หมายเลข ตัดซ้ำแล้ว)`);
+      saveState();
+    }
 
-        if (!workspace.knownTabs.includes(tabName)) {
-          workspace.knownTabs.unshift(tabName);
+    function copySeriesBoundaryBarcodes(tabKey, seriesKey) {
+      const items = Object.values(state.casesByBarcode).filter(c => {
+        if (c.tabName !== tabKey || c.closedByUser || (c.sheetCause && c.sheetCause.trim())) return false;
+        const p = parseS10(c.barcode);
+        return (p ? p.seriesKey : 'หมวดอื่นๆ') === seriesKey;
+      });
+      if (!items.length) return;
+      items.sort((a, b) => {
+        const pa = parseS10(a.barcode);
+        const pb = parseS10(b.barcode);
+        return (pa && pb) ? (pa.serialNum - pb.serialNum) : (a.rowNum - b.rowNum);
+      });
+      const first = items[0];
+      const last = items[items.length - 1];
+      const codes = new Set();
+      generateNeighbors(first.barcode, 3).filter(n => n.offset <= 0).forEach(n => codes.add(n.code));
+      generateNeighbors(last.barcode, 3).filter(n => n.offset >= 0).forEach(n => codes.add(n.code));
+      const arr = Array.from(codes);
+      copyTextToClipboard(arr.join('\n'), `คัดลอกเฉพาะเลขหัว-ท้ายหมวด ${seriesKey} (${arr.length} หมายเลข)`);
+    }
+
+    function closeSeriesGroup(tabKey, seriesKey) {
+      const nowStr = new Date().toLocaleString('th-TH');
+      let count = 0;
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          const p = parseS10(c.barcode);
+          const k = p ? p.seriesKey : 'หมวดอื่นๆ';
+          if (k === seriesKey) {
+            c.closedByUser = true;
+            c.closedAt = nowStr;
+            count++;
+          }
         }
+      });
+      checkIfDateFullyClosed(tabKey);
+      saveState();
+      renderAll();
+      showToast(`✅ ปิดงานหมวด ${seriesKey} (${count} เคส) เรียบร้อย!`);
+    }
 
-        let duplicateSkipped = 0;
-        let pnkCountInTab = 0;
-        let resolvedCountInTab = 0;
+    // 1-Click Safe Multi-Row Copy for Google Sheets Column K!
+    function copyDateCausesForSheetPaste(tabKey) {
+      const casesInTab = Object.values(state.casesByBarcode).filter(c => c.tabName === tabKey);
+      if (!casesInTab.length) return;
+      casesInTab.sort((a, b) => a.rowNum - b.rowNum);
 
-        for (let i = 0; i < rows.length; i++) {
-          const c = rows[i].c;
-          if (!c) continue;
-          const getVal = (idx) => (c[idx] ? (c[idx].f || (c[idx].v !== null && c[idx].v !== undefined ? String(c[idx].v) : '')) : '').trim();
+      const minRow = casesInTab[0].rowNum;
+      const maxRow = casesInTab[casesInTab.length - 1].rowNum;
+      const byRow = {};
+      casesInTab.forEach(c => {
+        byRow[c.rowNum] = (c.userCause || c.sheetCause || '').trim();
+      });
 
-          const officeCode = getVal(4);
-          const officeName = getVal(5);
-          const barcode = getVal(6).toUpperCase();
+      const lines = [];
+      let filledCount = 0;
+      for (let r = minRow; r <= maxRow; r++) {
+        const txt = byRow[r] || '';
+        if (txt) filledCount++;
+        lines.push(txt);
+      }
 
-          if ((officeCode === '10501' || officeName.includes('ปณก')) && barcode.match(/^[A-Z]{2}\d{9}[A-Z]{2}$/)) {
-            pnkCountInTab++;
-            const sheetCause = getVal(10);
-            const existing = workspace.casesByBarcode[barcode];
+      copyTextToClipboard(
+        lines.join('\n'),
+        `📋 คัดลอกสาเหตุเรียงตามแถว ${minRow}–${maxRow} (${filledCount} แถว) แล้ว! ไปคลิกช่อง K${minRow} ในชีตแล้วกด Ctrl+V ครั้งเดียววางครบทุกแถวได้เลย`
+      );
+    }
 
-            if (existing) {
-              // Deduplicate! Preserve user's saved notes/causeNote/isClosed state, only update sheetCause if newly added in sheet
-              if (existing.sheetTab !== tabName || existing.sheetRow !== (i + 2)) {
-                duplicateSkipped++;
-              }
-              if (sheetCause && !existing.sheetCause) {
-                existing.sheetCause = sheetCause;
-                if (!existing.userCauseNote) existing.userCauseNote = sheetCause;
-                existing.isClosed = true;
-                existing.closedAt = 'บันทึกในชีตแล้ว';
-              }
-              if (existing.isClosed || existing.sheetCause) {
-                resolvedCountInTab++;
-              }
+    function updateCaseField(barcode, field, value) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      c[field] = value;
+      saveState();
+      // Update summary badge live without closing drawer
+      if (field === 'userCause') {
+        const row = document.getElementById(`caseRow_${barcode}`);
+        if (row) {
+          const preview = row.querySelector('.cause-preview');
+          if (preview) {
+            if (value && value.trim()) {
+              preview.className = 'cause-preview filled';
+              preview.textContent = '✓ ' + value.trim();
             } else {
-              const isAlreadyDoneInSheet = sheetCause.length > 0;
-              if (isAlreadyDoneInSheet) resolvedCountInTab++;
-              workspace.casesByBarcode[barcode] = {
-                barcode: barcode,
-                sheetTab: tabName,
-                sheetRow: i + 2,
-                date: getVal(0) || firstDateStr || tabName,
-                service: getVal(2),
-                scanTime: getVal(8).replace(/\s+/g, ' '),
-                operator: getVal(9),
-                sheetCause: sheetCause,
-                userCauseNote: sheetCause,
-                companyName: '',
-                isClosed: isAlreadyDoneInSheet,
-                closedAt: isAlreadyDoneInSheet ? 'บันทึกในชีตแล้ว' : null,
-                showQrStrip: !isAlreadyDoneInSheet
-              };
+              preview.className = 'cause-preview empty';
+              preview.textContent = 'รอระบุสาเหตุ';
             }
           }
         }
-
-        // If all PNK items in this tab have causes in sheet or are closed, mark tab as resolved so we don't query it again next time!
-        if (pnkCountInTab > 0 && resolvedCountInTab === pnkCountInTab) {
-          workspace.resolvedTabsCache[tabName] = true;
-        }
-
-        if (duplicateSkipped > 0) {
-          workspace.dedupCount = duplicateSkipped;
-        }
-
-        saveWorkspace(true);
-        renderAll();
-      };
-
-      const s = document.createElement('script');
-      s.id = cbName;
-      s.src = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=responseHandler:${cbName}&sheet=${encodeURIComponent(tabName)}&_ts=${Date.now()}`;
-      document.body.appendChild(s);
-    }
-
-    function addCustomSheetTab() {
-      const inp = document.getElementById('customTabNameInput');
-      const val = inp.value.trim();
-      if (!val) return;
-      workspace.resolvedTabsCache[val] = false; // Force check
-      if (!workspace.knownTabs.includes(val)) {
-        workspace.knownTabs.unshift(val);
-      }
-      inp.value = '';
-      fetchSingleTabJsonp(val, true);
-      showToast(`กำลังดึงข้อมูลแท็บ "${val}" จาก Google Sheets...`);
-    }
-
-    const statusConfig = {
-      unchecked: { label: '⚪ ยังไม่เช็ค', badgeClass: 'bg-slate-800 text-slate-400 border-slate-700', rowClass: '' },
-      viewed:    { label: '☑️ กดเช็คแล้ว', badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/40', rowClass: 'bg-sky-500/5' },
-      found:     { label: '✅ พบข้อมูลแล้ว', badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', rowClass: 'bg-emerald-500/5' },
-      relevant:  { label: '⭐ มีประเด็นเกี่ยวข้อง!', badgeClass: 'bg-amber-500/25 text-amber-300 border-amber-500/50 font-bold', rowClass: 'bg-amber-500/10' },
-      not_found: { label: '❌ ไม่พบข้อมูล', badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40', rowClass: 'opacity-50' }
-    };
-
-    const statusOrder = ['unchecked', 'viewed', 'found', 'relevant', 'not_found'];
-
-    function cycleStatus(code) {
-      const st = getTrackState(code, false);
-      const idx = statusOrder.indexOf(st.status);
-      st.status = statusOrder[(idx + 1) % statusOrder.length];
-      saveWorkspace();
-      renderAll();
-    }
-
-    function updateNote(code, value) {
-      const st = getTrackState(code, false);
-      st.note = value;
-      if (value.trim().length > 0 && st.status === 'unchecked') {
-        st.status = 'found';
-      }
-      saveWorkspace();
-    }
-
-    function updateReceiptNo(code, value) {
-      const st = getTrackState(code, false);
-      st.receiptNo = value.trim();
-      saveWorkspace();
-    }
-
-    function updateMainCause(barcode, value) {
-      const item = workspace.casesByBarcode[barcode];
-      if (item) {
-        item.userCauseNote = value;
-        saveWorkspace();
       }
     }
 
-    function setQuickCause(barcode, causeText) {
-      const item = workspace.casesByBarcode[barcode];
-      if (!item) return;
-      const prefix = item.companyName && item.companyName.trim() ? `[${item.companyName.trim()}] ` : '';
-      item.userCauseNote = prefix + causeText;
-      const inputEl = document.getElementById(`cause-input-${barcode}`);
-      if (inputEl) inputEl.value = item.userCauseNote;
-      saveWorkspace();
-      copyTextToClipboard(item.userCauseNote, `คัดลอกสาเหตุแล้ว! นำไปวางที่แท็บ ${item.sheetTab} แถว ${item.sheetRow} คอลัมน์ K ได้เลย`);
+    function setCaseCause(barcode, text) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      c.userCause = text;
+      const inp = document.getElementById(`causeInput_${barcode}`);
+      if (inp) inp.value = text;
+      updateCaseField(barcode, 'userCause', text);
+      copyTextToClipboard(text, `เลือกและคัดลอกสาเหตุแถว ${c.rowNum} แล้ว`);
     }
 
-    function applyCompanyToCause(barcode, companyStr) {
-      const item = workspace.casesByBarcode[barcode];
-      if (!item) return;
-      item.companyName = companyStr;
-      if (companyStr.trim()) {
-        const prefix = `[ลูกค้า/บริษัท: ${companyStr.trim()}] `;
-        const cleaned = (item.userCauseNote || '').replace(/^\[ลูกค้า\/บริษัท:.*?\]\s*/, '');
-        item.userCauseNote = prefix + cleaned;
-        const inputEl = document.getElementById(`cause-input-${barcode}`);
-        if (inputEl) inputEl.value = item.userCauseNote;
-      }
-      saveWorkspace();
+    function copyCauseOnly(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      const text = (c.userCause || '').trim();
+      if (!text) return showToast('กรุณาเลือกหรือพิมพ์สาเหตุก่อนคัดลอกครับ');
+      copyTextToClipboard(text, `คัดลอกสาเหตุสำหรับแถว ${c.rowNum} คอลัมน์ K แล้ว!`);
     }
 
-    function toggleCardQrStrip(barcode) {
-      const item = workspace.casesByBarcode[barcode];
-      if (!item) return;
-      item.showQrStrip = !item.showQrStrip;
-      saveWorkspace();
-      renderAll();
-    }
-
-    function toggleClosedArchive() {
-      const panel = document.getElementById('closedArchivePanel');
-      const btn = document.getElementById('btnToggleArchive');
-      panel.classList.toggle('hidden');
-      btn.textContent = panel.classList.contains('hidden') ? 'แสดงประวัติเคสที่ปิดแล้ว ▼' : 'ซ่อนประวัติเคสที่ปิดแล้ว ▲';
-    }
-
-    function exportBackupJson() {
-      const blob = new Blob([JSON.stringify(workspace, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `pnk-tracker-backup-${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast('💾 ดาวน์โหลดไฟล์สำรองข้อมูลเรียบร้อยแล้ว!');
-    }
-
-    function toggleManualCalcDrawer() {
-      document.getElementById('manualCalcDrawer').classList.toggle('hidden');
-      runCheckDigitCalc();
-    }
-
-    function runCheckDigitCalc() {
-      const rawInput = document.getElementById('calcSerialInput').value.trim().toUpperCase();
-      const prefixSelect = document.getElementById('calcPrefix');
-      const letterMatch = rawInput.match(/^([A-Z]{2})/);
-      let prefix = letterMatch ? letterMatch[1] : prefixSelect.value;
-      if (letterMatch && Array.from(prefixSelect.options).some(o => o.value === prefix)) {
-        prefixSelect.value = prefix;
-      }
-
-      const digitsOnly = rawInput.replace(/\D/g, '');
-      const banner = document.getElementById('calcResultBanner');
-      if (digitsOnly.length < 8) {
-        banner.innerHTML = `<span class="text-amber-300">⏳ กรุณาพิมพ์ตัวเลขอย่างน้อย 8 หลัก (ตอนนี้มี ${digitsOnly.length} หลัก)</span>`;
-        return;
-      }
-
-      const eightDigits = digitsOnly.slice(0, 8);
-      const info = calculateS10Details(eightDigits);
-      const fullBarcode = `${prefix}${eightDigits}${info.checkDigit}TH`;
-      currentCalcBarcode = fullBarcode;
-
-      banner.innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            เลข 8 หลัก: <b>${prefix}-${eightDigits}</b> ➔ หลักที่ 9 (Check Digit) คือ
-            <span class="px-2.5 py-0.5 rounded bg-emerald-500 text-black font-mono text-base font-black">${info.checkDigit}</span>
-            ➔ เลขเต็ม: <b class="text-emerald-300 font-mono text-sm">${fullBarcode}</b>
-          </div>
-          <button onclick="copyTextToClipboard('${fullBarcode}')" class="px-2.5 py-1 rounded bg-slate-800 text-white font-bold">📋 คัดลอก</button>
-        </div>
-      `;
-
-      document.getElementById('calcMainQrBox').innerHTML = createQrSvg(fullBarcode, 3, 1);
-      document.getElementById('calcMainQrLabel').textContent = fullBarcode;
-
-      const strip = document.getElementById('calcNeighborsQrStrip');
-      let stripHtml = '';
-      for (let off = -neighborRange; off <= neighborRange; off++) {
-        const code = generateOffsetBarcode(fullBarcode, off);
-        if (!code) continue;
-        const isMain = off === 0;
-        const label = isMain ? 'เลขหลัก (0)' : off < 0 ? `ก่อนหน้า ${off}` : `ถัดไป +${off}`;
-        stripHtml += `
-          <div onclick="openQrModalForGroup('calc', ${off})" class="cursor-pointer rounded-xl p-2 flex flex-col items-center border ${isMain ? 'border-red-500 bg-red-950/30' : 'border-slate-800 bg-slate-950'}">
-            <span class="text-xs font-bold mb-1">${label}</span>
-            <div class="bg-white p-1 rounded">${createQrSvg(code, 2, 1)}</div>
-            <div class="font-mono text-xs font-bold mt-1">${code}</div>
-          </div>
-        `;
-      }
-      strip.innerHTML = stripHtml;
-    }
-
-    // Full-Screen QR Modal
-    let modalPlaylist = [];
-    let modalIndex = 0;
-
-    function openQrModalForGroup(barcodeOrCalc, targetOffset = 0) {
-      let centerCode = barcodeOrCalc === 'calc' ? currentCalcBarcode : barcodeOrCalc;
-      modalPlaylist = [];
-      let startIdx = 0;
-      for (let off = -neighborRange; off <= neighborRange; off++) {
-        const c = generateOffsetBarcode(centerCode, off);
-        if (c) {
-          if (off === targetOffset) startIdx = modalPlaylist.length;
-          modalPlaylist.push({ code: c, offset: off });
-        }
-      }
-      modalIndex = startIdx;
-      renderQrModal();
-      document.getElementById('qrModal').classList.remove('hidden');
-    }
-
-    function renderQrModal() {
-      if (!modalPlaylist.length) return;
-      const entry = modalPlaylist[modalIndex];
-      const code = entry.code;
-      const off = entry.offset;
-
-      const st = getTrackState(code, off === 0);
-      if (st.status === 'unchecked') {
-        st.status = 'viewed';
-        saveWorkspace();
-      }
-
-      const badgeEl = document.getElementById('qrModalOffsetBadge');
-      if (off === 0) {
-        badgeEl.textContent = 'เลขหลัก (0)';
-        badgeEl.className = 'px-2.5 py-1 rounded text-xs font-bold bg-red-600 text-white';
-      } else if (off < 0) {
-        badgeEl.textContent = `เลขก่อนหน้า (${off})`;
-        badgeEl.className = 'px-2.5 py-1 rounded text-xs font-bold bg-amber-500 text-black';
+    function copyCauseAndCloseCase(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      const text = (c.userCause || '').trim();
+      if (text) {
+        copyTextToClipboard(text, `คัดลอกสาเหตุ (แถว ${c.rowNum}) + ปิดเคส ${barcode} แล้ว!`);
       } else {
-        badgeEl.textContent = `เลขถัดไป (+${off})`;
-        badgeEl.className = 'px-2.5 py-1 rounded text-xs font-bold bg-sky-500 text-black';
+        showToast(`✅ ปิดเคส ${barcode} เรียบร้อยแล้ว`);
+      }
+      c.closedByUser = true;
+      c.closedAt = new Date().toLocaleString('th-TH');
+      checkIfDateFullyClosed(c.tabName);
+      saveState();
+      renderAll();
+    }
+
+    function checkIfDateFullyClosed(tabKey) {
+      const remaining = Object.values(state.casesByBarcode).filter(
+        item => item.tabName === tabKey && !item.closedByUser && !(item.sheetCause && item.sheetCause.trim())
+      );
+      if (remaining.length === 0 && tabKey) {
+        state.resolvedTabsCache[tabKey] = true;
+      }
+    }
+
+    function closeAllCasesInDate(tabKey) {
+      const nowStr = new Date().toLocaleString('th-TH');
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.tabName === tabKey && !c.closedByUser) {
+          c.closedByUser = true;
+          c.closedAt = nowStr;
+        }
+      });
+      state.resolvedTabsCache[tabKey] = true;
+      saveState();
+      renderAll();
+      showToast(`✅ ปิดงานทั้งกลุ่มวันที่ ${tabKey} เรียบร้อยแล้ว!`);
+    }
+
+    function reopenCase(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      c.closedByUser = false;
+      if (c.tabName) delete state.resolvedTabsCache[c.tabName];
+      saveState();
+      renderAll();
+      showToast(`↩️ เปิดเคส ${barcode} กลับมาที่หน้างานค้างแล้ว`);
+    }
+
+    function toggleArchiveDrawer() {
+      const d = document.getElementById('archiveDrawer');
+      const lbl = document.getElementById('archiveToggleLabel');
+      if (!d) return;
+      const open = d.style.display === 'none';
+      d.style.display = open ? 'block' : 'none';
+      if (lbl) lbl.textContent = open ? 'ซ่อนประวัติ ▲' : 'คลิกเพื่อดูประวัติ ▼';
+    }
+
+    // Neighbor updates & copy
+    function updateNeighborStatus(code, status) {
+      const ns = getNeighborEntry(code);
+      ns.status = status;
+      ns.checked = true;
+      saveState();
+    }
+
+    function updateNeighborNote(code, note) {
+      const ns = getNeighborEntry(code);
+      ns.note = note;
+      if (note.trim() && ns.status === 'unknown') ns.status = 'found';
+      saveState();
+    }
+
+    function copySingleNeighbor(code) {
+      getNeighborEntry(code).checked = true;
+      saveState();
+      copyTextToClipboard(code, `คัดลอก ${code} แล้ว`);
+    }
+
+    function copySingleCaseNeighbors(barcode) {
+      const codes = generateNeighbors(barcode, 3).map(n => n.code);
+      codes.forEach(code => { getNeighborEntry(code).checked = true; });
+      saveState();
+      copyTextToClipboard(codes.join('\n'), `คัดลอกทั้ง 7 เลขของ ${barcode} แล้ว`);
+    }
+
+    function copyDateGroupBarcodes(tabKey) {
+      const set = new Set();
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          generateNeighbors(c.barcode, 3).forEach(n => {
+            set.add(n.code);
+            getNeighborEntry(n.code).checked = true;
+          });
+        }
+      });
+      const list = Array.from(set);
+      saveState();
+      copyTextToClipboard(list.join('\n'), `คัดลอกเลขวันที่ ${tabKey} (${list.length} เลข ตัดซ้ำแล้ว)`);
+    }
+
+    function copyAllActiveBarcodes() {
+      const set = new Set();
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+          generateNeighbors(c.barcode, 3).forEach(n => {
+            set.add(n.code);
+            getNeighborEntry(n.code).checked = true;
+          });
+        }
+      });
+      const list = Array.from(set);
+      if (!list.length) return showToast('ไม่มีรายการค้างให้คัดลอกครับ');
+      saveState();
+      copyTextToClipboard(list.join('\n'), `คัดลอกเลขค้างทั้งหมด ${list.length} หมายเลข (ตัดซ้ำแล้ว)`);
+    }
+
+    // QR Code Strip & Modal
+    function toggleQrStrip(barcode) {
+      const strip = document.getElementById(`qrStrip_${barcode}`);
+      if (!strip) return;
+      const isOpen = strip.classList.toggle('open');
+      if (isOpen) {
+        const grid = document.getElementById(`qrGrid_${barcode}`);
+        if (grid && !grid.dataset.rendered) {
+          const neighbors = generateNeighbors(barcode, 3);
+          grid.innerHTML = neighbors.map(n => {
+            const isMain = n.offset === 0;
+            const label = isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`);
+            return `
+              <div class="qr-mini-card ${isMain ? 'is-main' : ''}" onclick="openQrModal('${barcode}', '${n.code}')">
+                <div style="font-size:0.68rem; font-weight:700;">${label}</div>
+                <div class="qr-mini-box" id="qrMini_${barcode}_${n.code}"></div>
+                <div style="font-family:var(--mono); font-size:0.72rem; font-weight:800;">${n.code}</div>
+              </div>
+            `;
+          }).join('');
+          neighbors.forEach(n => {
+            const el = document.getElementById(`qrMini_${barcode}_${n.code}`);
+            if (el && typeof QRCode !== 'undefined') {
+              new QRCode(el, { text: n.code, width: 88, height: 88, correctLevel: QRCode.CorrectLevel.M });
+            }
+          });
+          grid.dataset.rendered = 'true';
+        }
+      }
+    }
+
+    let modalList = [];
+    let modalIdx = 0;
+
+    function openQrModal(mainBarcode, targetCode) {
+      modalList = generateNeighbors(mainBarcode, 3);
+      modalIdx = Math.max(0, modalList.findIndex(x => x.code === targetCode));
+      renderQrModalContent();
+      document.getElementById('qrModalBackdrop').classList.add('open');
+    }
+
+    function renderQrModalContent() {
+      if (!modalList.length) return;
+      const item = modalList[modalIdx];
+      getNeighborEntry(item.code).checked = true;
+      saveState();
+
+      const badge = document.getElementById('qrModalRoleBadge');
+      if (item.offset === 0) {
+        badge.className = 'offset-tag offset-zero';
+        badge.textContent = 'เลขหลักที่ไม่มีสถานะรับฝาก (0)';
+      } else if (item.offset < 0) {
+        badge.className = 'offset-tag offset-neg';
+        badge.textContent = `เลขก่อนหน้า (${item.offset})`;
+      } else {
+        badge.className = 'offset-tag offset-pos';
+        badge.textContent = `เลขถัดไป (+${item.offset})`;
       }
 
-      document.getElementById('qrModalStepText').textContent =
-        `ลำดับที่ ${modalIndex + 1} / ${modalPlaylist.length} • ${(statusConfig[st.status] || statusConfig.unchecked).label}`;
-
-      document.getElementById('qrModalSvgContainer').innerHTML = createQrSvg(code, 7, 2);
-      document.getElementById('qrModalBarcodeText').innerHTML =
-        `${code.slice(0,8)}<span class="text-red-600 underline">${code.slice(8,10)}</span><span class="bg-amber-200 px-1 rounded">${code.slice(10,11)}</span>${code.slice(11)}`;
-      document.getElementById('qrModalCheckDigitHint').textContent =
-        `เลข 8 หลัก: ${code.slice(2,10)} • หลักที่ 9 (Check Digit S10): ${code.slice(10,11)}`;
-
-      document.getElementById('qrModalNoteInput').value = st.note || '';
-      renderAll();
+      document.getElementById('qrModalBarcodeText').textContent = item.code;
+      const wrap = document.getElementById('qrModalCanvasWrap');
+      wrap.innerHTML = '';
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(wrap, { text: item.code, width: 210, height: 210, correctLevel: QRCode.CorrectLevel.M });
+      }
+      document.getElementById('qrPrevBtn').disabled = (modalIdx <= 0);
+      document.getElementById('qrNextBtn').disabled = (modalIdx >= modalList.length - 1);
     }
 
     function stepQrModal(delta) {
-      if (!modalPlaylist.length) return;
-      modalIndex = (modalIndex + delta + modalPlaylist.length) % modalPlaylist.length;
-      renderQrModal();
+      const next = modalIdx + delta;
+      if (next >= 0 && next < modalList.length) {
+        modalIdx = next;
+        renderQrModalContent();
+      }
     }
 
     function closeQrModal() {
-      document.getElementById('qrModal').classList.add('hidden');
+      document.getElementById('qrModalBackdrop').classList.remove('open');
     }
 
-    function markModalBarcodeStatus(newStatus) {
-      if (!modalPlaylist.length) return;
-      const entry = modalPlaylist[modalIndex];
-      const st = getTrackState(entry.code, entry.offset === 0);
-      st.status = newStatus;
-      saveWorkspace();
-      renderQrModal();
-      showToast(`บันทึกสถานะ ${entry.code} เป็น ${statusConfig[newStatus].label}`);
+    function copyCurrentModalBarcode() {
+      if (!modalList.length) return;
+      copyTextToClipboard(modalList[modalIdx].code);
     }
 
-    function updateModalBarcodeNote(val) {
-      if (!modalPlaylist.length) return;
-      const entry = modalPlaylist[modalIndex];
-      const st = getTrackState(entry.code, entry.offset === 0);
-      st.note = val;
-      saveWorkspace();
-      renderAll();
-    }
+    // S10 Custom Tool
+    function runCustomS10Tool() {
+      const prefixEl = document.getElementById('s10Prefix');
+      const serialEl = document.getElementById('s10Serial');
+      const suffixEl = document.getElementById('s10Suffix');
 
-    window.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('qrModal');
-      if (modal.classList.contains('hidden')) return;
-      if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-        if (e.key === 'Escape') closeQrModal();
+      let raw = (serialEl.value || '').trim().toUpperCase();
+      const fullMatch = /^([A-Z]{2})(\d{8,9})([A-Z]{2})?$/.exec(raw);
+      if (fullMatch) {
+        prefixEl.value = fullMatch[1];
+        raw = fullMatch[2].slice(0, 8);
+        serialEl.value = raw;
+        if (fullMatch[3]) suffixEl.value = fullMatch[3];
+      }
+
+      const digits = raw.replace(/\D/g, '').slice(0, 8);
+      if (digits.length < 8) {
+        document.getElementById('customS10ResultSummary').textContent = `กรอกเลขอีก ${8 - digits.length} หลัก...`;
+        document.getElementById('customS10Output').style.display = 'none';
         return;
       }
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        stepQrModal(1);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        stepQrModal(-1);
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        closeQrModal();
-      }
-    });
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      const txt = document.getElementById('toastText');
-      txt.textContent = msg;
-      t.classList.remove('hidden');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => {
-        t.classList.add('hidden');
-      }, 3500);
+      const prefix = (prefixEl.value || 'WC').toUpperCase().slice(0, 2);
+      const suffix = (suffixEl.value || 'TH').toUpperCase().slice(0, 2);
+      const check = calcS10CheckDigit(digits);
+      const mainCode = `${prefix}${digits}${check}${suffix}`;
+
+      document.getElementById('customS10ResultSummary').innerHTML = `ได้เลข 13 หลัก: <span style="color:#fbbf24;">${mainCode}</span> (Digit = ${check})`;
+      document.getElementById('customS10Output').style.display = 'block';
+
+      const neighbors = generateNeighbors(mainCode, 3);
+      const grid = document.getElementById('customS10Neighbors');
+      grid.innerHTML = neighbors.map(n => `
+        <div class="qr-mini-card ${n.offset === 0 ? 'is-main' : ''}" onclick="openQrModal('${mainCode}', '${n.code}')">
+          <div style="font-size:0.68rem; font-weight:700;">${n.offset === 0 ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`)}</div>
+          <div class="qr-mini-box" id="customQr_${n.code}"></div>
+          <div style="font-family:var(--mono); font-size:0.74rem; font-weight:800;">${n.code}</div>
+        </div>
+      `).join('');
+
+      neighbors.forEach(n => {
+        const box = document.getElementById(`customQr_${n.code}`);
+        if (box && typeof QRCode !== 'undefined') {
+          new QRCode(box, { text: n.code, width: 84, height: 84, correctLevel: QRCode.CorrectLevel.M });
+        }
+      });
     }
 
-    function copyTextToClipboard(text, message) {
+    // QMS File Import & Paste Parser
+    async function handleFileUpload(event) {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) return;
+      const statusEl = document.getElementById('uploadStatusText');
+      statusEl.textContent = `กำลังอ่านไฟล์ ${files.length} ไฟล์...`;
+      let combined = '';
+
+      for (const file of files) {
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'pdf') {
+          const buf = await file.arrayBuffer();
+          const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+          for (let p = 1; p <= pdf.numPages; p++) {
+            const page = await pdf.getPage(p);
+            const tc = await page.getTextContent();
+            combined += tc.items.map(i => i.str).join(' ') + '\n';
+          }
+        } else {
+          const buf = await file.arrayBuffer();
+          const wb = XLSX.read(buf, { type: 'array' });
+          wb.SheetNames.forEach(sn => {
+            const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], { header: 1, defval: '' });
+            rows.forEach(r => { combined += r.join('\t') + '\n'; });
+          });
+        }
+      }
+
+      document.getElementById('pasteArea').value = combined;
+      parsePastedResults();
+      statusEl.textContent = `✅ นำเข้าสำเร็จ!`;
+    }
+
+    function parsePastedResults() {
+      const raw = document.getElementById('pasteArea').value || '';
+      if (!raw.trim()) return showToast('ยังไม่มีข้อมูลสำหรับวิเคราะห์ครับ');
+
+      let matched = 0;
+      Object.values(state.casesByBarcode).forEach(c => {
+        generateNeighbors(c.barcode, 3).forEach(n => {
+          if (n.offset === 0) return;
+          if (raw.toUpperCase().includes(n.code)) {
+            const ns = getNeighborEntry(n.code);
+            ns.checked = true;
+            ns.status = 'found';
+            const lines = raw.split(/\r?\n/).filter(l => l.toUpperCase().includes(n.code));
+            if (lines.length) {
+              const snippet = lines.join(' | ').replace(/\s+/g, ' ').slice(0, 140);
+              ns.note = snippet;
+              const rcpt = /\b(\d{13})\b/.exec(snippet);
+              if (rcpt && !c.receiptNo) c.receiptNo = rcpt[1];
+            }
+            matched++;
+          }
+        });
+      });
+
+      saveState();
+      renderAll();
+      showToast(`วิเคราะห์เสร็จสิ้น! จับคู่เลขข้างเคียงได้ ${matched} หมายเลข`);
+    }
+
+    function copyAndOpenCapos(receiptNo) {
+      const clean = (receiptNo || '').trim();
+      if (clean) copyTextToClipboard(clean, `คัดลอกเลขใบเสร็จ ${clean} แล้ว`);
+      window.open('https://caposhelp.thailandpost.com/rcpt/receipt', '_blank', 'noopener');
+    }
+
+    function exportWorkspaceJson() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `pnk10501_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('💾 ดาวน์โหลดไฟล์สำรองข้อมูลเรียบร้อย!');
+    }
+
+    function copyTextToClipboard(text, msg) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast(message || `คัดลอกแล้ว: ${text}`);
+        showToast(msg || `คัดลอก "${text}" แล้ว!`);
       }).catch(() => {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -903,565 +1872,29 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast(message || `คัดลอกแล้ว: ${text}`);
+        showToast(msg || 'คัดลอกลงคลิปบอร์ดแล้ว!');
       });
     }
 
-    function checkReceiptInCaPos(receiptNo) {
-      const cleanReceipt = (receiptNo || '').trim();
-      if (cleanReceipt && /^\d+$/.test(cleanReceipt)) {
-        copyTextToClipboard(cleanReceipt, `🧾 คัดลอกเลขใบเสร็จ ${cleanReceipt} แล้ว! กดวาง (Ctrl+V) ในหน้า CA POS ได้เลย`);
-      }
-      window.open(CAPOS_RECEIPT_URL, '_blank');
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3200);
     }
 
-    function openCaPosPortal() {
-      window.open(CAPOS_RECEIPT_URL, '_blank');
-    }
-
-    function trackSingleOnWeb(code) {
-      const st = getTrackState(code, false);
-      if (st.status === 'unchecked') st.status = 'viewed';
-      saveWorkspace();
-      copyTextToClipboard(code, `คัดลอก ${code} แล้ว`);
-      renderAll();
-    }
-
-    function copyGroupNumbers(barcode, openMode) {
-      const list = [];
-      for (let off = -neighborRange; off <= neighborRange; off++) {
-        const code = generateOffsetBarcode(barcode, off);
-        if (code) {
-          list.push(code);
-          const st = getTrackState(code, off === 0);
-          if (st.status === 'unchecked') st.status = 'viewed';
-        }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeQrModal();
+      if (document.getElementById('qrModalBackdrop').classList.contains('open')) {
+        if (e.key === 'ArrowLeft') stepQrModal(-1);
+        if (e.key === 'ArrowRight') stepQrModal(1);
       }
-      saveWorkspace();
-      copyTextToClipboard(list.join(' '), `คัดลอกชุด ${barcode} รวม ${list.length} เลขแล้ว!`);
-      renderAll();
-      if (openMode === 'qms_web') {
-        window.open('https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx', '_blank');
-      }
-    }
+    });
 
-    // Copy deduplicated numbers for an entire Open Date Group
-    function copyDateGroupNumbers(tabName, openQms) {
-      const openItems = Object.values(workspace.casesByBarcode).filter(x => x.sheetTab === tabName && !x.isClosed);
-      const uniqueCodes = new Set();
-
-      openItems.forEach(item => {
-        for (let off = -neighborRange; off <= neighborRange; off++) {
-          const code = generateOffsetBarcode(item.barcode, off);
-          if (code) {
-            uniqueCodes.add(code);
-            const st = getTrackState(code, off === 0);
-            if (st.status === 'unchecked') st.status = 'viewed';
-          }
-        }
-      });
-
-      const arr = Array.from(uniqueCodes);
-      saveWorkspace();
-      copyTextToClipboard(arr.join(' '), `คัดลอกเลขกลุ่มแท็บ ${tabName} (ตัดตัวซ้ำออกแล้ว เหลือ ${arr.length} หมายเลข)!`);
-      renderAll();
-      if (openQms) {
-        window.open('https://qms.thailandpost.com/Web/Tracking/ItemMultipleTracking.aspx', '_blank');
-      }
-    }
-
-    async function handleFileUpload(files) {
-      if (!files || files.length === 0) return;
-      const file = files[0];
-      const ext = file.name.split('.').pop().toLowerCase();
-      showToast(`กำลังอ่านไฟล์ ${file.name}...`);
-
-      try {
-        if (ext === 'pdf') {
-          const arrayBuffer = await file.arrayBuffer();
-          const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-          let fullText = '';
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const content = await page.getTextContent();
-            const strings = content.items.map(item => item.str);
-            fullText += strings.join(' ') + '\n';
-          }
-          analyzeRawText(fullText, file.name);
-        } else if (ext === 'xlsx' || ext === 'xls' || ext === 'csv') {
-          const arrayBuffer = await file.arrayBuffer();
-          const workbook = window.XLSX.read(arrayBuffer, { type: 'array' });
-          let fullText = '';
-          workbook.SheetNames.forEach(sheetName => {
-            const sheet = workbook.Sheets[sheetName];
-            const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-            rows.forEach(r => {
-              fullText += r.join('\t') + '\n';
-            });
-          });
-          analyzeRawText(fullText, file.name);
-        } else {
-          const text = await file.text();
-          analyzeRawText(text, file.name);
-        }
-      } catch (err) {
-        showToast('เกิดข้อผิดพลาดในการอ่านไฟล์: ' + err.message);
-      }
-    }
-
-    function analyzeRawText(text, sourceName) {
-      if (!text || !text.trim()) {
-        showToast('ไม่พบข้อความในไฟล์');
-        return;
-      }
-
-      const barcodeToParent = {};
-      const allExpectedCodes = new Set();
-      Object.values(workspace.casesByBarcode).forEach(item => {
-        for (let off = -neighborRange; off <= neighborRange; off++) {
-          const code = generateOffsetBarcode(item.barcode, off);
-          if (code) {
-            barcodeToParent[code] = { item, offset: off };
-            allExpectedCodes.add(code);
-          }
-        }
-      });
-
-      const normalized = text.replace(/\r?\n/g, ' ');
-      const groupedByBarcode = {};
-
-      const regex = /([A-Z]{2}\d{9}[A-Z]{2})\s+([^\n]{1,240}?)(?=(?:\s+\d+\s+[A-Z]{2}\d{9}[A-Z]{2})|$)/g;
-      let m;
-      while ((m = regex.exec(normalized)) !== null) {
-        const code = m[1].toUpperCase();
-        const snippet = m[2].trim();
-        if (snippet.startsWith(',')) continue;
-        if (!groupedByBarcode[code]) groupedByBarcode[code] = [];
-        groupedByBarcode[code].push(snippet);
-      }
-
-      let matchedCount = 0;
-      const foundReceipts = new Set();
-
-      allExpectedCodes.forEach(code => {
-        const snippets = groupedByBarcode[code];
-        const parentInfo = barcodeToParent[code];
-        const isCenter = parentInfo && parentInfo.offset === 0;
-        const st = getTrackState(code, isCenter);
-
-        if (!snippets || snippets.length === 0) return;
-
-        matchedCount++;
-        const combined = snippets.join(' | ');
-        const reasons = [];
-
-        const receiptMatch = combined.match(/\b(\d{13})\b/);
-        if (receiptMatch) {
-          st.receiptNo = receiptMatch[1];
-          foundReceipts.add(receiptMatch[1]);
-        } else if (combined.includes('รับฝาก (API/IPS)')) {
-          st.receiptNo = 'API/IPS (ไม่มีเลขใบเสร็จ POS)';
-        }
-
-        if (combined.includes('รับฝาก (API/IPS)')) {
-          reasons.push('🎯 รับฝาก (API/IPS)');
-        } else if (combined.includes('รับฝาก (POS/TND)')) {
-          reasons.push('🎯 รับฝาก (POS/TND)');
-        } else if (combined.includes('รับฝาก')) {
-          reasons.push('🎯 พบสถานะรับฝาก');
-        }
-
-        if (combined.includes('10501') || combined.includes('ปณก.')) {
-          reasons.push('📍 10501 ปณก.');
-        }
-
-        if (parentInfo && parentInfo.item.operator && parentInfo.item.operator !== '-' && combined.includes(parentInfo.item.operator)) {
-          reasons.push(`👤 ผู้ดำเนินการตรงกัน (${parentInfo.item.operator})`);
-        }
-
-        if (!isCenter && reasons.length > 0) {
-          st.status = 'relevant';
-        } else {
-          st.status = 'found';
-        }
-
-        const firstEvent = snippets[0].replace(/\s{2,}/g, ' ').slice(0, 140);
-        st.note = `${reasons.length ? '[' + reasons.join(' • ') + '] ' : ''}${firstEvent}`;
-      });
-
-      saveWorkspace();
-      renderAll();
-      const banner = document.getElementById('fileStatusBanner');
-      if (banner) {
-        banner.classList.remove('hidden');
-        banner.innerHTML = `<span>✅ <b>นำเข้าและบันทึกผลจากไฟล์แล้ว:</b> ${sourceName} (พบข้อมูล ${matchedCount} หมายเลข • สกัดเลขใบเสร็จได้ ${foundReceipts.size} ใบเสร็จ)</span>`;
-      }
-      showToast(`นำเข้า ${sourceName} และบันทึกความจำอัตโนมัติเรียบร้อย!`);
-    }
-
-    function renderAll() {
-      const pillsContainer = document.getElementById('datePillsContainer');
-      const openGroupsContainer = document.getElementById('openGroupsContainer');
-      const closedArchivePanel = document.getElementById('closedArchivePanel');
-
-      pillsContainer.innerHTML = '';
-      openGroupsContainer.innerHTML = '';
-      closedArchivePanel.innerHTML = '';
-
-      const allCases = Object.values(workspace.casesByBarcode);
-      const closedCases = allCases.filter(x => x.isClosed || (x.sheetCause && x.sheetCause.trim()));
-      const openCases = allCases.filter(x => !x.isClosed && (!x.sheetCause || !x.sheetCause.trim()));
-
-      document.getElementById('closedCasesCountText').textContent =
-        `${closedCases.length} เคส (ระบบจำไว้แล้ว ไม่นำมาค้นหาหรือสกัดเลขซ้ำ)`;
-
-      // Render Date Status Pills (Compact, Non-Redundant)
-      workspace.knownTabs.forEach(tabName => {
-        const tabItems = allCases.filter(x => x.sheetTab === tabName);
-        if (tabItems.length === 0) return;
-        const tabOpen = tabItems.filter(x => !x.isClosed && (!x.sheetCause || !x.sheetCause.trim()));
-        const isDone = tabOpen.length === 0;
-
-        const pill = document.createElement('div');
-        if (isDone) {
-          pill.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5';
-          pill.innerHTML = `<span>🟢 แท็บ ${tabName}: เสร็จครบ ${tabItems.length}/${tabItems.length} เคส (ข้ามไม่ค้นหาซ้ำ)</span>`;
-        } else {
-          pill.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 text-white shadow flex items-center gap-1.5';
-          pill.innerHTML = `<span>🔴 แท็บ ${tabName}: ค้าง ${tabOpen.length} เคส (กำลังเปิดทำงาน)</span>`;
-        }
-        pillsContainer.appendChild(pill);
-      });
-
-      // Group Open Cases by Date Tab
-      if (openCases.length === 0) {
-        openGroupsContainer.innerHTML = `
-          <div class="bg-slate-900 border-2 border-emerald-500/40 rounded-2xl p-8 text-center space-y-3">
-            <div class="text-xl font-bold text-emerald-400">🎉 ปิดงานครบทุกเคสแล้ว! ไม่มีรายการค้างในขณะนี้</div>
-            <p class="text-xs text-slate-400">
-              เมื่อมีวันที่ใหม่เพิ่มเข้ามาใน Google Sheets ระบบจะดึงเฉพาะรายการของวันใหม่ที่ยังไม่ได้ลงสาเหตุมาแสดงที่นี่อัตโนมัติ (หรือกดดูเคสเก่าที่ปิดไปแล้วได้จากกล่องประวัติด้านล่างครับ)
-            </p>
-          </div>
-        `;
-      } else {
-        workspace.knownTabs.forEach(tabName => {
-          const groupOpenItems = openCases.filter(x => x.sheetTab === tabName);
-          if (groupOpenItems.length === 0) return;
-
-          const reportDate = groupOpenItems[0].date || tabName;
-          const groupSection = document.createElement('div');
-          groupSection.className = 'bg-slate-900/60 border-2 border-rose-500/40 rounded-2xl p-4 md:p-5 space-y-5';
-
-          groupSection.innerHTML = `
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3.5 border-b border-slate-800">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <span class="px-3 py-1 rounded-xl text-sm font-black bg-rose-600 text-white">
-                  📂 กลุ่มวันที่ ${reportDate} (แท็บ ${tabName})
-                </span>
-                <span class="text-sm font-bold text-white">
-                  เคสที่ยังไม่ได้ปิดงาน: ${groupOpenItems.length} เคส
-                </span>
-              </div>
-              <div class="flex flex-wrap items-center gap-2">
-                <button onclick="copyDateGroupNumbers('${tabName}', true)" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white shadow transition">
-                  📋 คัดลอกเลขทั้งกลุ่มวันนี้ไปวาง QMS
-                </button>
-                <button onclick="closeAllCasesInDateGroup('${tabName}')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition">
-                  ✅ ปิดงานทั้งกลุ่มวันที่ ${reportDate} (${groupOpenItems.length} เคส)
-                </button>
-              </div>
-            </div>
-            <div class="space-y-6" id="open-cards-${tabName.replace(/\W/g, '_')}"></div>
-          `;
-
-          openGroupsContainer.appendChild(groupSection);
-          const cardsHolder = groupSection.querySelector(`#open-cards-${tabName.replace(/\W/g, '_')}`);
-
-          groupOpenItems.forEach((item, idxInGroup) => {
-            const card = document.createElement('div');
-            card.className = 'bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-md';
-
-            const groupReceipts = new Set();
-            let qrStripCardsHtml = '';
-            let rowsHtml = '';
-
-            for (let off = -neighborRange; off <= neighborRange; off++) {
-              const code = generateOffsetBarcode(item.barcode, off);
-              if (!code) continue;
-              const isCenter = off === 0;
-              const st = getTrackState(code, isCenter);
-              const cfg = statusConfig[st.status] || statusConfig.unchecked;
-
-              const rcpt = (st.receiptNo || '').trim();
-              const isNumericReceipt = /^\d{10,16}$/.test(rcpt);
-              if (isNumericReceipt) groupReceipts.add(rcpt);
-
-              const offsetBadge = isCenter
-                ? `<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white">เลขหลัก (0)</span>`
-                : off < 0
-                  ? `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">ก่อนหน้า ${off}</span>`
-                  : `<span class="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">ถัดไป +${off}</span>`;
-
-              const stripLabel = isCenter ? 'เลขหลัก (0)' : off < 0 ? `ก่อนหน้า ${off}` : `ถัดไป +${off}`;
-              const stripBadgeCls = isCenter
-                ? 'bg-red-600 text-white'
-                : off < 0
-                  ? 'bg-amber-500 text-black'
-                  : 'bg-sky-500 text-black';
-
-              qrStripCardsHtml += `
-                <div
-                  onclick="openQrModalForGroup('${item.barcode}', ${off})"
-                  class="cursor-pointer rounded-xl p-2.5 flex flex-col items-center transition border-2 ${
-                    isCenter
-                      ? 'bg-red-950/30 border-red-500'
-                      : st.status === 'relevant'
-                        ? 'bg-amber-950/20 border-amber-500/60 hover:border-amber-400'
-                        : 'bg-slate-950 border-slate-800 hover:border-emerald-400'
-                  }"
-                  title="คลิกเพื่อขยายใหญ่เต็มจอสำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า"
-                >
-                  <div class="flex items-center justify-between w-full mb-1.5">
-                    <span class="px-1.5 py-0.5 rounded text-xs font-bold ${stripBadgeCls}">${stripLabel}</span>
-                    <span class="text-xs">${st.status === 'relevant' ? '⭐' : st.status === 'found' ? '✅' : st.status === 'not_found' ? '❌' : ''}</span>
-                  </div>
-                  <div class="bg-white p-1.5 rounded-lg shadow">
-                    ${createQrSvg(code, 3, 1)}
-                  </div>
-                  <div class="font-mono text-xs font-bold text-white mt-1.5 tracking-tight">
-                    ${code.slice(0,8)}<span class="text-emerald-400 underline">${code.slice(8,10)}</span><span class="text-amber-300">${code.slice(10,11)}</span>${code.slice(11)}
-                  </div>
-                </div>
-              `;
-
-              const prefix = code.slice(0, 2);
-              const body6 = code.slice(2, 8);
-              const last2Serial = code.slice(8, 10);
-              const checkChar = code.slice(10, 11);
-              const suffix = code.slice(11, 13);
-
-              const receiptCellHtml = isNumericReceipt
-                ? `
-                  <button
-                    onclick="checkReceiptInCaPos('${rcpt}')"
-                    class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition flex items-center gap-1"
-                  >
-                    <span>🧾 ${rcpt}</span>
-                    <span class="text-xs bg-indigo-800 px-1 rounded">เช็คบริษัท ↗</span>
-                  </button>
-                `
-                : rcpt
-                  ? `<span class="px-2 py-1 rounded text-xs bg-purple-500/15 text-purple-300 border border-purple-500/30">${rcpt}</span>`
-                  : `<input
-                       type="text"
-                       placeholder="วางเลขใบเสร็จ..."
-                       value=""
-                       onchange="updateReceiptNo('${code}', this.value); renderAll();"
-                       class="w-32 px-2 py-1 rounded border border-slate-800 bg-slate-950 text-slate-300 text-xs font-mono"
-                     />`;
-
-              rowsHtml += `
-                <tr class="border-t border-slate-800 transition ${isCenter ? 'bg-red-500/10 font-semibold' : cfg.rowClass}">
-                  <td class="px-3 py-2.5 whitespace-nowrap">${offsetBadge}</td>
-                  <td class="px-3 py-2.5 whitespace-nowrap font-mono text-sm">
-                    <span class="text-slate-400">${prefix}${body6}</span><span class="font-bold text-white underline decoration-dotted">${last2Serial}</span><span class="text-xs px-1 rounded bg-slate-800 text-amber-300">${checkChar}</span><span class="text-slate-400">${suffix}</span>
-                  </td>
-                  <td class="px-3 py-2.5 whitespace-nowrap">
-                    <button
-                      onclick="openQrModalForGroup('${item.barcode}', ${off})"
-                      class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition"
-                    >
-                      📱 ยิง QR
-                    </button>
-                  </td>
-                  <td class="px-3 py-2.5 whitespace-nowrap">
-                    ${receiptCellHtml}
-                  </td>
-                  <td class="px-3 py-2.5 whitespace-nowrap">
-                    <div class="flex items-center gap-1">
-                      <button onclick="cycleStatus('${code}')" class="px-2.5 py-1 rounded text-xs border transition ${cfg.badgeClass}">
-                        ${cfg.label}
-                      </button>
-                      <button onclick="trackSingleOnWeb('${code}')" class="px-2 py-1 rounded text-xs bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700" title="คัดลอกเลขพัสดุ">
-                        📋
-                      </button>
-                    </div>
-                  </td>
-                  <td class="px-3 py-2.5 w-full min-w-[260px]">
-                    <input
-                      type="text"
-                      value="${(st.note || '').replace(/"/g, '&quot;')}"
-                      oninput="updateNote('${code}', this.value)"
-                      placeholder="จดสิ่งที่พบ (จำค่าอัตโนมัติ)..."
-                      class="w-full px-2.5 py-1 rounded border border-slate-700 bg-slate-950 text-white text-xs focus:outline-none focus:ring-1 focus:ring-red-500"
-                    />
-                  </td>
-                </tr>
-              `;
-            }
-
-            let receiptSummaryHtml = '';
-            if (groupReceipts.size > 0) {
-              const btns = Array.from(groupReceipts).map(r => `
-                <button
-                  onclick="checkReceiptInCaPos('${r}')"
-                  class="px-3 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition"
-                >
-                  🧾 ใบเสร็จ ${r} (คลิกคัดลอก + เปิด CA POS)
-                </button>
-              `).join('');
-              receiptSummaryHtml = `
-                <div class="px-4 py-2.5 bg-indigo-950/50 border-b border-indigo-500/30 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-xs font-bold text-indigo-300">🔑 เลขใบเสร็จรับเงินของกลุ่มนี้:</span>
-                    ${btns}
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs text-indigo-200">🏢 ชื่อบริษัท/ลูกค้าที่พบ:</span>
-                    <input
-                      type="text"
-                      placeholder="พิมพ์ชื่อบริษัท..."
-                      value="${(item.companyName || '').replace(/"/g, '&quot;')}"
-                      oninput="applyCompanyToCause('${item.barcode}', this.value)"
-                      class="px-2.5 py-1 rounded border border-indigo-500/40 bg-slate-950 text-white text-xs w-56"
-                    />
-                  </div>
-                </div>
-              `;
-            }
-
-            const qrStripSection = item.showQrStrip
-              ? `
-                <div class="p-4 bg-slate-950/80 border-b border-slate-800 space-y-2.5">
-                  <div class="flex flex-wrap items-center justify-between gap-2">
-                    <span class="text-xs font-bold text-emerald-400">
-                      📱 แผง QR Code สำหรับยิงเข้าเครื่องพิมพ์ใบจ่าหน้า (ก่อนหน้า -${neighborRange} ➔ เลขหลัก ➔ ถัดไป +${neighborRange}):
-                    </span>
-                    <button onclick="openQrModalForGroup('${item.barcode}', -${neighborRange})" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow">
-                      🔍 เปิดโหมดสไลด์ QR ใหญ่เต็มจอ (กดลูกศรซ้าย-ขวาเลื่อนยิงทีละเลข)
-                    </button>
-                  </div>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
-                    ${qrStripCardsHtml}
-                  </div>
-                </div>
-              `
-              : '';
-
-            const quickCauseBtns = QUICK_CAUSES.map(c => `
-              <button
-                onclick="setQuickCause('${item.barcode}', '${c}')"
-                class="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 border border-slate-700 transition"
-              >
-                + ${c}
-              </button>
-            `).join('');
-
-            card.innerHTML = `
-              <div class="p-4 bg-slate-800/60 border-b border-slate-700 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-2.5 py-1 rounded-lg text-xs font-black bg-sky-500 text-black">
-                    วันที่ ${item.date} • เคสที่ ${idxInGroup + 1}/${groupOpenItems.length}
-                  </span>
-                  <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-900">
-                    แถวในชีต: ${item.sheetRow}
-                  </span>
-                  <span class="font-mono text-lg font-black text-red-400">${item.barcode}</span>
-                  <span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">
-                    บริการ: <b>${item.service}</b>
-                  </span>
-                  <span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">
-                    สแกน: <b>${item.scanTime}</b> (${item.operator})
-                  </span>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                  <button onclick="toggleCardQrStrip('${item.barcode}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 transition">
-                    📱 ${item.showQrStrip ? 'ซ่อนแผง QR' : 'แสดงแผง QR'}
-                  </button>
-                  <button onclick="copyGroupNumbers('${item.barcode}', 'qms_web')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition">
-                    📋 คัดลอก 7 เลข + เปิด QMS
-                  </button>
-                  <button onclick="closeCase('${item.barcode}')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition">
-                    ✅ ปิดงานเคสนี้ (ทำเสร็จแล้ว)
-                  </button>
-                </div>
-              </div>
-
-              ${receiptSummaryHtml}
-              ${qrStripSection}
-
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead>
-                    <tr class="text-xs text-slate-400 bg-slate-950/60">
-                      <th class="px-3 py-2">ลำดับ</th>
-                      <th class="px-3 py-2">หมายเลขสิ่งของ (S10)</th>
-                      <th class="px-3 py-2 text-emerald-400">📱 QR Code</th>
-                      <th class="px-3 py-2 text-indigo-300">🧾 เลขใบเสร็จ (CA POS)</th>
-                      <th class="px-3 py-2">สถานะการเช็ค</th>
-                      <th class="px-3 py-2">ข้อมูลที่พบ / จุดสังเกต (บันทึกอัตโนมัติ)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${rowsHtml}
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="p-4 bg-emerald-950/30 border-t border-emerald-500/30 space-y-2.5">
-                <div class="flex flex-wrap items-center gap-1.5">
-                  <span class="text-xs font-bold text-emerald-300 mr-1">⚡ คลิกเลือกสาเหตุที่ใช้บ่อย:</span>
-                  ${quickCauseBtns}
-                </div>
-                <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <span class="text-xs font-bold text-emerald-300 whitespace-nowrap">📝 สาเหตุ (แท็บ ${item.sheetTab} แถว ${item.sheetRow} คอลัมน์ K):</span>
-                  <input
-                    id="cause-input-${item.barcode}"
-                    type="text"
-                    value="${(item.userCauseNote || '').replace(/"/g, '&quot;')}"
-                    oninput="updateMainCause('${item.barcode}', this.value)"
-                    placeholder="คลิกปุ่มด้านบน หรือพิมพ์สาเหตุที่นี่ (จำค่าอัตโนมัติ)..."
-                    class="flex-1 px-3 py-2 rounded-lg border border-emerald-500/40 bg-slate-950 text-emerald-200 text-xs font-medium"
-                  />
-                  <button onclick="copyTextToClipboard(document.getElementById('cause-input-${item.barcode}').value, 'คัดลอกสาเหตุแล้ว! นำไปวางที่แท็บ ${item.sheetTab} แถว ${item.sheetRow} คอลัมน์ K ได้เลย')" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 whitespace-nowrap">
-                    📋 คัดลอกสาเหตุ
-                  </button>
-                  <button onclick="copyTextToClipboard(document.getElementById('cause-input-${item.barcode}').value); closeCase('${item.barcode}');" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white whitespace-nowrap shadow">
-                    📋 คัดลอก + ✅ ปิดเคสทันที
-                  </button>
-                </div>
-              </div>
-            `;
-
-            cardsHolder.appendChild(card);
-          });
-        });
-      }
-
-      // Render Closed Archive List
-      if (closedCases.length === 0) {
-        closedArchivePanel.innerHTML = `<div class="text-xs text-slate-400">ยังไม่มีประวัติเคสที่ปิดแล้ว</div>`;
-      } else {
-        closedArchivePanel.innerHTML = closedCases.map(c => `
-          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">✓ ปิดเคสแล้ว</span>
-              <span class="text-slate-400">วันที่ ${c.date} (แท็บ ${c.sheetTab} แถว ${c.sheetRow})</span>
-              <span class="font-mono font-bold text-white">${c.barcode}</span>
-              <span class="text-emerald-300">➔ สาเหตุ: <b>${c.userCauseNote || c.sheetCause || '-'}</b></span>
-            </div>
-            <button onclick="reopenCase('${c.barcode}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 font-semibold">
-              ↩️ เปิดเคสกลับมาแก้ไข
-            </button>
-          </div>
-        `).join('');
-      }
-    }
-
-    loadWorkspace();
+    // Startup
+    loadState();
     renderAll();
-    scanNewAndPendingSheets(false);
+    syncGoogleSheets(false);
   </script>
 </body>
 </html>
