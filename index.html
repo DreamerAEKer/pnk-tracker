@@ -663,6 +663,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     let state = {
       trackTarget: 'qms',
       causesList: DEFAULT_CAUSES.slice(),
+      deletedCauses: [],
       casesByBarcode: {},
       neighborState: {},
       resolvedTabsCache: { '28.10.69': true, '29.10.69': true },
@@ -676,6 +677,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return state.causesList;
     }
 
+    function autoLearnCause(text) {
+      const t = (text || '').trim();
+      if (!t || t.length < 2) return false;
+      if (!Array.isArray(state.deletedCauses)) state.deletedCauses = [];
+      if (state.deletedCauses.includes(t)) return false;
+      const list = getCausesList();
+      if (!list.includes(t)) {
+        list.push(t);
+        return true;
+      }
+      return false;
+    }
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('pnk_persistent_workspace_v7');
@@ -685,6 +699,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           if (Array.isArray(p.causesList) && p.causesList.length) {
             state.causesList = p.causesList;
           }
+          state.deletedCauses = Array.isArray(p.deletedCauses) ? p.deletedCauses : [];
           state.casesByBarcode = p.casesByBarcode || {};
           state.neighborState = p.neighborState || {};
           state.resolvedTabsCache = p.resolvedTabsCache || { '28.10.69': true, '29.10.69': true };
@@ -693,6 +708,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       } catch (e) {}
       SEED_HISTORY.forEach(x => upsertCase(x, true));
       SEED_ACTIVE.forEach(x => upsertCase(x, false));
+      Object.values(state.casesByBarcode).forEach(c => {
+        if (c.sheetCause) autoLearnCause(c.sheetCause);
+        if (c.userCause) autoLearnCause(c.userCause);
+      });
       syncTrackTargetSelects();
     }
 
@@ -744,6 +763,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (!bc) return;
       const ex = state.casesByBarcode[bc];
       const hasSheetCause = Boolean(item.sheetCause && item.sheetCause.trim());
+      if (hasSheetCause) {
+        autoLearnCause(item.sheetCause);
+      }
       if (item.tabName && item.gid) state.tabGids[item.tabName] = item.gid;
 
       if (!ex) {
@@ -980,14 +1002,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                           </div>
                         `).join('')}
                         <div class="cause-option add-opt" onclick="openCustomCauseInput(event, '${c.barcode}')">
-                          ➕ เพิ่ม / พิมพ์สาเหตุใหม่...
+                          ✏️ พิมพ์สาเหตุใหม่ (ระบบจำเข้าตัวเลือกให้อัตโนมัติ)...
                         </div>
                       </div>
                     </div>
 
                     <div id="customBox_${c.barcode}" style="display:${isCustom ? 'flex' : 'none'}; width:100%; gap:6px; margin-top:4px;">
-                      <input type="text" class="input-clean" id="inp_${c.barcode}" style="flex:1;" placeholder="พิมพ์สาเหตุสำหรับแถว ${c.rowNum}..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)">
-                      <button type="button" class="btn btn-primary btn-sm" onclick="saveInputAsCauseOption('${c.barcode}')">➕ จำเป็นตัวเลือก</button>
+                      <input type="text" class="input-clean" id="inp_${c.barcode}" style="flex:1;" placeholder="พิมพ์สาเหตุสำหรับแถว ${c.rowNum} (พิมพ์เสร็จระบบจำเข้าตัวเลือกให้เอง)..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)" onblur="autoSaveCustomCauseOnBlur('${c.barcode}')" onkeydown="if(event.key==='Enter'){ event.preventDefault(); this.blur(); }">
                     </div>
                   </div>
                 </div>
@@ -1070,6 +1091,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const causes = getCausesList();
       if (pendingDeleteCauseIndex >= 0 && pendingDeleteCauseIndex < causes.length) {
         const removed = causes.splice(pendingDeleteCauseIndex, 1)[0];
+        if (!Array.isArray(state.deletedCauses)) state.deletedCauses = [];
+        if (removed && !state.deletedCauses.includes(removed)) {
+          state.deletedCauses.push(removed);
+        }
         pendingDeleteCauseIndex = -1;
         saveState();
         closeModal('deleteCauseModal');
@@ -1096,28 +1121,28 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         }
         inp.focus();
       }
-      if (lbl) lbl.textContent = '➕ พิมพ์สาเหตุใหม่ด้านล่าง...';
+      if (lbl) lbl.textContent = '✏️ พิมพ์สาเหตุใหม่ด้านล่าง...';
       saveState();
     }
 
-    function saveInputAsCauseOption(barcode) {
+    function autoSaveCustomCauseOnBlur(barcode) {
       const inp = document.getElementById(`inp_${barcode}`);
       if (!inp) return;
       const val = inp.value.trim();
-      if (!val) {
-        showToast('กรุณาพิมพ์ข้อความสาเหตุก่อนกดบันทึกนะครับ');
-        inp.focus();
-        return;
+      if (!val) return;
+      if (Array.isArray(state.deletedCauses)) {
+        state.deletedCauses = state.deletedCauses.filter(x => x !== val);
       }
-      const causes = getCausesList();
-      if (!causes.includes(val)) {
-        causes.push(val);
-      }
+      const added = autoLearnCause(val);
       const c = state.casesByBarcode[barcode];
       if (c) c.userCause = val;
       saveState();
       render();
-      copyText(val, `เพิ่ม "${val}" เป็นตัวเลือกประจำและคัดลอกแล้ว`);
+      if (added) {
+        copyText(val, `จำ "${val}" เข้าตัวเลือกอัตโนมัติ + คัดลอกแล้ว`);
+      } else {
+        copyText(val, `คัดลอกสาเหตุแถว ${c ? c.rowNum : ''} แล้ว`);
+      }
     }
 
     function handleCauseSelect(barcode, val) {
@@ -1163,6 +1188,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     function closeSingleCase(barcode) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
+      if (c.userCause && c.userCause.trim()) {
+        if (Array.isArray(state.deletedCauses)) {
+          state.deletedCauses = state.deletedCauses.filter(x => x !== c.userCause.trim());
+        }
+        autoLearnCause(c.userCause);
+      }
       c.closedByUser = true;
       saveState();
       render();
@@ -1180,7 +1211,15 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function closeDateGroup(tabKey) {
       Object.values(state.casesByBarcode).forEach(c => {
-        if (c.tabName === tabKey) c.closedByUser = true;
+        if (c.tabName === tabKey) {
+          if (c.userCause && c.userCause.trim()) {
+            if (Array.isArray(state.deletedCauses)) {
+              state.deletedCauses = state.deletedCauses.filter(x => x !== c.userCause.trim());
+            }
+            autoLearnCause(c.userCause);
+          }
+          c.closedByUser = true;
+        }
       });
       state.resolvedTabsCache[tabKey] = true;
       saveState();
@@ -1220,7 +1259,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const minR = items[0].rowNum;
       const maxR = items[items.length - 1].rowNum;
       const map = {};
-      items.forEach(c => { map[c.rowNum] = (c.userCause || c.sheetCause || '').trim(); });
+      items.forEach(c => {
+        const v = (c.userCause || c.sheetCause || '').trim();
+        if (v) autoLearnCause(v);
+        map[c.rowNum] = v;
+      });
+      saveState();
+      render();
 
       const lines = [];
       for (let r = minR; r <= maxR; r++) lines.push(map[r] || '');
@@ -1238,6 +1283,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (!c) return;
       const val = (c.userCause || c.sheetCause || '').trim();
       if (val) {
+        autoLearnCause(val);
+        saveState();
+        render();
         copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง K${c.rowNum} ได้เลย`);
       } else {
         showToast(`เปิดไปที่ช่อง K${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
