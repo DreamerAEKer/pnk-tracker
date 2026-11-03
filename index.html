@@ -848,6 +848,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปสาเหตุและเปิดช่อง K${c.rowNum}">📋 วาง K${c.rowNum}</button>
                       <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็คเลข / QR</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
@@ -964,11 +965,27 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const lines = [];
       for (let r = minR; r <= maxR; r++) lines.push(map[r] || '');
 
-      copyText(lines.join('\n'), `คัดลอกสาเหตุแถว ${minR}–${maxR} แล้ว กดวางที่ช่อง K${minR} ได้เลย`);
+      copyText(lines.join('\n'), `คัดลอกสาเหตุแถว ${minR}–${maxR} แล้ว กด Ctrl+V วางที่ช่อง K${minR} ได้เลย`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=${gid}&range=K${minR}:K${maxR}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing`;
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${minR}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function copySingleCauseAndOpen(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      const val = (c.userCause || c.sheetCause || '').trim();
+      if (val) {
+        copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง K${c.rowNum} ได้เลย`);
+      } else {
+        showToast(`เปิดไปที่ช่อง K${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
+      }
+      const gid = state.tabGids[c.tabName] || c.gid || '';
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${c.rowNum}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
 
