@@ -855,11 +855,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                   </div>
 
                   <div class="item-bottom">
-                    <select class="select-clean cause-select" onchange="if(this.value) setCause('${c.barcode}', this.value)">
-                      <option value="">เลือกสาเหตุที่ใช้บ่อย...</option>
+                    <select class="select-clean" id="sel_${c.barcode}" onchange="handleCauseSelect('${c.barcode}', this.value)">
+                      <option value="">-- เลือกสาเหตุ --</option>
                       ${CAUSES.map(x => `<option value="${x}" ${c.userCause === x ? 'selected' : ''}>${x}</option>`).join('')}
+                      <option value="__custom__" ${(c.userCause && !CAUSES.includes(c.userCause)) ? 'selected' : ''}>✏️ พิมพ์สาเหตุอื่นๆ เอง...</option>
                     </select>
-                    <input type="text" class="input-clean cause-input" id="inp_${c.barcode}" placeholder="หรือพิมพ์สาเหตุสำหรับแถว ${c.rowNum}..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)">
+                    <input type="text" class="input-clean" id="inp_${c.barcode}" style="display:${(c.userCause && !CAUSES.includes(c.userCause)) ? 'block' : 'none'};" placeholder="พิมพ์สาเหตุสำหรับแถว ${c.rowNum}..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)">
                   </div>
                 </div>
               `).join('')}
@@ -869,14 +870,35 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       `;
     }
 
-    function setCause(barcode, val) {
+    function handleCauseSelect(barcode, val) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
-      c.userCause = val;
       const inp = document.getElementById(`inp_${barcode}`);
-      if (inp) inp.value = val;
+      if (val === '__custom__') {
+        if (inp) {
+          inp.style.display = 'block';
+          if (CAUSES.includes(c.userCause)) {
+            c.userCause = '';
+            inp.value = '';
+          }
+          inp.focus();
+        }
+        saveState();
+        return;
+      }
+      if (inp) {
+        inp.style.display = 'none';
+        inp.value = val;
+      }
+      c.userCause = val;
       saveState();
-      copyText(val, `เลือกและคัดลอกสาเหตุแถว ${c.rowNum} แล้ว`);
+      if (val) {
+        copyText(val, `เลือกและคัดลอกสาเหตุแถว ${c.rowNum} แล้ว`);
+      }
+    }
+
+    function setCause(barcode, val) {
+      handleCauseSelect(barcode, val);
     }
 
     function setCauseSilent(barcode, val) {
