@@ -493,6 +493,67 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       pointer-events: none;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Red Stripe Detector Alert */
+    .red-alert-card {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 5px solid #dc2626;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(220, 38, 38, 0.08);
+    }
+    .red-alert-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #991b1b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .red-alert-sub {
+      font-size: 0.78rem;
+      color: #7f1d1d;
+      margin-top: 3px;
+    }
+    .red-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid #fca5a5;
+    }
+    .green-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ecfdf5;
+      color: #065f46;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid #a7f3d0;
+    }
+    .red-tab-card {
+      background: #ffffff;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
   </style>
 </head>
 <body>
@@ -519,6 +580,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       <button class="btn btn-sm" onclick="openModal('historyModal')">🗂️ ประวัติ (<span id="closedCount">0</span>)</button>
     </div>
   </div>
+
+  <!-- Red Stripe Detector Alert Banner -->
+  <div id="redStripeAlertContainer"></div>
 
   <!-- Main Content -->
   <div id="mainContainer"></div>
@@ -637,15 +701,36 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
     const TARGET_OFFICE_CODE = '10501';
-    const STORAGE_KEY = 'pnk_persistent_workspace_v8';
+    const STORAGE_KEY = 'pnk_persistent_workspace_v9';
 
     const DEFAULT_CAUSES = [
       'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
       'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง',
+      'เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)',
+      'บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง',
+      'เงินเชื่อ จนท. บันทึกข้อมูลตกหล่น ตรวจสอบ มีชิ้นงาน ตรงตามใบนำส่ง',
+      'เงินเชื่อ จนท. บันทึกข้อมูลขาด 1 ชิ้น(สุดท้าย) ตรวจสอบ มีชิ้นงาน ตรงตามใบนำส่ง',
       'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน',
       'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น',
       'ใบตอบรับ'
     ];
+
+    const DEFAULT_SOLUTIONS = [
+      'กำชับให้นายเวร ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น',
+      'แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง',
+      'กำชับ ให้ตรวจสอบงานกับใบนำส่ง ให้ถูกต้องตรงกัน ก่อนบันทึกงาน',
+      'กำชับ ให้ระมัดระวังมากขึ้น',
+      'แจ้ง จนท ให้รับฝากตามขั้นตอนให้ถูกต้อง กำชับให้เจ้าหน้าที่ระมัดระวังในการสแกนรับชิ้นงาน เพื่อป้องกันไม่ให้เกิดข้อผิดพลาด'
+    ];
+
+    function getSuggestedSolution(cause) {
+      const c = (cause || '').toLowerCase();
+      if (c.includes('เงินเชื่อ')) return 'กำชับให้นายเวร ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น';
+      if (c.includes('หมวดหน้า') || c.includes('ผิดพลาด')) return 'แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง';
+      if (c.includes('drop off') || c.includes('ขัดข้อง') || c.includes('สัญญาณ')) return 'แจ้ง จนท ให้รับฝากตามขั้นตอนให้ถูกต้อง กำชับให้เจ้าหน้าที่ระมัดระวังในการสแกนรับชิ้นงาน เพื่อป้องกันไม่ให้เกิดข้อผิดพลาด';
+      if (c.includes('ใบนำส่ง') || c.includes('ตกหล่น')) return 'กำชับ ให้ตรวจสอบงานกับใบนำส่ง ให้ถูกต้องตรงกัน ก่อนบันทึกงาน';
+      return 'กำชับ ให้ระมัดระวังมากขึ้น';
+    }
 
     const SEED_HISTORY = [
       { tabName: '28.10.69', gid: '0', date: '28/10/2569', rowNum: 187, service: 'E (W)', barcode: 'WB327054102TH', bagTime: '27/10/2569 17:10', operator: 'kiattisak.pa', sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก' },
@@ -664,11 +749,33 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       trackTarget: 'qms',
       causesList: DEFAULT_CAUSES.slice(),
       deletedCauses: [],
+      solutionsList: DEFAULT_SOLUTIONS.slice(),
+      deletedSolutions: [],
       casesByBarcode: {},
       neighborState: {},
-      resolvedTabsCache: { '28.10.69': true, '29.10.69': true },
-      tabGids: { '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }
+      resolvedTabsCache: {},
+      tabGids: { '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230', '4.11.69': '1804342213', '5.11.69': '2146078973' }
     };
+
+    function getSolutionsList() {
+      if (!Array.isArray(state.solutionsList) || !state.solutionsList.length) {
+        state.solutionsList = DEFAULT_SOLUTIONS.slice();
+      }
+      return state.solutionsList;
+    }
+
+    function autoLearnSolution(text) {
+      const t = (text || '').trim();
+      if (!t || t.length < 2) return false;
+      if (!Array.isArray(state.deletedSolutions)) state.deletedSolutions = [];
+      if (state.deletedSolutions.includes(t)) return false;
+      const list = getSolutionsList();
+      if (!list.includes(t)) {
+        list.push(t);
+        return true;
+      }
+      return false;
+    }
 
     function getCausesList() {
       if (!Array.isArray(state.causesList) || !state.causesList.length) {
@@ -692,7 +799,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function loadState() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('pnk_persistent_workspace_v7');
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('pnk_persistent_workspace_v8') || localStorage.getItem('pnk_persistent_workspace_v7');
         if (raw) {
           const p = JSON.parse(raw);
           state.trackTarget = p.trackTarget || 'qms';
@@ -702,7 +809,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.deletedCauses = Array.isArray(p.deletedCauses) ? p.deletedCauses : [];
           state.casesByBarcode = p.casesByBarcode || {};
           state.neighborState = p.neighborState || {};
-          state.resolvedTabsCache = p.resolvedTabsCache || { '28.10.69': true, '29.10.69': true };
+          state.resolvedTabsCache = p.resolvedTabsCache || {};
           state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, p.tabGids || {});
         }
       } catch (e) {}
@@ -711,6 +818,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       Object.values(state.casesByBarcode).forEach(c => {
         if (c.sheetCause) autoLearnCause(c.sheetCause);
         if (c.userCause) autoLearnCause(c.userCause);
+        if (c.sheetSolution) autoLearnSolution(c.sheetSolution);
+        if (c.userSolution) autoLearnSolution(c.userSolution);
       });
       syncTrackTargetSelects();
     }
@@ -763,10 +872,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (!bc) return;
       const ex = state.casesByBarcode[bc];
       const hasSheetCause = Boolean(item.sheetCause && item.sheetCause.trim());
-      if (hasSheetCause) {
-        autoLearnCause(item.sheetCause);
-      }
+      const hasSheetSolution = Boolean(item.sheetSolution && item.sheetSolution.trim());
+      if (hasSheetCause) autoLearnCause(item.sheetCause);
+      if (hasSheetSolution) autoLearnSolution(item.sheetSolution);
       if (item.tabName && item.gid) state.tabGids[item.tabName] = item.gid;
+
+      const userCause = item.userCause || item.sheetCause || '';
+      const userSolution = item.userSolution || item.sheetSolution || getSuggestedSolution(userCause);
 
       if (!ex) {
         state.casesByBarcode[bc] = {
@@ -779,17 +891,23 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           bagTime: item.bagTime || '',
           operator: item.operator || '',
           sheetCause: item.sheetCause || '',
-          userCause: item.sheetCause || '',
-          closedByUser: Boolean(forceClosed || hasSheetCause)
+          sheetSolution: item.sheetSolution || '',
+          userCause: userCause,
+          userSolution: userSolution,
+          // Only true if forced or BOTH K and L are filled in Google Sheet!
+          closedByUser: Boolean(forceClosed || (hasSheetCause && hasSheetSolution))
         };
       } else {
         ex.rowNum = item.rowNum || ex.rowNum;
         ex.operator = item.operator || ex.operator;
         ex.bagTime = item.bagTime || ex.bagTime;
         ex.gid = item.gid || state.tabGids[ex.tabName] || ex.gid || '';
-        if (hasSheetCause) {
-          ex.sheetCause = item.sheetCause;
-          if (!ex.userCause) ex.userCause = item.sheetCause;
+        if (item.sheetCause !== undefined) ex.sheetCause = item.sheetCause;
+        if (item.sheetSolution !== undefined) ex.sheetSolution = item.sheetSolution;
+        if (!ex.userCause && item.sheetCause) ex.userCause = item.sheetCause;
+        if (!ex.userSolution && item.sheetSolution) ex.userSolution = item.sheetSolution;
+        if (!ex.userSolution) ex.userSolution = getSuggestedSolution(ex.userCause);
+        if (hasSheetCause && hasSheetSolution) {
           ex.closedByUser = true;
         }
       }
@@ -865,8 +983,101 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       container.textContent = text;
     }
 
+
+    function detectRedStripes() {
+      const all = Object.values(state.casesByBarcode);
+      const redItems = [];
+      const byTab = {};
+
+      all.forEach(c => {
+        const kMissing = !c.sheetCause || !c.sheetCause.trim();
+        const lMissing = !c.sheetSolution || !c.sheetSolution.trim();
+        if (kMissing || lMissing) {
+          redItems.push({ c, kMissing, lMissing });
+          const tab = c.tabName || c.date;
+          if (!byTab[tab]) byTab[tab] = { tabName: tab, gid: c.gid || state.tabGids[tab] || '', items: [] };
+          byTab[tab].items.push({ c, kMissing, lMissing });
+        }
+      });
+
+      return { total: redItems.length, redItems, byTab };
+    }
+
+    function renderRedStripeBanner() {
+      const bannerEl = document.getElementById('redStripeAlertContainer');
+      if (!bannerEl) return;
+
+      const { total, byTab } = detectRedStripes();
+      if (total === 0) {
+        bannerEl.innerHTML = `
+          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-left:5px solid var(--success); border-radius:10px; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:0.86rem; font-weight:700; color:#065f46;">
+              ✅ ไม่พบแถบสีแดงใน Google Sheet ของ ปณก. 10501 (ทุกช่องเป็นสีขาวครบ 100%)
+            </div>
+            <button class="btn btn-sm" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสดอีกครั้ง</button>
+          </div>
+        `;
+        return;
+      }
+
+      const tabsHtml = Object.values(byTab).map(t => {
+        const rows = t.items.map(x => x.c.rowNum).sort((a,b) => a - b);
+        const minR = rows[0];
+        const maxR = rows[rows.length - 1];
+        const countL = t.items.filter(x => x.lMissing).length;
+        const countK = t.items.filter(x => x.kMissing).length;
+
+        let desc = [];
+        if (countL > 0) desc.push(`ขาดแนวทางแก้ไข (ช่อง L) <b>${countL}</b> แถว`);
+        if (countK > 0) desc.push(`ขาดสาเหตุ (ช่อง K) <b>${countK}</b> แถว`);
+
+        return `
+          <div class="red-tab-card">
+            <div>
+              <div style="font-weight:700; font-size:0.86rem; color:#991b1b;">
+                📅 แท็บ ${t.tabName} (แถว ${minR}–${maxR} รวม ${t.items.length} รายการ)
+              </div>
+              <div style="font-size:0.78rem; color:#7f1d1d; margin-top:2px;">
+                ${desc.join(' • ')}
+              </div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${countL > 0 ? `
+                <button class="btn btn-sm" style="background:#dc2626; color:#fff; border-color:#dc2626;" onclick="quickCopySolutionRange('${t.tabName}', ${minR}, ${maxR})">
+                  📋 ก๊อปแก้ช่อง L (${countL} แถว) & เปิดชีต L${minR}
+                </button>
+              ` : ''}
+              <button class="btn btn-sm" style="background:#2563eb; color:#fff; border-color:#2563eb;" onclick="quickCopyBothRange('${t.tabName}', ${minR}, ${maxR})">
+                ⚡ ก๊อปคู่ (K+L) & เปิดชีต K${minR}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      bannerEl.innerHTML = `
+        <div class="red-alert-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+            <div>
+              <div class="red-alert-title">
+                🚨 ตรวจพบแถบสีแดงใน Google Sheet (ปณก. ยังลงไม่ครบ ${total} รายการ)
+              </div>
+              <div class="red-alert-sub">
+                ผู้สร้างชีตตั้งเงื่อนไข "ถ้าเซลล์ว่าง = สีแดง/ชมพู" • หากกรอกครบจะกลายเป็นสีขาวทันที
+              </div>
+            </div>
+            <button class="btn btn-sm" style="background:#fff; border-color:#fca5a5; color:#991b1b;" onclick="syncGoogleSheets(true, true)">
+              🔄 ตรวจจับชีตสด
+            </button>
+          </div>
+          ${tabsHtml}
+        </div>
+      `;
+    }
+
     // Render Main UI
     function render() {
+      renderRedStripeBanner();
       const all = Object.values(state.casesByBarcode);
       const active = all.filter(c => !c.closedByUser && !(c.sheetCause && c.sheetCause.trim()));
       const closed = all.filter(c => c.closedByUser || (c.sheetCause && c.sheetCause.trim()));
@@ -899,7 +1110,15 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             <div>
               <span style="color:var(--muted);">[${c.tabName} แถว ${c.rowNum}]</span>
               <b style="font-family:var(--mono); margin:0 4px;">${c.barcode}</b>
-              <div style="color:var(--success); margin-top:2px;">✓ ${c.userCause || c.sheetCause || '-'}</div>
+              <div style="color:var(--success); margin-top:2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span>✓ สาเหตุ: ${c.userCause || c.sheetCause || '-'}</span>
+                ${(!c.sheetSolution || !c.sheetSolution.trim()) ? `
+                  <span class="red-pill">🔴 ในชีตขาดช่อง L (แนวทางแก้ไขว่าง)</span>
+                  <button class="btn btn-sm" style="padding:2px 6px; font-size:0.72rem; background:#dc2626; color:#fff;" onclick="copySingleSolutionAndOpen('${c.barcode}')">📋 ก๊อปปี้วาง L${c.rowNum}</button>
+                ` : `
+                  <span class="green-pill">⚪ ในชีตขาวครบ (มีแนวทางแก้ไขแล้ว)</span>
+                `}
+              </div>
             </div>
             <button class="btn btn-sm" onclick="reopenCase('${c.barcode}')">นำกลับมาทำใหม่</button>
           </div>
@@ -935,14 +1154,18 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 <span class="count-pill">${list.length} รายการ (แถว ${minR}–${maxR})</span>
               </div>
             </div>
-            <div class="date-actions">
+            <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
               <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
                 ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
               </button>
-              <button class="btn btn-primary btn-sm marquee-btn" onclick="copyCausesAndOpenSheet('${tabKey}')" title="คัดลอกสาเหตุไปวางช่อง K${minR}">
-                <span class="marquee-wrap">
-                  <span class="marquee-track">คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp; คัดลอกสาเหตุไปวางช่อง K${minR} &nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                </span>
+              <button class="btn btn-primary btn-sm" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="คัดลอกคู่ K+L วางช่อง K${minR} ครั้งเดียวเต็มทั้ง 2 คอลัมน์">
+                ⚡ ก๊อปคู่ (K+L) วาง K${minR}
+              </button>
+              <button class="btn btn-sm" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})">
+                📋 ก๊อปแนวทางแก้ไข (ช่อง L) ทั้งวัน
+              </button>
+              <button class="btn btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}')">
+                📋 ก๊อปสาเหตุ (ช่อง K) ทั้งวัน
               </button>
               <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
             </div>
@@ -973,7 +1196,16 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       </span>
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
-                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                    <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+                      ${(!c.sheetCause) ? `
+                        <span class="red-pill">🔴 ในชีตขาดช่อง K</span>
+                      ` : (!c.sheetSolution) ? `
+                        <span class="red-pill">🔴 ในชีตขาดช่อง L</span>
+                      ` : `
+                        <span class="green-pill">⚪ ชีตขาวครบ</span>
+                      `}
+                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปทั้งสาเหตุ+แนวทางแก้ไข วางช่อง K${c.rowNum} ครั้งเดียวได้ทั้ง 2 ช่อง">⚡ วาง K+L${c.rowNum}</button>
+                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปแนวทางแก้ไขและเปิดช่อง L${c.rowNum}">📋 วาง L${c.rowNum}</button>
                       <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปสาเหตุและเปิดช่อง K${c.rowNum}">📋 วาง K${c.rowNum}</button>
                       <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็คเลข / QR</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
@@ -1278,6 +1510,75 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       window.open(url, '_blank', 'noopener');
     }
 
+
+    function quickCopySolutionRange(tabKey, startRow, endRow) {
+      const items = Object.values(state.casesByBarcode)
+        .filter(c => c.tabName === tabKey && c.rowNum >= startRow && c.rowNum <= endRow)
+        .sort((a, b) => a.rowNum - b.rowNum);
+      if (!items.length) return;
+      const map = {};
+      items.forEach(c => {
+        map[c.rowNum] = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
+      });
+      const lines = [];
+      for (let r = startRow; r <= endRow; r++) {
+        lines.push(map[r] || getSuggestedSolution('เงินเชื่อ'));
+      }
+      copyText(lines.join('\n'), `คัดลอกแนวทางแก้ไข ${lines.length} แถวแล้ว • เปิดช่อง L${startRow} ให้แล้ว กด Ctrl+V วางได้เลย!`);
+      const gid = state.tabGids[tabKey] || items[0].gid || '';
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=L${startRow}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function quickCopyBothRange(tabKey, startRow, endRow) {
+      const items = Object.values(state.casesByBarcode)
+        .filter(c => c.tabName === tabKey && c.rowNum >= startRow && c.rowNum <= endRow)
+        .sort((a, b) => a.rowNum - b.rowNum);
+      if (!items.length) return;
+      const mapK = {}, mapL = {};
+      items.forEach(c => {
+        mapK[c.rowNum] = (c.userCause || c.sheetCause || '').trim();
+        mapL[c.rowNum] = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
+      });
+      const lines = [];
+      for (let r = startRow; r <= endRow; r++) {
+        lines.push((mapK[r] || '') + '\t' + (mapL[r] || ''));
+      }
+      copyText(lines.join('\n'), `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) ${lines.length} แถวแล้ว • เปิดช่อง K${startRow} ให้แล้ว กด Ctrl+V เติมทั้ง 2 ช่องพร้อมกันได้ทันที!`);
+      const gid = state.tabGids[tabKey] || items[0].gid || '';
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${startRow}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function copySingleSolutionAndOpen(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
+      copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • กด Ctrl+V วางที่ช่อง L${c.rowNum} ได้เลย`);
+      const gid = state.tabGids[c.tabName] || c.gid || '';
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=L${c.rowNum}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function copySingleBothAndOpen(barcode) {
+      const c = state.casesByBarcode[barcode];
+      if (!c) return;
+      const cause = (c.userCause || c.sheetCause || '').trim();
+      const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(cause)).trim();
+      copyText(`${cause}\t${sol}`, `คัดลอกคู่ (K+L) แถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง K${c.rowNum} จะเติมทั้ง 2 คอลัมน์พร้อมกันทันที!`);
+      const gid = state.tabGids[c.tabName] || c.gid || '';
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${c.rowNum}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      window.open(url, '_blank', 'noopener');
+    }
+
     function copySingleCauseAndOpen(barcode) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
@@ -1461,6 +1762,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             if (!bc) return;
             total++;
             const sheetCause = val(10);
+            const sheetSolution = val(11);
             upsertCase({
               tabName,
               gid: state.tabGids[tabName] || '',
@@ -1470,12 +1772,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               barcode: bc,
               bagTime: val(8),
               operator: val(9),
-              sheetCause
+              sheetCause,
+              sheetSolution
             }, false);
-            if (!state.casesByBarcode[bc].closedByUser && !sheetCause) unresolved++;
+            // Has red stripe if either cause (K) or solution (L) is empty!
+            const hasRedStripe = (!sheetCause || !sheetCause.trim()) || (!sheetSolution || !sheetSolution.trim());
+            if (hasRedStripe) unresolved++;
           }
         });
-        if (total > 0 && unresolved === 0) state.resolvedTabsCache[tabName] = true;
+        if (total > 0 && unresolved === 0) {
+          state.resolvedTabsCache[tabName] = true;
+        } else {
+          delete state.resolvedTabsCache[tabName];
+        }
       }));
 
       saveState();
