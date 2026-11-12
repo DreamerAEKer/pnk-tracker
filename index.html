@@ -815,6 +815,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       } catch (e) {}
       SEED_HISTORY.forEach(x => upsertCase(x, true));
       SEED_ACTIVE.forEach(x => upsertCase(x, false));
+      // ล้างข้อมูลของแท็บที่ไม่ใช่วันที่ XX.XX.XX ออก
+      Object.keys(state.casesByBarcode).forEach(bc => {
+        const c = state.casesByBarcode[bc];
+        if (c && c.tabName && !isDateTab(c.tabName)) {
+          delete state.casesByBarcode[bc];
+        }
+      });
       Object.values(state.casesByBarcode).forEach(c => {
         if (c.sheetCause) autoLearnCause(c.sheetCause);
         if (c.userCause) autoLearnCause(c.userCause);
@@ -892,9 +899,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           operator: item.operator || '',
           sheetCause: item.sheetCause || '',
           sheetSolution: item.sheetSolution || '',
+          causeCol: item.causeCol || 'K',
+          solCol: item.solCol || 'L',
           userCause: userCause,
           userSolution: userSolution,
-          // Only true if forced or BOTH K and L are filled in Google Sheet!
           closedByUser: Boolean(forceClosed || (hasSheetCause && hasSheetSolution))
         };
       } else {
@@ -902,6 +910,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         ex.operator = item.operator || ex.operator;
         ex.bagTime = item.bagTime || ex.bagTime;
         ex.gid = item.gid || state.tabGids[ex.tabName] || ex.gid || '';
+        if (item.causeCol) ex.causeCol = item.causeCol;
+        if (item.solCol) ex.solCol = item.solCol;
         if (item.sheetCause !== undefined) ex.sheetCause = item.sheetCause;
         if (item.sheetSolution !== undefined) ex.sheetSolution = item.sheetSolution;
         if (!ex.userCause && item.sheetCause) ex.userCause = item.sheetCause;
@@ -990,6 +1000,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const byTab = {};
 
       all.forEach(c => {
+        if (!isDateTab(c.tabName)) return;
         const kMissing = !c.sheetCause || !c.sheetCause.trim();
         const lMissing = !c.sheetSolution || !c.sheetSolution.trim();
         if (kMissing || lMissing) {
@@ -1044,11 +1055,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               ${countL > 0 ? `
                 <button class="btn btn-sm" style="background:#dc2626; color:#fff; border-color:#dc2626;" onclick="quickCopySolutionRange('${t.tabName}', ${minR}, ${maxR})">
-                  📋 ก๊อปแก้ช่อง L (${countL} แถว) & เปิดชีต L${minR}
+                  📋 ก๊อปแก้ช่อง ${t.items[0].c.solCol || 'L'} (${countL} แถว) & เปิดชีต ${t.items[0].c.solCol || 'L'}${minR}
                 </button>
               ` : ''}
               <button class="btn btn-sm" style="background:#2563eb; color:#fff; border-color:#2563eb;" onclick="quickCopyBothRange('${t.tabName}', ${minR}, ${maxR})">
-                ⚡ ก๊อปคู่ (K+L) & เปิดชีต K${minR}
+                ⚡ ก๊อปคู่ (${t.items[0].c.causeCol || 'K'}+${t.items[0].c.solCol || 'L'}) & เปิดชีต ${t.items[0].c.causeCol || 'K'}${minR}
               </button>
             </div>
           </div>
@@ -1158,14 +1169,14 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
                 ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
               </button>
-              <button class="btn btn-primary btn-sm" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="คัดลอกคู่ K+L วางช่อง K${minR} ครั้งเดียวเต็มทั้ง 2 คอลัมน์">
-                ⚡ ก๊อปคู่ (K+L) วาง K${minR}
+              <button class="btn btn-primary btn-sm" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="คัดลอกคู่ วางครั้งเดียวเต็มทั้ง 2 คอลัมน์">
+                ⚡ ก๊อปคู่ (${list[0].causeCol || 'K'}+${list[0].solCol || 'L'}) วาง ${list[0].causeCol || 'K'}${minR}
               </button>
               <button class="btn btn-sm" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})">
-                📋 ก๊อปแนวทางแก้ไข (ช่อง L) ทั้งวัน
+                📋 ก๊อปแนวทางแก้ไข (ช่อง ${list[0].solCol || 'L'}) ทั้งวัน
               </button>
               <button class="btn btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}')">
-                📋 ก๊อปสาเหตุ (ช่อง K) ทั้งวัน
+                📋 ก๊อปสาเหตุ (ช่อง ${list[0].causeCol || 'K'}) ทั้งวัน
               </button>
               <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
             </div>
@@ -1198,15 +1209,15 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
                       ${(!c.sheetCause) ? `
-                        <span class="red-pill">🔴 ในชีตขาดช่อง K</span>
+                        <span class="red-pill">🔴 ในชีตขาดช่อง ${c.causeCol || 'K'}</span>
                       ` : (!c.sheetSolution) ? `
-                        <span class="red-pill">🔴 ในชีตขาดช่อง L</span>
+                        <span class="red-pill">🔴 ในชีตขาดช่อง ${c.solCol || 'L'}</span>
                       ` : `
                         <span class="green-pill">⚪ ชีตขาวครบ</span>
                       `}
-                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปทั้งสาเหตุ+แนวทางแก้ไข วางช่อง K${c.rowNum} ครั้งเดียวได้ทั้ง 2 ช่อง">⚡ วาง K+L${c.rowNum}</button>
-                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปแนวทางแก้ไขและเปิดช่อง L${c.rowNum}">📋 วาง L${c.rowNum}</button>
-                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปสาเหตุและเปิดช่อง K${c.rowNum}">📋 วาง K${c.rowNum}</button>
+                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปคู่ วางช่อง ${c.causeCol || 'K'}${c.rowNum} ครั้งเดียวได้ทั้ง 2 ช่อง">⚡ วาง ${c.causeCol || 'K'}+${c.solCol || 'L'}${c.rowNum}</button>
+                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปแนวทางแก้ไขและเปิดช่อง ${c.solCol || 'L'}${c.rowNum}">📋 วาง ${c.solCol || 'L'}${c.rowNum}</button>
+                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปสาเหตุและเปิดช่อง ${c.causeCol || 'K'}${c.rowNum}">📋 วาง ${c.causeCol || 'K'}${c.rowNum}</button>
                       <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็คเลข / QR</button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
@@ -1516,6 +1527,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         .filter(c => c.tabName === tabKey && c.rowNum >= startRow && c.rowNum <= endRow)
         .sort((a, b) => a.rowNum - b.rowNum);
       if (!items.length) return;
+      const solCol = items[0].solCol || 'L';
       const map = {};
       items.forEach(c => {
         map[c.rowNum] = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
@@ -1524,10 +1536,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       for (let r = startRow; r <= endRow; r++) {
         lines.push(map[r] || getSuggestedSolution('เงินเชื่อ'));
       }
-      copyText(lines.join('\n'), `คัดลอกแนวทางแก้ไข ${lines.length} แถวแล้ว • เปิดช่อง L${startRow} ให้แล้ว กด Ctrl+V วางได้เลย!`);
+      copyText(lines.join('\n'), `คัดลอกแนวทางแก้ไข ${lines.length} แถวแล้ว • เปิดช่อง ${solCol}${startRow} ให้แล้ว กด Ctrl+V วางได้เลย!`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=L${startRow}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${solCol}${startRow}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
@@ -1537,6 +1549,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         .filter(c => c.tabName === tabKey && c.rowNum >= startRow && c.rowNum <= endRow)
         .sort((a, b) => a.rowNum - b.rowNum);
       if (!items.length) return;
+      const causeCol = items[0].causeCol || 'K';
+      const solCol = items[0].solCol || 'L';
       const mapK = {}, mapL = {};
       items.forEach(c => {
         mapK[c.rowNum] = (c.userCause || c.sheetCause || '').trim();
@@ -1546,10 +1560,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       for (let r = startRow; r <= endRow; r++) {
         lines.push((mapK[r] || '') + '\t' + (mapL[r] || ''));
       }
-      copyText(lines.join('\n'), `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) ${lines.length} แถวแล้ว • เปิดช่อง K${startRow} ให้แล้ว กด Ctrl+V เติมทั้ง 2 ช่องพร้อมกันได้ทันที!`);
+      copyText(lines.join('\n'), `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) ${lines.length} แถวแล้ว • เปิดช่อง ${causeCol}${startRow} ให้แล้ว กด Ctrl+V เติมช่อง ${causeCol} และ ${solCol} พร้อมกันได้ทันที!`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${startRow}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${startRow}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
@@ -1557,11 +1571,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     function copySingleSolutionAndOpen(barcode) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
+      const solCol = c.solCol || 'L';
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
-      copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • กด Ctrl+V วางที่ช่อง L${c.rowNum} ได้เลย`);
+      copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • กด Ctrl+V วางที่ช่อง ${solCol}${c.rowNum} ได้เลย`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=L${c.rowNum}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${solCol}${c.rowNum}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
@@ -1569,12 +1584,14 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     function copySingleBothAndOpen(barcode) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
+      const causeCol = c.causeCol || 'K';
+      const solCol = c.solCol || 'L';
       const cause = (c.userCause || c.sheetCause || '').trim();
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(cause)).trim();
-      copyText(`${cause}\t${sol}`, `คัดลอกคู่ (K+L) แถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง K${c.rowNum} จะเติมทั้ง 2 คอลัมน์พร้อมกันทันที!`);
+      copyText(`${cause}\t${sol}`, `คัดลอกคู่ (${causeCol}+${solCol}) แถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} จะเติมทั้ง 2 คอลัมน์พร้อมกันทันที!`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${c.rowNum}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${c.rowNum}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
@@ -1582,18 +1599,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     function copySingleCauseAndOpen(barcode) {
       const c = state.casesByBarcode[barcode];
       if (!c) return;
+      const causeCol = c.causeCol || 'K';
       const val = (c.userCause || c.sheetCause || '').trim();
       if (val) {
         autoLearnCause(val);
         saveState();
         render();
-        copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง K${c.rowNum} ได้เลย`);
+        copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} ได้เลย`);
       } else {
-        showToast(`เปิดไปที่ช่อง K${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
+        showToast(`เปิดไปที่ช่อง ${causeCol}${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
       }
       const gid = state.tabGids[c.tabName] || c.gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${c.rowNum}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${c.rowNum}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
@@ -1711,6 +1729,44 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       saveState();
     }
 
+
+    function isDateTab(name) {
+      if (!name || typeof name !== 'string') return false;
+      return /^\d{1,2}\.\d{1,2}\.\d{2,4}$/.test(name.trim());
+    }
+
+    function getTabColumnMapping(table) {
+      const cols = (table && table.cols) || [];
+      let causeIdx = -1;
+      let solIdx = -1;
+
+      cols.forEach((c, idx) => {
+        const lbl = (c.label || '').trim();
+        if (lbl.includes('สาเหตุ')) causeIdx = idx;
+        else if (lbl.includes('แนวทางแก้ไข')) solIdx = idx;
+      });
+
+      if (causeIdx === -1) {
+        if (cols.length > 12 && (cols[10].label.includes('ชื่อ') || cols[10].label.includes('เจ้าหน้าที่') || cols[10].label.includes('บกพร่อง'))) {
+          causeIdx = 11;
+          solIdx = 12;
+        } else {
+          causeIdx = 10;
+          solIdx = 11;
+        }
+      }
+      if (solIdx === -1) {
+        solIdx = causeIdx + 1;
+      }
+
+      return {
+        causeCol: String.fromCharCode(65 + causeIdx),
+        solCol: String.fromCharCode(65 + solIdx),
+        causeIdx,
+        solIdx
+      };
+    }
+
     // Live Google Sheet Sync
     async function discoverAllSheetTabs() {
       const found = [];
@@ -1721,8 +1777,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           const re = /items\.push\(\{name:\s*"([^"]+)",\s*pageUrl:[^,]+,\s*gid:\s*"(\d+)"/g;
           let m;
           while ((m = re.exec(html)) !== null) {
-            state.tabGids[m[1].trim()] = m[2].trim();
-            found.push(m[1].trim());
+            const tabName = m[1].trim();
+            const gid = m[2].trim();
+            state.tabGids[tabName] = gid;
+            // ตรวจเฉพาะแท็บที่เป็นรูปแบบวันที่ XX.XX.XX เท่านั้น
+            if (isDateTab(tabName)) {
+              found.push(tabName);
+            }
           }
         }
       } catch (e) {}
@@ -1735,7 +1796,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         const s = document.createElement('script');
         const timer = setTimeout(() => { cleanup(); resolve(null); }, 6000);
         function cleanup() { clearTimeout(timer); if (s.parentNode) s.remove(); delete window[cb]; }
-        window[cb] = res => { cleanup(); resolve(res && res.table ? res.table.rows : null); };
+        window[cb] = res => { cleanup(); resolve(res && res.table ? res.table : null); };
         s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${cb}&sheet=${encodeURIComponent(tabName)}&_=${Date.now()}`;
         s.onerror = () => { cleanup(); resolve(null); };
         document.body.appendChild(s);
@@ -1751,18 +1812,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const toCheck = baseTabs.filter(t => forceAll ? true : !state.resolvedTabsCache[t]);
 
       await Promise.all(toCheck.map(async tabName => {
-        const rows = await fetchSheetTabGviz(tabName);
-        if (!rows || !rows.length) return;
+        const table = await fetchSheetTabGviz(tabName);
+        if (!table || !table.rows || !table.rows.length) return;
+        const mapping = getTabColumnMapping(table);
         let total = 0, unresolved = 0;
-        rows.forEach((r, idx) => {
+        table.rows.forEach((r, idx) => {
           const c = r.c || [];
           const val = i => (c[i] ? String(c[i].f || c[i].v || '').trim() : '');
           if (val(4) === TARGET_OFFICE_CODE || val(5).includes('ปณก')) {
             const bc = val(6).toUpperCase();
             if (!bc) return;
             total++;
-            const sheetCause = val(10);
-            const sheetSolution = val(11);
+            const sheetCause = val(mapping.causeIdx);
+            const sheetSolution = val(mapping.solIdx);
             upsertCase({
               tabName,
               gid: state.tabGids[tabName] || '',
@@ -1773,9 +1835,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               bagTime: val(8),
               operator: val(9),
               sheetCause,
-              sheetSolution
+              sheetSolution,
+              causeCol: mapping.causeCol,
+              solCol: mapping.solCol
             }, false);
-            // Has red stripe if either cause (K) or solution (L) is empty!
+            // Has red stripe if either cause or solution is empty!
             const hasRedStripe = (!sheetCause || !sheetCause.trim()) || (!sheetSolution || !sheetSolution.trim());
             if (hasRedStripe) unresolved++;
           }
