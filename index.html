@@ -581,6 +581,18 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     </div>
   </div>
 
+
+    <!-- Quick Search & Active Tasks Bar -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:12px; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div style="position:relative; flex:1;">
+          <input type="text" id="mainSearchInput" class="input-clean" style="padding-left:34px; font-size:0.9rem;" placeholder="🔍 พิมพ์ค้นหาเลขพัสดุ (13 หลัก) / แถว / ชื่อผู้ดำเนินการ..." oninput="handleMainSearch(this.value)">
+          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.95rem; opacity:0.6;">🔍</span>
+        </div>
+        <button class="btn btn-sm" onclick="clearMainSearch()" id="clearSearchBtn" style="display:none;">✕ ล้าง</button>
+      </div>
+    </div>
+
   <!-- Red Stripe Detector Alert Banner -->
   <div id="redStripeAlertContainer"></div>
 
@@ -701,7 +713,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
     const TARGET_OFFICE_CODE = '10501';
-    const STORAGE_KEY = 'pnk_persistent_workspace_v11';
+    const STORAGE_KEY = 'pnk_persistent_workspace_v12';
 
     const DEFAULT_CAUSES = [
       'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
@@ -740,13 +752,14 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     ];
 
     const SEED_ACTIVE = [
-      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 11, service: 'E (E)', barcode: 'EW632000105TH', bagTime: '10/11/2569 18:11', operator: 'note.th', sheetCause: '', sheetSolution: '', causeCol: 'L', solCol: 'M' },
-      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 12, service: 'E (E)', barcode: 'EQ526873675TH', bagTime: '10/11/2569 18:11', operator: 'note.th', sheetCause: '', sheetSolution: '', causeCol: 'L', solCol: 'M' },
-      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 13, service: 'E (E)', barcode: 'EQ160772469TH', bagTime: '10/11/2569 18:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: '', causeCol: 'L', solCol: 'M' }
+      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 13, service: 'E (E)', barcode: 'EQ160772469TH', bagTime: '10/11/2569 18:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก', causeCol: 'L', solCol: 'M' },
+      { tabName: '10.11.69', gid: '1540307905', date: '10/11/2569', rowNum: 39, service: 'E (E)', barcode: 'EQ514747445TH', bagTime: '09/11/2569 11:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'ได้กำชับให้เพิ่มความระมัดระวังแล้ว', causeCol: 'L', solCol: 'M' }
     ];
 
     let state = {
       trackTarget: 'qms',
+      searchQuery: '',
+      redBannerExpanded: false,
       causesList: DEFAULT_CAUSES.slice(),
       deletedCauses: [],
       solutionsList: DEFAULT_SOLUTIONS.slice(),
@@ -813,10 +826,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, p.tabGids || {});
         }
       } catch (e) {}
-      // ล้างข้อมูลเก่าที่ผิดปกติ (เช่น ข้อมูลที่ดึงจาก Data พ.ย. 69 แถว > 400 หรือแท็บที่ไม่ใช่วันที่)
+      // ล้างข้อมูลเก่าที่ผิดปกติ (เช่น แถว > 200 ในแท็บ 6.11-11.11 หรือแท็บที่ไม่ใช่วันที่)
       Object.keys(state.casesByBarcode).forEach(bc => {
         const c = state.casesByBarcode[bc];
-        if (!c || !c.tabName || !isDateTab(c.tabName) || c.rowNum > 400) {
+        if (!c || !c.tabName || !isDateTab(c.tabName) || c.rowNum > 350) {
           delete state.casesByBarcode[bc];
         }
       });
@@ -1032,6 +1045,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       renderRedStripeBanner();
     }
 
+    function toggleRedBannerExpand() {
+      state.redBannerExpanded = !state.redBannerExpanded;
+      renderRedStripeBanner();
+    }
+
     function renderRedStripeBanner() {
       const bannerEl = document.getElementById('redStripeAlertContainer');
       if (!bannerEl) return;
@@ -1040,17 +1058,41 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       if (totalMissingCause === 0 && totalMissingSol === 0) {
         bannerEl.innerHTML = `
-          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-left:5px solid var(--success); border-radius:10px; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <div style="font-size:0.86rem; font-weight:700; color:#065f46;">
-              ✅ ไม่พบรายการค้างในแท็บวันที่ของ ปณก. 10501 (ลงสาเหตุและแนวทางแก้ไขครบ 100%)
+          <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <div style="font-size:0.84rem; font-weight:700; color:#065f46;">
+              ✅ ปณก. 10501: ลงสาเหตุและแนวทางแก้ไขใน Google Sheet ครบ 100% แล้ว
             </div>
-            <button class="btn btn-sm" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสดอีกครั้ง</button>
+            <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสด</button>
           </div>
         `;
         return;
       }
 
-      // เรียงแท็บที่ยังไม่ได้ลงสาเหตุ จากล่าสุดไปหาเก่าสุด
+      // ข้อความสรุปย่อแบบกะทัดรัด
+      const causeBrief = Object.keys(byTabCause).map(t => `${t} (${byTabCause[t].items.length} รายการ)`).join(', ');
+
+      if (!state.redBannerExpanded) {
+        // โหมดย่อ (Collapsed View) - ประหยัดพื้นที่หน้าจอ ให้เห็นรายการค้นหาเป็นหลัก!
+        bannerEl.innerHTML = `
+          <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span class="red-pill" style="font-size:0.75rem;">🔴 แถบแดงในชีต ${totalMissingCause + totalMissingSol} รายการ</span>
+              <span style="font-size:0.8rem; color:#991b1b; font-weight:700;">
+                ${totalMissingCause > 0 ? `รอลงสาเหตุ ${totalMissingCause} รายการ [${causeBrief}]` : `ขาดแนวทางแก้ไข ${totalMissingSol} รายการ`}
+              </span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#fff; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="toggleRedBannerExpand()">
+                ▼ ดูรายการแถบแดง
+              </button>
+              <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔄</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // โหมดขยาย (Expanded View) เมื่อผู้ใช้กดดูรายละเอียด
       const sortedCauseTabs = Object.values(byTabCause).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
       const sortedSolTabs = Object.values(byTabSol).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
 
@@ -1062,13 +1104,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         const solCol = t.items[0].solCol || 'L';
 
         return `
-          <div class="red-tab-card" style="background:#fff; border:1.5px solid #ef4444;">
+          <div class="red-tab-card" style="background:#fff; border:1.5px solid #ef4444; padding:8px 10px; margin-top:6px;">
             <div>
-              <div style="font-weight:800; font-size:0.9rem; color:#b91c1c;">
+              <div style="font-weight:800; font-size:0.88rem; color:#b91c1c;">
                 📅 แท็บ ${t.tabName} (แถว ${minR}–${maxR} รวม ${t.items.length} รายการ)
               </div>
-              <div style="font-size:0.8rem; color:#dc2626; margin-top:2px; font-weight:700;">
-                ⚠️ ยังไม่ได้ลงสาเหตุ (ช่อง ${causeCol}) ${t.items.length} แถว
+              <div style="font-size:0.78rem; color:#dc2626; margin-top:2px;">
+                ⚠️ ขาดสาเหตุ (ช่อง ${causeCol}) ${t.items.length} แถว
               </div>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -1088,54 +1130,42 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         const minR = rows[0];
         const maxR = rows[rows.length - 1];
         const solCol = t.items[0].solCol || 'L';
-        const causeCol = t.items[0].causeCol || 'K';
 
         return `
-          <div class="red-tab-card" style="background:#f8fafc; border:1px solid #cbd5e1;">
+          <div class="red-tab-card" style="background:#f8fafc; border:1px solid #cbd5e1; padding:8px 10px; margin-top:6px;">
             <div>
               <div style="font-weight:700; font-size:0.84rem; color:#334155;">
-                📅 แท็บ ${t.tabName} (แถว ${minR}–${maxR} รวม ${t.items.length} รายการ)
+                📅 แท็บ ${t.tabName} (แถว ${minR}–${maxR})
               </div>
-              <div style="font-size:0.76rem; color:#64748b; margin-top:2px;">
+              <div style="font-size:0.76rem; color:#64748b;">
                 ลงสาเหตุแล้ว • ขาดเฉพาะแนวทางแก้ไข (ช่อง ${solCol}) ${t.items.length} แถว
               </div>
             </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="btn btn-sm" style="background:#475569; color:#fff;" onclick="quickCopySolutionRange('${t.tabName}', ${minR}, ${maxR})">
-                📋 ก๊อปแนวทางแก้ไข (ช่อง ${solCol}) & เปิดชีต ${solCol}${minR}
-              </button>
-            </div>
+            <button class="btn btn-sm" style="background:#475569; color:#fff;" onclick="quickCopySolutionRange('${t.tabName}', ${minR}, ${maxR})">
+              📋 ก๊อปแก้ช่อง ${solCol} & เปิดชีต
+            </button>
           </div>
         `;
       }).join('');
 
       bannerEl.innerHTML = `
-        <div class="red-alert-card" style="border-left: 6px solid #ef4444;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px;">
-            <div>
-              <div class="red-alert-title" style="font-size:1rem; color:#b91c1c;">
-                📌 ตรวจพบรายการ "ยังไม่ได้ลงสาเหตุ" ในแท็บวันที่ (${totalMissingCause} รายการ)
-              </div>
-              <div class="red-alert-sub" style="color:#7f1d1d;">
-                คัดกรองเฉพาะแท็บวันที่จริง (ไม่รวม Data รวม) • เรียงแท็บวันที่ล่าสุดก่อน
-              </div>
+        <div class="red-alert-card" style="border-left: 6px solid #ef4444; padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+            <div class="red-alert-title" style="font-size:0.92rem; color:#b91c1c;">
+              🚨 รายละเอียดแถบสีแดงใน Google Sheet (${totalMissingCause + totalMissingSol} รายการ)
             </div>
-            <button class="btn btn-sm" style="background:#fff; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="syncGoogleSheets(true, true)">
-              🔄 อัปเดตชีตสด
+            <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="toggleRedBannerExpand()">
+              ▲ ย่อเก็บ
             </button>
           </div>
 
-          ${totalMissingCause > 0 ? causeCardsHtml : `
-            <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:10px; color:#065f46; font-size:0.85rem; font-weight:700; margin-bottom:8px;">
-              ✅ ลงสาเหตุครบทุกแท็บวันที่แล้ว! (ไม่มีรายการค้างสาเหตุ)
-            </div>
-          `}
+          ${causeCardsHtml}
 
           ${totalMissingSol > 0 ? `
             <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #fca5a5;">
-              <button class="btn btn-sm" style="width:100%; justify-content:space-between; background:#fff;" onclick="toggleOldMissingSol()">
-                <span>📋 มีแท็บวันที่เก่าที่ลงสาเหตุแล้ว ขาดแค่แนวทางแก้ไข (${totalMissingSol} รายการ)</span>
-                <span>${showOldMissingSolTabs ? '▲ ซ่อน' : '▼ ดูรายการ'}</span>
+              <button class="btn btn-sm" style="width:100%; justify-content:space-between; background:#fff; font-size:0.78rem;" onclick="toggleOldMissingSol()">
+                <span>📋 แท็บเก่าที่ลงสาเหตุแล้ว ขาดเฉพาะแนวทางแก้ไข (${totalMissingSol} รายการ)</span>
+                <span>${showOldMissingSolTabs ? '▲ ซ่อน' : '▼ ดู'}</span>
               </button>
               ${showOldMissingSolTabs ? `<div style="margin-top:6px;">${solCardsHtml}</div>` : ''}
             </div>
@@ -1144,12 +1174,46 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       `;
     }
 
+
+    function handleMainSearch(query) {
+      state.searchQuery = query || '';
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.style.display = state.searchQuery ? 'inline-flex' : 'none';
+      render();
+    }
+
+    function clearMainSearch() {
+      state.searchQuery = '';
+      const inp = document.getElementById('mainSearchInput');
+      if (inp) { inp.value = ''; inp.focus(); }
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+      render();
+    }
+
     // Render Main UI
     function render() {
       renderRedStripeBanner();
       const all = Object.values(state.casesByBarcode);
-      const active = all.filter(c => !c.closedByUser && !(c.sheetCause && c.sheetCause.trim()));
-      const closed = all.filter(c => c.closedByUser || (c.sheetCause && c.sheetCause.trim()));
+      const q = (state.searchQuery || '').trim().toUpperCase();
+
+      const active = all.filter(c => {
+        if (c.closedByUser || (c.sheetCause && c.sheetCause.trim())) return false;
+        if (!q) return true;
+        return (c.barcode && c.barcode.includes(q)) ||
+               (c.tabName && c.tabName.includes(q)) ||
+               (String(c.rowNum).includes(q)) ||
+               (c.operator && c.operator.toUpperCase().includes(q));
+      });
+
+      const closed = all.filter(c => {
+        if (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) return false;
+        if (!q) return true;
+        return (c.barcode && c.barcode.includes(q)) ||
+               (c.tabName && c.tabName.includes(q)) ||
+               (String(c.rowNum).includes(q)) ||
+               (c.operator && c.operator.toUpperCase().includes(q));
+      });
 
       document.getElementById('closedCount').textContent = closed.length;
 
