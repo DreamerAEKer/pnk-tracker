@@ -107,32 +107,35 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
     .btn-sm { padding: 7px 10px; font-size: 0.8rem; border-radius: 7px; }
 
-    /* Smooth Slow Marquee for Long Button Text */
+    /* Seamless Infinite Marquee Loop (ลื่นไหลเป็นธรรมชาติ ไม่หยุด ไม่กระตุก ไม่ห้วน) */
     .marquee-btn {
       justify-content: flex-start;
-      padding-left: 0;
-      padding-right: 0;
+      padding-left: 6px;
+      padding-right: 6px;
+      overflow: hidden;
+      position: relative;
     }
     .marquee-wrap {
-      display: flex;
+      display: inline-flex;
       width: 100%;
       overflow: hidden;
-      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      white-space: nowrap;
+      mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
     }
     .marquee-track {
-      display: inline-block;
-      padding-left: 12px;
+      display: inline-flex;
       white-space: nowrap;
-      animation: slowMarquee 9s linear infinite;
+      animation: seamlessMarquee 11s linear infinite;
+      will-change: transform;
     }
     .marquee-btn:hover .marquee-track,
     .marquee-btn:active .marquee-track {
       animation-play-state: paused;
     }
-    @keyframes slowMarquee {
-      0%, 15% { transform: translateX(0%); }
-      85%, 100% { transform: translateX(-50%); }
+    @keyframes seamlessMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* Date Card */
@@ -713,7 +716,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SHEET_ID = '1XHZd0Axx0qO8sJZdiRLHi7tRfKip1tIrYz9RDa1ypBc';
     const TARGET_OFFICE_CODE = '10501';
-    const STORAGE_KEY = 'pnk_persistent_workspace_v12';
+    const STORAGE_KEY = 'pnk_persistent_workspace_v13';
 
     const DEFAULT_CAUSES = [
       'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก',
@@ -744,16 +747,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return 'กำชับ ให้ระมัดระวังมากขึ้น';
     }
 
-    const SEED_HISTORY = [
-      { tabName: '28.10.69', gid: '0', date: '28/10/2569', rowNum: 187, service: 'E (W)', barcode: 'WB327054102TH', bagTime: '27/10/2569 17:10', operator: 'kiattisak.pa', sheetCause: 'ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก' },
-      { tabName: '28.10.69', gid: '0', date: '28/10/2569', rowNum: 188, service: 'E (E)', barcode: 'ET717324835TH', bagTime: '19/10/2569 19:10', operator: 'burapa.lu', sheetCause: 'งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง' },
-      { tabName: '28.10.69', gid: '0', date: '28/10/2569', rowNum: 189, service: 'E (E)', barcode: 'EQ177456925TH', bagTime: '27/10/2569 16:10', operator: 'kiattisak.pa', sheetCause: 'งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน' },
-      { tabName: '29.10.69', gid: '1911902467', date: '29/10/2569', rowNum: 205, service: 'E (E)', barcode: 'EQ089995853TH', bagTime: '28/10/2569 15:10', operator: 'kiattisak.pa', sheetCause: 'งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น' }
-    ];
+    const SEED_HISTORY = [];
 
     const SEED_ACTIVE = [
-      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 13, service: 'E (E)', barcode: 'EQ160772469TH', bagTime: '10/11/2569 18:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก', causeCol: 'L', solCol: 'M' },
-      { tabName: '10.11.69', gid: '1540307905', date: '10/11/2569', rowNum: 39, service: 'E (E)', barcode: 'EQ514747445TH', bagTime: '09/11/2569 11:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'ได้กำชับให้เพิ่มความระมัดระวังแล้ว', causeCol: 'L', solCol: 'M' }
+      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 13, service: 'E (E)', barcode: 'EQ160772469TH', bagTime: '10/11/2569 18:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก', causeCol: 'L', solCol: 'M' }
     ];
 
     let state = {
@@ -826,10 +823,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, p.tabGids || {});
         }
       } catch (e) {}
-      // ล้างข้อมูลเก่าที่ผิดปกติ (เช่น แถว > 200 ในแท็บ 6.11-11.11 หรือแท็บที่ไม่ใช่วันที่)
+      // ล้างข้อมูลเก่าที่ผิดปกติ (เช่น ข้อมูลเดือนตุลาคม หรือแถวที่ไม่ใช่วันที่จริง)
       Object.keys(state.casesByBarcode).forEach(bc => {
         const c = state.casesByBarcode[bc];
-        if (!c || !c.tabName || !isDateTab(c.tabName) || c.rowNum > 350) {
+        if (!c || !c.tabName || !isDateTab(c.tabName) || c.tabName.includes('.10.') || c.rowNum > 200) {
           delete state.casesByBarcode[bc];
         }
       });
@@ -1293,14 +1290,29 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
                 ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
               </button>
-              <button class="btn btn-primary btn-sm" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="คัดลอกคู่ วางครั้งเดียวเต็มทั้ง 2 คอลัมน์">
-                ⚡ ก๊อปคู่ (${list[0].causeCol || 'K'}+${list[0].solCol || 'L'}) วาง ${list[0].causeCol || 'K'}${minR}
+              <button class="btn btn-primary btn-sm marquee-btn" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="ก๊อปปี้ทั้งสาเหตุและแนวทางแก้ไขไปวางที่ช่อง ${list[0].causeCol || 'L'}${minR} ในคลิกเดียว">
+                <span class="marquee-wrap">
+                  <span class="marquee-track">
+                    <span>⚡ ก๊อปคู่ (สาเหตุ+แนวทางแก้ไข) วางช่อง ${list[0].causeCol || 'L'}${minR}&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                    <span>⚡ ก๊อปคู่ (สาเหตุ+แนวทางแก้ไข) วางช่อง ${list[0].causeCol || 'L'}${minR}&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                  </span>
+                </span>
               </button>
-              <button class="btn btn-sm" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})">
-                📋 ก๊อปแนวทางแก้ไข (ช่อง ${list[0].solCol || 'L'}) ทั้งวัน
+              <button class="btn btn-sm marquee-btn" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})" title="ก๊อปปี้แนวทางแก้ไขทั้งหมด">
+                <span class="marquee-wrap">
+                  <span class="marquee-track">
+                    <span>📋 ก๊อปแนวทางแก้ไขทั้งหมด (ช่อง ${list[0].solCol || 'M'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                    <span>📋 ก๊อปแนวทางแก้ไขทั้งหมด (ช่อง ${list[0].solCol || 'M'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                  </span>
+                </span>
               </button>
-              <button class="btn btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}')">
-                📋 ก๊อปสาเหตุ (ช่อง ${list[0].causeCol || 'K'}) ทั้งวัน
+              <button class="btn btn-sm marquee-btn" onclick="copyCausesAndOpenSheet('${tabKey}')" title="ก๊อปปี้สาเหตุทั้งหมด">
+                <span class="marquee-wrap">
+                  <span class="marquee-track">
+                    <span>📋 ก๊อปสาเหตุทั้งหมด (ช่อง ${list[0].causeCol || 'L'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                    <span>📋 ก๊อปสาเหตุทั้งหมด (ช่อง ${list[0].causeCol || 'L'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+                  </span>
+                </span>
               </button>
               <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
             </div>
@@ -1333,16 +1345,33 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
                       ${(!c.sheetCause) ? `
-                        <span class="red-pill">🔴 ในชีตขาดช่อง ${c.causeCol || 'K'}</span>
+                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="คลิกเพื่อกระโดดไปที่ช่อง ${c.causeCol || 'L'}${c.rowNum} ใน Google Sheet" style="cursor:pointer; border:1px solid #f87171;">
+                          🔴 ขาดสาเหตุ (ช่อง ${c.causeCol || 'L'}) 🔗
+                        </button>
                       ` : (!c.sheetSolution) ? `
-                        <span class="red-pill">🔴 ในชีตขาดช่อง ${c.solCol || 'L'}</span>
+                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${c.solCol || 'M'}', ${c.rowNum})" title="คลิกเพื่อกระโดดไปที่ช่อง ${c.solCol || 'M'}${c.rowNum} ใน Google Sheet" style="cursor:pointer; border:1px solid #f87171;">
+                          🔴 ขาดแนวทางแก้ไข (ช่อง ${c.solCol || 'M'}) 🔗
+                        </button>
                       ` : `
-                        <span class="green-pill">⚪ ชีตขาวครบ</span>
+                        <button class="green-pill" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="คลิกเพื่อเปิดดูใน Google Sheet" style="cursor:pointer;">
+                          ⚪ ในชีตลงครบแล้ว 🔗
+                        </button>
                       `}
-                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปคู่ วางช่อง ${c.causeCol || 'K'}${c.rowNum} ครั้งเดียวได้ทั้ง 2 ช่อง">⚡ วาง ${c.causeCol || 'K'}+${c.solCol || 'L'}${c.rowNum}</button>
-                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปแนวทางแก้ไขและเปิดช่อง ${c.solCol || 'L'}${c.rowNum}">📋 วาง ${c.solCol || 'L'}${c.rowNum}</button>
-                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปสาเหตุและเปิดช่อง ${c.causeCol || 'K'}${c.rowNum}">📋 วาง ${c.causeCol || 'K'}${c.rowNum}</button>
-                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">🔍 เช็คเลข / QR</button>
+                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปปี้ทั้งสาเหตุและแนวทางแก้ไข แล้วเปิดชีตวางที่ช่อง ${c.causeCol || 'L'}${c.rowNum} ทีเดียวได้ทั้ง 2 ช่อง">
+                        ⚡ วางคู่ (สาเหตุ+แก้ไข)
+                      </button>
+                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปปี้เฉพาะสาเหตุ แล้วเปิดไปที่ช่อง ${c.causeCol || 'L'}${c.rowNum}">
+                        📋 วางเฉพาะสาเหตุ
+                      </button>
+                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปปี้เฉพาะแนวทางแก้ไข แล้วเปิดไปที่ช่อง ${c.solCol || 'M'}${c.rowNum}">
+                        📋 วางเฉพาะแนวทางแก้ไข
+                      </button>
+                      <button class="btn btn-sm" style="background:#f1f5f9; border-color:#cbd5e1;" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="เปิดไปที่แถว ${c.rowNum} ใน Google Sheet ทันที">
+                        🔗 ดูในชีต (${c.causeCol || 'L'}${c.rowNum})
+                      </button>
+                      <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">
+                        🔍 เช็คเลข / QR
+                      </button>
                       <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
                     </div>
                   </div>
@@ -1697,7 +1726,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (!c) return;
       const solCol = c.solCol || 'L';
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
-      copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • กด Ctrl+V วางที่ช่อง ${solCol}${c.rowNum} ได้เลย`);
+      copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • เปิด Google Sheet ให้แล้ว กด Ctrl+V วางที่ช่อง ${solCol}${c.rowNum} ได้เลย`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
       const url = gid
         ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${solCol}${c.rowNum}`
@@ -1712,7 +1741,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const solCol = c.solCol || 'L';
       const cause = (c.userCause || c.sheetCause || '').trim();
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(cause)).trim();
-      copyText(`${cause}\t${sol}`, `คัดลอกคู่ (${causeCol}+${solCol}) แถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} จะเติมทั้ง 2 คอลัมน์พร้อมกันทันที!`);
+      copyText(`${cause}\t${sol}`, `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) แถว ${c.rowNum} แล้ว • เปิด Google Sheet ให้แล้ว กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} จะเติมทั้ง 2 ช่องพร้อมกันทันที!`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
       const url = gid
         ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${c.rowNum}`
@@ -1729,7 +1758,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         autoLearnCause(val);
         saveState();
         render();
-        copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} ได้เลย`);
+        copyText(val, `คัดลอกสาเหตุแถว ${c.rowNum} แล้ว • เปิด Google Sheet ให้แล้ว กด Ctrl+V วางที่ช่อง ${causeCol}${c.rowNum} ได้เลย`);
       } else {
         showToast(`เปิดไปที่ช่อง ${causeCol}${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
       }
@@ -1854,6 +1883,18 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     }
 
 
+
+
+    function openSheetCell(tabKey, colLetter, rowNum) {
+      const gid = state.tabGids[tabKey] || '';
+      const col = colLetter || 'A';
+      const row = rowNum || 1;
+      const url = gid
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${col}${row}`
+        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      showToast(`เปิด Google Sheet ไปที่ช่อง ${col}${row} (แท็บ ${tabKey}) แล้ว`);
+      window.open(url, '_blank', 'noopener');
+    }
 
     function parseTabDate(tabName) {
       const m = /^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/.exec((tabName || '').trim());
