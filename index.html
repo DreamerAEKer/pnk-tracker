@@ -589,7 +589,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:12px; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
       <div style="display:flex; gap:8px; align-items:center;">
         <div style="position:relative; flex:1;">
-          <input type="text" id="mainSearchInput" class="input-clean" style="padding-left:34px; font-size:0.9rem;" placeholder="🔍 พิมพ์ค้นหาเลขพัสดุ (13 หลัก) / แถว / ชื่อผู้ดำเนินการ..." oninput="handleMainSearch(this.value)">
+          <input type="text" id="mainSearchInput" class="input-clean" style="padding-left:34px; font-size:0.9rem;" placeholder="พิมพ์ค้นหาเลขพัสดุ (13 หลัก) / แถว / ชื่อผู้ดำเนินการ..." oninput="handleMainSearch(this.value)">
           <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.95rem; opacity:0.6;">🔍</span>
         </div>
         <button class="btn btn-sm" onclick="clearMainSearch()" id="clearSearchBtn" style="display:none;">✕ ล้าง</button>
@@ -1065,40 +1065,57 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         return;
       }
 
-      // ข้อความสรุปย่อแบบกะทัดรัด
-      const causeBrief = Object.keys(byTabCause).map(t => `${t} (${byTabCause[t].items.length} รายการ)`).join(', ');
+      const sortedCauseTabs = Object.values(byTabCause).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
+      const sortedSolTabs = Object.values(byTabSol).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
+      const firstCauseTab = sortedCauseTabs[0];
+      const firstCauseItem = firstCauseTab ? [...firstCauseTab.items].sort((a, b) => a.rowNum - b.rowNum)[0] : null;
+      const causeBrief = sortedCauseTabs.map(t => `${t.tabName} (${t.items.length} รายการ)`).join(', ');
 
       if (!state.redBannerExpanded) {
-        // โหมดย่อ (Collapsed View) - ประหยัดพื้นที่หน้าจอ ให้เห็นรายการค้นหาเป็นหลัก!
-        bannerEl.innerHTML = `
-          <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span class="red-pill" style="font-size:0.75rem;">🔴 แถบแดงในชีต ${totalMissingCause + totalMissingSol} รายการ</span>
-              <span style="font-size:0.8rem; color:#991b1b; font-weight:700;">
-                ${totalMissingCause > 0 ? `รอลงสาเหตุ ${totalMissingCause} รายการ [${causeBrief}]` : `ขาดแนวทางแก้ไข ${totalMissingSol} รายการ`}
-              </span>
+        if (totalMissingCause > 0) {
+          bannerEl.innerHTML = `
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="red-pill" style="font-size:0.78rem;">🔴 รอลงสาเหตุ ${totalMissingCause} รายการ</span>
+                <span style="font-size:0.8rem; color:#991b1b; font-weight:700;">แท็บ ${causeBrief}</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                ${firstCauseItem ? `
+                  <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#dc2626; color:#fff; border-color:#dc2626; font-weight:700;" onclick="openSheetCell('${firstCauseItem.tabName}', '${firstCauseItem.causeCol || 'L'}', ${firstCauseItem.rowNum})">
+                    🔗 ไปที่ช่อง ${firstCauseItem.causeCol || 'L'}${firstCauseItem.rowNum} (${firstCauseItem.tabName})
+                  </button>
+                ` : ''}
+                <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#fff; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="toggleRedBannerExpand()">
+                  ▼ ดูทั้งหมด
+                </button>
+                <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔄</button>
+              </div>
             </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#fff; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="toggleRedBannerExpand()">
-                ▼ ดูรายการแถบแดง
-              </button>
-              <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔄</button>
+          `;
+        } else {
+          bannerEl.innerHTML = `
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <div style="font-size:0.82rem; font-weight:700; color:#334155;">
+                ✅ ลงสาเหตุครบทุกวันแล้ว • <span style="color:#64748b; font-weight:600;">มีแท็บเก่าขาดเฉพาะแนวทางแก้ไข ${totalMissingSol} รายการ</span>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="toggleRedBannerExpand()">▼ ดูแท็บเก่า</button>
+                <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔄</button>
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        }
         return;
       }
 
       // โหมดขยาย (Expanded View) เมื่อผู้ใช้กดดูรายละเอียด
-      const sortedCauseTabs = Object.values(byTabCause).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
-      const sortedSolTabs = Object.values(byTabSol).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName));
-
       const causeCardsHtml = sortedCauseTabs.map(t => {
         const rows = t.items.map(x => x.rowNum).sort((a, b) => a - b);
         const minR = rows[0];
         const maxR = rows[rows.length - 1];
         const causeCol = t.items[0].causeCol || 'K';
         const solCol = t.items[0].solCol || 'L';
+        const allHasSol = t.items.every(x => Boolean(x.sheetSolution && x.sheetSolution.trim()));
 
         return `
           <div class="red-tab-card" style="background:#fff; border:1.5px solid #ef4444; padding:8px 10px; margin-top:6px;">
@@ -1107,16 +1124,25 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 📅 แท็บ ${t.tabName} (แถว ${minR}–${maxR} รวม ${t.items.length} รายการ)
               </div>
               <div style="font-size:0.78rem; color:#dc2626; margin-top:2px;">
-                ⚠️ ขาดสาเหตุ (ช่อง ${causeCol}) ${t.items.length} แถว
+                ⚠️ ขาดสาเหตุ (ช่อง ${causeCol}) ${t.items.length} แถว${allHasSol ? ` • ช่อง ${solCol} มีแล้ว` : ''}
               </div>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="quickCopyBothRange('${t.tabName}', ${minR}, ${maxR})">
-                ⚡ ก๊อปคู่ (${causeCol}+${solCol}) & เปิดชีต ${causeCol}${minR}
+              <button class="btn btn-sm" style="background:#f1f5f9; border-color:#cbd5e1; font-weight:700;" onclick="openSheetCell('${t.tabName}', '${causeCol}', ${minR})">
+                🔗 ไปที่ช่อง ${causeCol}${minR}
               </button>
-              <button class="btn btn-sm" style="background:#dc2626; color:#fff;" onclick="copyCausesAndOpenSheet('${t.tabName}')">
-                📋 ก๊อปสาเหตุ (ช่อง ${causeCol}) & เปิดชีต
-              </button>
+              ${allHasSol ? `
+                <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copyCausesAndOpenSheet('${t.tabName}', ${minR}, ${maxR})">
+                  📋 ก๊อปสาเหตุไปวางช่อง ${causeCol}${minR}
+                </button>
+              ` : `
+                <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="quickCopyBothRange('${t.tabName}', ${minR}, ${maxR})">
+                  ⚡ ก๊อปคู่ไปวางช่อง ${causeCol}${minR}
+                </button>
+                <button class="btn btn-sm" style="background:#dc2626; color:#fff;" onclick="copyCausesAndOpenSheet('${t.tabName}', ${minR}, ${maxR})">
+                  📋 ก๊อปเฉพาะสาเหตุ (${causeCol}${minR})
+                </button>
+              `}
             </div>
           </div>
         `;
@@ -1146,10 +1172,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }).join('');
 
       bannerEl.innerHTML = `
-        <div class="red-alert-card" style="border-left: 6px solid #ef4444; padding:12px;">
+        <div class="red-alert-card" style="border-left: 6px solid ${totalMissingCause > 0 ? '#ef4444' : '#64748b'}; padding:12px; ${totalMissingCause === 0 ? 'background:#f8fafc; border-color:#cbd5e1;' : ''}">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
-            <div class="red-alert-title" style="font-size:0.92rem; color:#b91c1c;">
-              🚨 รายละเอียดแถบสีแดงใน Google Sheet (${totalMissingCause + totalMissingSol} รายการ)
+            <div class="red-alert-title" style="font-size:0.92rem; color:${totalMissingCause > 0 ? '#b91c1c' : '#334155'};">
+              ${totalMissingCause > 0
+                ? `🚨 รอลงสาเหตุ ${totalMissingCause} รายการ`
+                : `📋 แท็บเก่าขาดเฉพาะแนวทางแก้ไข (${totalMissingSol} รายการ)`}
             </div>
             <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="toggleRedBannerExpand()">
               ▲ ย่อเก็บ
@@ -1158,7 +1186,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
           ${causeCardsHtml}
 
-          ${totalMissingSol > 0 ? `
+          ${totalMissingCause > 0 && totalMissingSol > 0 ? `
             <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #fca5a5;">
               <button class="btn btn-sm" style="width:100%; justify-content:space-between; background:#fff; font-size:0.78rem;" onclick="toggleOldMissingSol()">
                 <span>📋 แท็บเก่าที่ลงสาเหตุแล้ว ขาดเฉพาะแนวทางแก้ไข (${totalMissingSol} รายการ)</span>
@@ -1166,7 +1194,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               </button>
               ${showOldMissingSolTabs ? `<div style="margin-top:6px;">${solCardsHtml}</div>` : ''}
             </div>
-          ` : ''}
+          ` : (totalMissingCause === 0 && totalMissingSol > 0 ? `<div>${solCardsHtml}</div>` : '')}
         </div>
       `;
     }
@@ -1286,36 +1314,30 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 <span class="count-pill">${list.length} รายการ (แถว ${minR}–${maxR})</span>
               </div>
             </div>
-            <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
-              <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
-                ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
-              </button>
-              <button class="btn btn-primary btn-sm marquee-btn" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})" title="ก๊อปปี้ทั้งสาเหตุและแนวทางแก้ไขไปวางที่ช่อง ${list[0].causeCol || 'L'}${minR} ในคลิกเดียว">
-                <span class="marquee-wrap">
-                  <span class="marquee-track">
-                    <span>⚡ ก๊อปคู่ (สาเหตุ+แนวทางแก้ไข) วางช่อง ${list[0].causeCol || 'L'}${minR}&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                    <span>⚡ ก๊อปคู่ (สาเหตุ+แนวทางแก้ไข) วางช่อง ${list[0].causeCol || 'L'}${minR}&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                  </span>
-                </span>
-              </button>
-              <button class="btn btn-sm marquee-btn" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b; font-weight:700;" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})" title="ก๊อปปี้แนวทางแก้ไขทั้งหมด">
-                <span class="marquee-wrap">
-                  <span class="marquee-track">
-                    <span>📋 ก๊อปแนวทางแก้ไขทั้งหมด (ช่อง ${list[0].solCol || 'M'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                    <span>📋 ก๊อปแนวทางแก้ไขทั้งหมด (ช่อง ${list[0].solCol || 'M'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                  </span>
-                </span>
-              </button>
-              <button class="btn btn-sm marquee-btn" onclick="copyCausesAndOpenSheet('${tabKey}')" title="ก๊อปปี้สาเหตุทั้งหมด">
-                <span class="marquee-wrap">
-                  <span class="marquee-track">
-                    <span>📋 ก๊อปสาเหตุทั้งหมด (ช่อง ${list[0].causeCol || 'L'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                    <span>📋 ก๊อปสาเหตุทั้งหมด (ช่อง ${list[0].causeCol || 'L'})&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-                  </span>
-                </span>
-              </button>
-              <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
-            </div>
+            ${list.length === 1 ? `
+              <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
+                <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
+                  ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลข + เปิด QMS' : '🌍 ก๊อปเลข + เปิดเว็บ Track'}
+                </button>
+                <button class="btn btn-success btn-sm" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
+              </div>
+            ` : `
+              <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
+                <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
+                  ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
+                </button>
+                <button class="btn btn-primary btn-sm" style="background:#2563eb; color:#fff;" onclick="quickCopyBothRange('${tabKey}', ${minR}, ${maxR})">
+                  ⚡ ก๊อปคู่ทั้งวันไปวาง ${list[0].causeCol || 'L'}${minR}
+                </button>
+                <button class="btn btn-sm" onclick="copyCausesAndOpenSheet('${tabKey}', ${minR}, ${maxR})">
+                  📋 ก๊อปสาเหตุทั้งวัน (ช่อง ${list[0].causeCol || 'L'})
+                </button>
+                <button class="btn btn-sm" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})">
+                  📋 ก๊อปแนวทางแก้ไขทั้งวัน (ช่อง ${list[0].solCol || 'M'})
+                </button>
+                <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
+              </div>
+            `}
           </div>
 
           ${groups.map(g => `
@@ -1333,6 +1355,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               ${g.items.map(({ c, p }) => {
                 const causes = getCausesList();
                 const isCustom = Boolean(c.userCause && !causes.includes(c.userCause));
+                const causeCol = c.causeCol || 'L';
+                const solCol = c.solCol || 'M';
+                const hasSolInSheet = Boolean(c.sheetSolution && c.sheetSolution.trim());
                 return `
                 <div class="item-row">
                   <div class="item-top">
@@ -1344,42 +1369,36 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       <span class="sub-info">${c.bagTime} (${c.operator})</span>
                     </div>
                     <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
-                      ${(!c.sheetCause) ? `
-                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="คลิกเพื่อกระโดดไปที่ช่อง ${c.causeCol || 'L'}${c.rowNum} ใน Google Sheet" style="cursor:pointer; border:1px solid #f87171;">
-                          🔴 ขาดสาเหตุ (ช่อง ${c.causeCol || 'L'}) 🔗
+                      ${(!c.sheetCause && hasSolInSheet) ? `
+                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${causeCol}', ${c.rowNum})" style="cursor:pointer; border:1px solid #f87171;" title="คลิกเพื่อเปิดช่อง ${causeCol}${c.rowNum} ใน Google Sheet">
+                          🔴 ขาดสาเหตุช่อง ${causeCol}${c.rowNum} (ช่อง ${solCol} มีแล้ว)
                         </button>
-                      ` : (!c.sheetSolution) ? `
-                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${c.solCol || 'M'}', ${c.rowNum})" title="คลิกเพื่อกระโดดไปที่ช่อง ${c.solCol || 'M'}${c.rowNum} ใน Google Sheet" style="cursor:pointer; border:1px solid #f87171;">
-                          🔴 ขาดแนวทางแก้ไข (ช่อง ${c.solCol || 'M'}) 🔗
+                      ` : (!c.sheetCause) ? `
+                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${causeCol}', ${c.rowNum})" style="cursor:pointer; border:1px solid #f87171;" title="คลิกเพื่อเปิดช่อง ${causeCol}${c.rowNum} ใน Google Sheet">
+                          🔴 ขาดสาเหตุ+แก้ไข (ช่อง ${causeCol}${c.rowNum})
+                        </button>
+                      ` : (!hasSolInSheet) ? `
+                        <button class="red-pill" onclick="openSheetCell('${c.tabName}', '${solCol}', ${c.rowNum})" style="cursor:pointer; border:1px solid #f87171;">
+                          🔴 ขาดแนวทางแก้ไข (ช่อง ${solCol}${c.rowNum})
                         </button>
                       ` : `
-                        <button class="green-pill" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="คลิกเพื่อเปิดดูใน Google Sheet" style="cursor:pointer;">
-                          ⚪ ในชีตลงครบแล้ว 🔗
+                        <button class="green-pill" onclick="openSheetCell('${c.tabName}', '${causeCol}', ${c.rowNum})" style="cursor:pointer;">
+                          ⚪ ในชีตลงครบแล้ว
                         </button>
                       `}
-                      <button class="btn btn-sm" style="background:#2563eb; color:#fff; font-weight:700;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปปี้ทั้งสาเหตุและแนวทางแก้ไข แล้วเปิดชีตวางที่ช่อง ${c.causeCol || 'L'}${c.rowNum} ทีเดียวได้ทั้ง 2 ช่อง">
-                        ⚡ วางคู่ (สาเหตุ+แก้ไข)
-                      </button>
-                      <button class="btn btn-sm" onclick="copySingleCauseAndOpen('${c.barcode}')" title="ก๊อปปี้เฉพาะสาเหตุ แล้วเปิดไปที่ช่อง ${c.causeCol || 'L'}${c.rowNum}">
-                        📋 วางเฉพาะสาเหตุ
-                      </button>
-                      <button class="btn btn-sm" onclick="copySingleSolutionAndOpen('${c.barcode}')" title="ก๊อปปี้เฉพาะแนวทางแก้ไข แล้วเปิดไปที่ช่อง ${c.solCol || 'M'}${c.rowNum}">
-                        📋 วางเฉพาะแนวทางแก้ไข
-                      </button>
-                      <button class="btn btn-sm" style="background:#f1f5f9; border-color:#cbd5e1;" onclick="openSheetCell('${c.tabName}', '${c.causeCol || 'L'}', ${c.rowNum})" title="เปิดไปที่แถว ${c.rowNum} ใน Google Sheet ทันที">
-                        🔗 ดูในชีต (${c.causeCol || 'L'}${c.rowNum})
-                      </button>
                       <button class="btn btn-sm" onclick="openNeighborModal('${c.barcode}')">
                         🔍 เช็คเลข / QR
                       </button>
-                      <button class="btn btn-success btn-sm" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว">✓</button>
+                      <button class="btn btn-sm" style="background:#f1f5f9; border-color:#cbd5e1;" onclick="openSheetCell('${c.tabName}', '${causeCol}', ${c.rowNum})">
+                        🔗 ไปที่ช่อง ${causeCol}${c.rowNum}
+                      </button>
                     </div>
                   </div>
 
                   <div class="item-bottom">
                     <div class="cause-picker-wrap" id="cpWrap_${c.barcode}">
                       <button type="button" class="cause-trigger-btn ${!c.userCause ? 'placeholder' : ''}" id="cpBtn_${c.barcode}" onclick="toggleCauseMenu(event, '${c.barcode}')">
-                        <span id="cpLabel_${c.barcode}" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${c.userCause || '-- เลือกสาเหตุ --'}</span>
+                        <span id="cpLabel_${c.barcode}" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${c.userCause || '① เลือกหรือพิมพ์สาเหตุ...'}</span>
                         <span style="font-size:0.75rem; color:var(--muted);">▾</span>
                       </button>
                       <div class="cause-menu" id="cpMenu_${c.barcode}">
@@ -1406,6 +1425,25 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                     <div id="customBox_${c.barcode}" style="display:${isCustom ? 'flex' : 'none'}; width:100%; gap:6px; margin-top:4px;">
                       <input type="text" class="input-clean" id="inp_${c.barcode}" style="flex:1;" placeholder="พิมพ์สาเหตุสำหรับแถว ${c.rowNum} (พิมพ์เสร็จระบบจำเข้าตัวเลือกให้เอง)..." value="${(c.userCause || '').replace(/"/g, '&quot;')}" oninput="setCauseSilent('${c.barcode}', this.value)" onblur="autoSaveCustomCauseOnBlur('${c.barcode}')" onkeydown="if(event.key==='Enter'){ event.preventDefault(); this.blur(); }">
                     </div>
+                  </div>
+
+                  <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                    ${hasSolInSheet ? `
+                      <button class="btn btn-sm" style="flex:1; background:#2563eb; color:#fff; font-weight:700; padding:8px 12px;" onclick="copySingleCauseAndOpen('${c.barcode}')">
+                        📋 ② ก๊อปสาเหตุไปวางช่อง ${causeCol}${c.rowNum}
+                      </button>
+                      <button class="btn btn-sm" style="padding:8px 10px; color:#475569;" onclick="copySingleBothAndOpen('${c.barcode}')" title="ก๊อปทั้งสาเหตุและแนวทางแก้ไขไปวางทับทั้ง 2 ช่อง">
+                        ⚡ ก๊อปคู่
+                      </button>
+                    ` : `
+                      <button class="btn btn-sm" style="flex:1; background:#2563eb; color:#fff; font-weight:700; padding:8px 12px;" onclick="copySingleBothAndOpen('${c.barcode}')">
+                        ⚡ ② ก๊อปคู่ (สาเหตุ+แก้ไข) ไปวางช่อง ${causeCol}${c.rowNum}
+                      </button>
+                      <button class="btn btn-sm" style="padding:8px 10px;" onclick="copySingleCauseAndOpen('${c.barcode}')">
+                        📋 เฉพาะสาเหตุ (${causeCol}${c.rowNum})
+                      </button>
+                    `}
+                    <button class="btn btn-success btn-sm" style="padding:8px 12px;" onclick="closeSingleCase('${c.barcode}')" title="ทำเสร็จแล้ว (ย้ายเข้าประวัติ)">✓ เสร็จ</button>
                   </div>
                 </div>
               `}).join('')}
@@ -1562,7 +1600,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       c.userCause = val;
       const lbl = document.getElementById(`cpLabel_${barcode}`);
       const btn = document.getElementById(`cpBtn_${barcode}`);
-      if (lbl) lbl.textContent = val || '-- เลือกสาเหตุ --';
+      if (lbl) lbl.textContent = val || '① เลือกหรือพิมพ์สาเหตุ...';
       if (btn) btn.classList.toggle('placeholder', !val);
       saveState();
     }
@@ -1648,12 +1686,16 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         : `คัดลอกและเปิด Track เลขถัดไป (+1 ถึง +3) ของ ${barcode}`);
     }
 
-    function copyCausesAndOpenSheet(tabKey) {
-      const items = Object.values(state.casesByBarcode).filter(c => c.tabName === tabKey);
+    function copyCausesAndOpenSheet(tabKey, startRow, endRow) {
+      let items = Object.values(state.casesByBarcode).filter(c => c.tabName === tabKey);
+      if (typeof startRow === 'number' && typeof endRow === 'number') {
+        items = items.filter(c => c.rowNum >= startRow && c.rowNum <= endRow);
+      }
       if (!items.length) return;
       items.sort((a, b) => a.rowNum - b.rowNum);
-      const minR = items[0].rowNum;
-      const maxR = items[items.length - 1].rowNum;
+      const minR = typeof startRow === 'number' ? startRow : items[0].rowNum;
+      const maxR = typeof endRow === 'number' ? endRow : items[items.length - 1].rowNum;
+      const causeCol = items[0].causeCol || 'K';
       const map = {};
       items.forEach(c => {
         const v = (c.userCause || c.sheetCause || '').trim();
@@ -1666,10 +1708,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const lines = [];
       for (let r = minR; r <= maxR; r++) lines.push(map[r] || '');
 
-      copyText(lines.join('\n'), `คัดลอกสาเหตุแถว ${minR}–${maxR} แล้ว กด Ctrl+V วางที่ช่อง K${minR} ได้เลย`);
+      const rowDesc = minR === maxR ? `แถว ${minR}` : `แถว ${minR}–${maxR}`;
+      copyText(lines.join('\n'), `คัดลอกสาเหตุ${rowDesc} แล้ว กด Ctrl+V วางที่ช่อง ${causeCol}${minR} ได้เลย`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
       const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=K${minR}`
+        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${minR}`
         : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
       window.open(url, '_blank', 'noopener');
     }
