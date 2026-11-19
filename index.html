@@ -749,9 +749,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SEED_HISTORY = [];
 
-    const SEED_ACTIVE = [
-      { tabName: '11.11.69', gid: '1625631201', date: '11/11/2569', rowNum: 13, service: 'E (E)', barcode: 'EQ160772469TH', bagTime: '10/11/2569 18:11', operator: 'kiattisak.pa', sheetCause: '', sheetSolution: 'แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก', causeCol: 'L', solCol: 'M' }
-    ];
+    const SEED_ACTIVE = [];
 
     let state = {
       trackTarget: 'qms',
@@ -764,6 +762,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       casesByBarcode: {},
       neighborState: {},
       resolvedTabsCache: {},
+      protectedRanges: {},
+      visibleDateTabs: [],
       tabGids: { '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230', '4.11.69': '1804342213', '5.11.69': '2146078973' }
     };
 
@@ -820,6 +820,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.casesByBarcode = p.casesByBarcode || {};
           state.neighborState = p.neighborState || {};
           state.resolvedTabsCache = p.resolvedTabsCache || {};
+          state.protectedRanges = (p.protectedRanges && typeof p.protectedRanges === 'object') ? p.protectedRanges : {};
+          state.visibleDateTabs = Array.isArray(p.visibleDateTabs) ? p.visibleDateTabs : [];
           state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, p.tabGids || {});
         }
       } catch (e) {}
@@ -1008,29 +1010,41 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const missingSolItems = [];
       const byTabCause = {};
       const byTabSol = {};
+      let lockedCount = 0;
 
       all.forEach(c => {
-        if (!isDateTab(c.tabName) || c.rowNum > 400) return;
+        if (!isDateTab(c.tabName) || c.rowNum > 400 || !isTabVisibleOrUnknown(c.tabName)) return;
         const kMissing = !c.sheetCause || !c.sheetCause.trim();
         const lMissing = !c.sheetSolution || !c.sheetSolution.trim();
 
         const tab = c.tabName || c.date;
         const gid = c.gid || state.tabGids[tab] || '';
+        const causeLocked = isCaseCauseProtected(c);
+        const solLocked = isCaseSolProtected(c);
 
         if (kMissing) {
-          missingCauseItems.push(c);
-          if (!byTabCause[tab]) byTabCause[tab] = { tabName: tab, gid, items: [] };
-          byTabCause[tab].items.push(c);
+          if (causeLocked) {
+            lockedCount++;
+          } else {
+            missingCauseItems.push(c);
+            if (!byTabCause[tab]) byTabCause[tab] = { tabName: tab, gid, items: [] };
+            byTabCause[tab].items.push(c);
+          }
         } else if (lMissing) {
-          missingSolItems.push(c);
-          if (!byTabSol[tab]) byTabSol[tab] = { tabName: tab, gid, items: [] };
-          byTabSol[tab].items.push(c);
+          if (solLocked) {
+            lockedCount++;
+          } else {
+            missingSolItems.push(c);
+            if (!byTabSol[tab]) byTabSol[tab] = { tabName: tab, gid, items: [] };
+            byTabSol[tab].items.push(c);
+          }
         }
       });
 
       return {
         totalMissingCause: missingCauseItems.length,
         totalMissingSol: missingSolItems.length,
+        lockedCount,
         byTabCause,
         byTabSol
       };
@@ -1051,13 +1065,16 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const bannerEl = document.getElementById('redStripeAlertContainer');
       if (!bannerEl) return;
 
-      const { totalMissingCause, totalMissingSol, byTabCause, byTabSol } = detectRedStripes();
+      const { totalMissingCause, totalMissingSol, lockedCount, byTabCause, byTabSol } = detectRedStripes();
 
       if (totalMissingCause === 0 && totalMissingSol === 0) {
         bannerEl.innerHTML = `
           <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-            <div style="font-size:0.84rem; font-weight:700; color:#065f46;">
-              ✅ ปณก. 10501: ลงสาเหตุและแนวทางแก้ไขใน Google Sheet ครบ 100% แล้ว
+            <div>
+              <div style="font-size:0.84rem; font-weight:700; color:#065f46;">
+                ✅ ปณก. 10501: ลงสาเหตุและแนวทางแก้ไขใน Google Sheet ครบ 100% แล้ว
+              </div>
+              ${lockedCount > 0 ? `<div style="font-size:0.75rem; color:#047857; font-weight:500; margin-top:2px;">🔒 ข้าม ${lockedCount} รายการที่เจ้าของชีตป้องกัน/ล็อกเซลล์ไว้ (แก้ไขไม่ได้)</div>` : ''}
             </div>
             <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสด</button>
           </div>
@@ -1223,7 +1240,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const q = (state.searchQuery || '').trim().toUpperCase();
 
       const active = all.filter(c => {
-        if (c.closedByUser || (c.sheetCause && c.sheetCause.trim())) return false;
+        if (c.closedByUser || (c.sheetCause && c.sheetCause.trim()) || isCaseCauseProtected(c) || !isTabVisibleOrUnknown(c.tabName)) return false;
         if (!q) return true;
         return (c.barcode && c.barcode.includes(q)) ||
                (c.tabName && c.tabName.includes(q)) ||
@@ -1232,6 +1249,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       });
 
       const closed = all.filter(c => {
+        if (!isTabVisibleOrUnknown(c.tabName)) return false;
         if (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) return false;
         if (!q) return true;
         return (c.barcode && c.barcode.includes(q)) ||
@@ -1244,10 +1262,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
       const container = document.getElementById('mainContainer');
       if (!active.length) {
+        const { lockedCount } = detectRedStripes();
         container.innerHTML = `
           <div class="date-card" style="padding:28px 16px; text-align:center;">
             <div style="font-size:1.05rem; font-weight:700; color:var(--success);">✅ ไม่มีรายการค้าง</div>
-            <div style="font-size:0.84rem; color:var(--muted); margin-top:4px;">รายการของ ปณก. 10501 ลงสาเหตุครบทั้งหมดแล้ว</div>
+            <div style="font-size:0.84rem; color:var(--muted); margin-top:4px;">รายการของ ปณก. 10501 ที่แก้ไขได้ลงสาเหตุครบทั้งหมดแล้ว</div>
+            ${lockedCount > 0 ? `<div style="font-size:0.76rem; color:var(--muted); margin-top:6px;">🔒 ซ่อน ${lockedCount} รายการที่ชีตป้องกัน/ล็อกเซลล์ไว้ไม่สามารถคีย์ข้อมูลได้</div>` : ''}
           </div>
         `;
       } else {
@@ -1953,6 +1973,162 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       return /^\d{1,2}\.\d{1,2}\.\d{2,4}$/.test(name.trim());
     }
 
+    function extractJsonObject(text, marker) {
+      if (!text || !marker) return null;
+      const idx = text.indexOf(marker);
+      if (idx === -1) return null;
+      let i = idx + marker.length;
+      while (i < text.length && /\s/.test(text[i])) i++;
+      if (text[i] !== '{') return null;
+      let depth = 0, inStr = false, esc = false, end = -1;
+      for (; i < text.length; i++) {
+        const ch = text[i];
+        if (inStr) {
+          if (esc) { esc = false; }
+          else if (ch === '\\') { esc = true; }
+          else if (ch === '"') { inStr = false; }
+        } else {
+          if (ch === '"') inStr = true;
+          else if (ch === '{') depth++;
+          else if (ch === '}') {
+            depth--;
+            if (depth === 0) { end = i + 1; break; }
+          }
+        }
+      }
+      if (end === -1) return null;
+      try {
+        return JSON.parse(text.slice(idx + marker.length, end).trim());
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function parseRangeDef(rangeDef) {
+      const out = [];
+      if (!Array.isArray(rangeDef) || !rangeDef.length) return out;
+      if (typeof rangeDef[0] === 'string' || typeof rangeDef[0] === 'number') {
+        const gid = String(rangeDef[0]);
+        out.push({
+          gid,
+          startRow: typeof rangeDef[1] === 'number' ? rangeDef[1] : 0,
+          endRow: typeof rangeDef[2] === 'number' ? rangeDef[2] : 1e9,
+          startCol: typeof rangeDef[3] === 'number' ? rangeDef[3] : 0,
+          endCol: typeof rangeDef[4] === 'number' ? rangeDef[4] : 1e9
+        });
+      } else {
+        rangeDef.forEach(item => {
+          if (Array.isArray(item)) {
+            out.push(...parseRangeDef(item));
+          } else if (item && typeof item === 'object' && item['1'] != null) {
+            out.push({
+              gid: String(item['1']),
+              startRow: typeof item['2'] === 'number' ? item['2'] : 0,
+              endRow: typeof item['3'] === 'number' ? item['3'] : 1e9,
+              startCol: typeof item['4'] === 'number' ? item['4'] : 0,
+              endCol: typeof item['5'] === 'number' ? item['5'] : 1e9
+            });
+          }
+        });
+      }
+      return out;
+    }
+
+    function parseBootstrapMetadata(html) {
+      const bd = extractJsonObject(html, 'var bootstrapData = ');
+      const changes = bd && bd.changes && Array.isArray(bd.changes.topsnapshot) ? bd.changes.topsnapshot : null;
+      if (!changes) return null;
+
+      const visibleDateTabs = [];
+      const tabGids = {};
+      const protectedByGid = {};
+
+      for (const ch of changes) {
+        if (!Array.isArray(ch) || typeof ch[1] !== 'string') continue;
+        if (ch[0] === 21350203) {
+          try {
+            const arr = JSON.parse(ch[1]);
+            const gid = String(arr[2]);
+            const props = arr[3] && arr[3][0] && arr[3][0]['1'];
+            if (!Array.isArray(props) || !props[0]) continue;
+            const name = String(props[0][2] || '').trim();
+            if (!name) continue;
+            const hiddenEntry = props.find(p => Array.isArray(p) && p[0] && p[0]['1'] === 6);
+            const isHidden = Boolean(hiddenEntry && hiddenEntry[0]['9'] === 1);
+            tabGids[name] = gid;
+            if (!isHidden && isDateTab(name)) {
+              visibleDateTabs.push(name);
+            }
+          } catch (e) {}
+        } else if (ch[0] === 34070425) {
+          try {
+            const arr = JSON.parse(ch[1]);
+            if (arr[2] !== 1) continue;
+            const meta = arr[3];
+            const metaObj = Array.isArray(meta) ? meta.find(x => x && x['2'] === 8) : null;
+            const warnArr = metaObj && Array.isArray(metaObj['6']) ? metaObj['6'] : null;
+            if (warnArr && warnArr[0] === 1) continue;
+            const rawEx = warnArr && Array.isArray(warnArr[3]) ? warnArr[3] : [];
+            const exceptions = [];
+            rawEx.forEach(ex => {
+              if (Array.isArray(ex)) exceptions.push(...parseRangeDef(ex));
+              else if (ex && typeof ex === 'object') exceptions.push(...parseRangeDef([ex]));
+            });
+            const ranges = parseRangeDef(arr[1]);
+            ranges.forEach(r => {
+              if (!protectedByGid[r.gid]) protectedByGid[r.gid] = [];
+              protectedByGid[r.gid].push({
+                startRow: r.startRow,
+                endRow: r.endRow,
+                startCol: r.startCol,
+                endCol: r.endCol,
+                exceptions: exceptions.filter(e => !e.gid || e.gid === r.gid)
+              });
+            });
+          } catch (e) {}
+        }
+      }
+
+      return { visibleDateTabs, tabGids, protectedByGid };
+    }
+
+    function isCellProtected(gidOrTab, rowNum, colLetterOrIdx) {
+      const gid = (gidOrTab && state.tabGids && state.tabGids[gidOrTab])
+        ? String(state.tabGids[gidOrTab])
+        : String(gidOrTab || '');
+      if (!gid || !state.protectedRanges || !Array.isArray(state.protectedRanges[gid])) return false;
+      const rowIdx = Number(rowNum) - 1;
+      let colIdx = 0;
+      if (typeof colLetterOrIdx === 'number') {
+        colIdx = colLetterOrIdx;
+      } else {
+        const s = String(colLetterOrIdx || 'A').trim().toUpperCase();
+        for (let i = 0; i < s.length; i++) colIdx = colIdx * 26 + (s.charCodeAt(i) - 64);
+        colIdx -= 1;
+      }
+      return state.protectedRanges[gid].some(r => {
+        if (rowIdx < r.startRow || rowIdx >= r.endRow || colIdx < r.startCol || colIdx >= r.endCol) return false;
+        if (Array.isArray(r.exceptions) && r.exceptions.some(ex =>
+          rowIdx >= ex.startRow && rowIdx < ex.endRow && colIdx >= ex.startCol && colIdx < ex.endCol
+        )) {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    function isCaseCauseProtected(c) {
+      return isCellProtected((c && (c.gid || c.tabName)) || '', c && c.rowNum, (c && c.causeCol) || 'L');
+    }
+
+    function isCaseSolProtected(c) {
+      return isCellProtected((c && (c.gid || c.tabName)) || '', c && c.rowNum, (c && c.solCol) || 'M');
+    }
+
+    function isTabVisibleOrUnknown(tabName) {
+      return !Array.isArray(state.visibleDateTabs) || !state.visibleDateTabs.length || state.visibleDateTabs.includes(tabName);
+    }
+
     function getTabColumnMapping(table) {
       const cols = (table && table.cols) || [];
       let causeIdx = -1;
@@ -1987,6 +2163,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     // Live Google Sheet Sync
     async function discoverAllSheetTabs() {
+      try {
+        const editRes = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`, { cache: 'no-store' });
+        if (editRes.ok) {
+          const meta = parseBootstrapMetadata(await editRes.text());
+          if (meta && meta.visibleDateTabs.length) {
+            Object.assign(state.tabGids, meta.tabGids);
+            state.protectedRanges = meta.protectedByGid;
+            state.visibleDateTabs = meta.visibleDateTabs;
+            return meta.visibleDateTabs;
+          }
+        }
+      } catch (e) {}
+
       const found = [];
       try {
         const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlview`, { cache: 'no-store' });
@@ -2005,6 +2194,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           }
         }
       } catch (e) {}
+      if (found.length) state.visibleDateTabs = found;
       return found;
     }
 
@@ -2057,8 +2247,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               causeCol: mapping.causeCol,
               solCol: mapping.solCol
             }, false);
-            // Has red stripe if either cause or solution is empty!
-            const hasRedStripe = (!sheetCause || !sheetCause.trim()) || (!sheetSolution || !sheetSolution.trim());
+            // Has red stripe if either editable cause or solution is empty!
+            const gid = state.tabGids[tabName] || '';
+            const causeLocked = isCellProtected(gid, idx + 2, mapping.causeCol);
+            const solLocked = isCellProtected(gid, idx + 2, mapping.solCol);
+            const hasRedStripe = ((!sheetCause || !sheetCause.trim()) && !causeLocked) || ((!sheetSolution || !sheetSolution.trim()) && !solLocked);
             if (hasRedStripe) unresolved++;
           }
         });
