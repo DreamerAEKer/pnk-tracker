@@ -611,11 +611,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px; font-size:0.78rem; font-weight:600; color:#475569;">
       <label style="display:inline-flex; align-items:center; gap:5px;">
         ก่อนหน้า:
-        <input type="number" id="digitBeforeCount" class="input-clean" style="width:62px; text-align:center; padding:5px 6px; font-weight:700;" min="0" max="50" value="3" oninput="updateDigitLookup()">
+        <input type="number" id="digitBeforeCount" class="input-clean" style="width:62px; text-align:center; padding:5px 6px; font-weight:700;" min="0" max="50" value="0" onfocus="this.select()" oninput="updateDigitLookup()">
       </label>
       <label style="display:inline-flex; align-items:center; gap:5px;">
         ถัดไป:
-        <input type="number" id="digitAfterCount" class="input-clean" style="width:62px; text-align:center; padding:5px 6px; font-weight:700;" min="0" max="50" value="3" oninput="updateDigitLookup()">
+        <input type="number" id="digitAfterCount" class="input-clean" style="width:62px; text-align:center; padding:5px 6px; font-weight:700;" min="0" max="50" value="0" onfocus="this.select()" oninput="updateDigitLookup()">
       </label>
       <span style="font-size:0.74rem; color:var(--muted);">ไม่บังคับกรอก 2 ตัวหน้า</span>
     </div>
@@ -2515,8 +2515,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const effectivePrefix = prefixRaw || 'XX';
       const effectiveSuffix = suffixRaw || 'TH';
 
-      const beforeCnt = clampRangeCount(bInp ? bInp.value : 3, 3);
-      const afterCnt = clampRangeCount(aInp ? aInp.value : 3, 3);
+      const beforeCnt = clampRangeCount(bInp ? bInp.value : 0, 0);
+      const afterCnt = clampRangeCount(aInp ? aInp.value : 0, 0);
 
       const mainSerialNum = parseInt(serial8, 10);
       const mainChk = calcS10CheckDigit(serial8);
