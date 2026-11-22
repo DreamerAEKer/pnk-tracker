@@ -783,6 +783,102 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SEED_ACTIVE = [];
 
+    const SEED_PAST_REPORTS = [
+      {"t":"28.10.69","r":187,"bc":"WB327054102TH","op":"kiattisak.pa","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":""},
+      {"t":"28.10.69","r":188,"bc":"ET717324835TH","op":"burapa.lu","c":"งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง","s":""},
+      {"t":"28.10.69","r":189,"bc":"EQ177456925TH","op":"kiattisak.pa","c":"งานในธุรกิจ ปณท. คลาดเคลื่อนเนื่องจากมีการใช้เลขที่ไม่รันต่อเนื่องกัน","s":""},
+      {"t":"29.10.69","r":146,"bc":"EQ089995853TH","op":"kiattisak.pa","c":"งานตราเครื่องประทับ ใส่จำนวนชิ้นงานที่เข้าระบบไม่ครบ ขาดไป 1 ชิ้น","s":""},
+      {"t":"1.11.69","r":342,"bc":"WC990275354TH","op":"kanitha.po","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":""},
+      {"t":"1.11.69","r":343,"bc":"WB545368690TH","op":"wanchana.th","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":""},
+      {"t":"1.11.69","r":344,"bc":"WC990269645TH","op":"kanitha.po","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":""},
+      {"t":"2.11.69","r":120,"bc":"EJ571420557TH","op":"kiattisak.pa","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":""},
+      {"t":"3.11.69","r":249,"bc":"WB327054102TH","op":"kiattisak.pa","c":"ระบบ Drop off เกิดขัดข้อง ไม่ขึ้นสถานะการรับฝาก","s":"เนื่องจากระบบขัดข้อง  pick up serviceทำให้ชิ้นงานไม่ขึ้นสถานะรับฝาก"},
+      {"t":"3.11.69","r":250,"bc":"JG131051019TH","op":"note.th","c":"งานเงินสดไม่ได้ยิงเลขจากจ่าหน้า ใช้เลขจากเครื่องพิมพ์","s":"กำชับ ให้ระมัดระวังมากขึ้น"},
+      {"t":"3.11.69","r":251,"bc":"EM056494219TH","op":"anyarat.su","c":"งานเงินเชื่อ เข้าระบบหมวดเลขไม่ถูกต้อง","s":"กำชับ ให้ตรวจสอบงานกับใบนำส่ง ให้ถูกต้องตรงกัน ก่อนบันทึกงาน"},
+      {"t":"4.11.69","r":122,"bc":"JN757583501TH","op":"kanitha.po","c":"เงินเชื่อ จนท. บันทึกข้อมูลตกหล่น  ตรวจสอบ มีชิ้นงาน ตรงตามใบนำส่ง","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":123,"bc":"EQ444289335TH","op":"kiattisak.pa","c":"เงินเชื่อ จนท. บันทึกข้อมูลขาด 1 ชิ้น(สุดท้าย) ตรวจสอบ มีชิ้นงาน ตรงตามใบนำส่ง","s":"กำชับให้นายเวร ก. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":124,"bc":"EQ357737445TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":125,"bc":"EQ357737604TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":126,"bc":"EQ357737839TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":127,"bc":"EQ357737533TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":128,"bc":"EQ357737547TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":129,"bc":"EQ357737493TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":130,"bc":"EQ357737516TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":131,"bc":"EQ357737825TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":132,"bc":"EQ357737860TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":133,"bc":"EQ357737785TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":134,"bc":"EQ357737723TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":135,"bc":"EQ357737710TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":136,"bc":"EQ357737581TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":137,"bc":"EQ357737595TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":138,"bc":"EQ357737618TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":139,"bc":"EQ357737621TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":140,"bc":"EQ357737635TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":141,"bc":"EQ357737811TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":142,"bc":"EQ357737649TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":143,"bc":"EQ357737683TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":144,"bc":"EQ357737670TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":145,"bc":"EQ357737697TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":146,"bc":"EQ357737476TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":147,"bc":"EQ357737414TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":148,"bc":"EQ357737737TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":149,"bc":"EQ357737578TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":150,"bc":"EQ357737564TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":151,"bc":"EQ357737431TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":152,"bc":"EQ357737808TH","op":"note.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":153,"bc":"EQ357737873TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":154,"bc":"EQ357737799TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":155,"bc":"EQ357737856TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":156,"bc":"EQ357737666TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":157,"bc":"EQ357737706TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":158,"bc":"EQ357737652TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":159,"bc":"EQ357737462TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":160,"bc":"EQ357737405TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":161,"bc":"EQ357737555TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"4.11.69","r":162,"bc":"EQ357737428TH","op":"kanitha.po","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"5.11.69","r":49,"bc":"EQ357737771TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":50,"bc":"EQ357737459TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":51,"bc":"EQ357737502TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":52,"bc":"EQ357737520TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":53,"bc":"EQ357737480TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":54,"bc":"EQ357737825TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":55,"bc":"EQ357737860TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":56,"bc":"EQ357737842TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":57,"bc":"EQ357737768TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":58,"bc":"EQ357737581TH","op":"note.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":59,"bc":"ET510325610TH","op":"wanchana.th","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"5.11.69","r":60,"bc":"EQ444638058TH","op":"kiattisak.pa","c":"บันทึกเลขที่หมวดหน้า ไม่ถูกต้อง","s":"แจ้งกับ จนท. ให้ทราบถึงข้อผิดพลาด ที่เกิด เพื่อจะได้ไม่เกิดขึ้นอีก หรือ เกิดเหตุดังกล่าวน้อยลง"},
+      {"t":"6.11.69","r":53,"bc":"EQ357737754TH","op":"note.th","c":"-เงินเชื่อ : บันทึกหมวดหน้า ไม่ถูกต้องตามงานจริง","s":"ได้แจ้ง จนท. ให้เพิ่มความละเอียดรอบคอบเพิ่มมากขึ้น"},
+      {"t":"6.11.69","r":54,"bc":"EQ357737745TH","op":"note.th","c":"-เงินเชื่อ : บันทึกหมวดหน้า ไม่ถูกต้องตามงานจริง","s":"ได้แจ้ง จนท. ให้เพิ่มความละเอียดรอบคอบเพิ่มมากขึ้น"},
+      {"t":"6.11.69","r":55,"bc":"EQ357737618TH","op":"note.th","c":"-เงินเชื่อ : บันทึกหมวดหน้า ไม่ถูกต้องตามงานจริง","s":"ได้แจ้ง จนท. ให้เพิ่มความละเอียดรอบคอบเพิ่มมากขึ้น"},
+      {"t":"6.11.69","r":56,"bc":"EQ420815354TH","op":"weerapat.ku","c":"-เงินเชื่อ : ตกหล่น การบันทึกเข้า CA","s":"ได้แจ้ง จนท. ให้เพิ่มความละเอียดรอบคอบเพิ่มมากขึ้น"},
+      {"t":"6.11.69","r":57,"bc":"EM871488963TH","op":"wanchana.th","c":"-Postone : เกิดจากมีการใส่ของลงถุงก่อน กดรับฝากผ่านเว็ป ทำให้ไม่ขึ้นสถานะรับฝาก","s":"ได้แจ้ง จนท. ให้ตรวจสอบการรับฝากเป็นขั้นตอนแรก"},
+      {"t":"6.11.69","r":58,"bc":"EQ420407196TH","op":"wanchana.th","c":"-เงินเชื่อ : เป็นเลขที่ตอบรับ","s":"ได้แจ้ง จนท. ให้เพิ่มความละเอียดรอบคอบเพิ่มมากขึ้น"},
+      {"t":"7.11.69","r":39,"bc":"EQ357737825TH","op":"note.th","c":"เงินเชื่อ - บันทึกหมวดหน้า ไม่ถูกต้อง แก้ให้ใบนำส่งให้ตรงกับงานแล้ว","s":"กำชับเพิ่มความละเอียดให้ตรวจสอบชิ้นงาน กับใบนำส่งให้ถูกต้องต้องตรงกัน"},
+      {"t":"7.11.69","r":40,"bc":"ET510321476TH","op":"weerapat.ku","c":"เงินเชื่อ - บันทึกหมวดหน้า ไม่ถูกต้อง แก้ให้ใบนำส่งให้ตรงกับงานแล้ว","s":"กำชับเพิ่มความละเอียดให้ตรวจสอบชิ้นงาน กับใบนำส่งให้ถูกต้องต้องตรงกัน"},
+      {"t":"10.11.69","r":39,"bc":"EQ514747445TH","op":"kiattisak.pa","c":"เงินเชื่อ ไม่ได้บันทึก แต่ตรวจสอบตรงตามใบนำส่ง","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"10.11.69","r":40,"bc":"EQ514747437TH","op":"kiattisak.pa","c":"เงินเชื่อ ไม่ได้บันทึก แต่ตรวจสอบตรงตามใบนำส่ง","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"10.11.69","r":41,"bc":"EQ526873653TH","op":"note.th","c":"ไม่ได้บันทึก ส่งคืนบัตรเลือกตั้ง กสล ปณท","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"10.11.69","r":42,"bc":"EQ526873256TH","op":"kwanta.ke","c":"ไม่ได้บันทึก ส่งคืนบัตรเลือกตั้ง กสล ปณท","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"10.11.69","r":43,"bc":"EQ420731950TH","op":"kwanta.ke","c":"เงินเชื่อ ไม่ได้บันทึก แต่ตรวจสอบตรงตามใบนำส่ง","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"10.11.69","r":44,"bc":"EQ420731932TH","op":"kwanta.ke","c":"ไม่ได้บันทึก ส่งคืนบัตรเลือกตั้ง กสล ปณท","s":"ได้กำชับให้เพิ่มความระมัดระวังแล้ว"},
+      {"t":"11.11.69","r":11,"bc":"EW632000105TH","op":"note.th","c":"เงินเชื่อ เลขเข้าไป เมื่อวันที่ 10.11.69","s":"แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก"},
+      {"t":"11.11.69","r":12,"bc":"EQ526873675TH","op":"note.th","c":"ไม่ได้ผ่านรับฝาก","s":"แจ้งผู้ปฏิบัติงาน ให้เพิ่มความละเอียด ในขั้นตอนรับฝาก"},
+      {"t":"12.11.69","r":15,"bc":"EQ357737839TH","op":"wanchana.th","c":"เงินเชื่อ ใบนำส่งระบุ EQ3537 จนท. ตรวจสอบจากใบนำส่ง คือ EQ 3577 (คีย์ตามใบนำส่ง หัว-ท้าย จำนวน 39 ชิ้น)","s":"กำชับให้นายเวร ข. ช่วยซัพพอร์ทงานเงินเชื่อเพิ่มมากขึ้น"},
+      {"t":"12.11.69","r":16,"bc":"EW632017600TH","op":"wanchana.th","c":"เงินเชื่อ ชิ้นงานเลขไม่ตรงใบนำส่ง  เข้าระบบหมวดเลขไม่ถูกต้อง","s":"กำชับให้เจ้าหน้าที่เพิ่มความระมัดระวังให้มากขึ้น"},
+      {"t":"14.11.69","r":27,"bc":"EK068999744TH","op":"anyarat.su","c":"เงินเชื่อ - มีรับฝากตามใบนำส่ง","s":"กำชับ ให้จนท.เพิ่มการตรวจสอบ ในขั้นตอนการรับฝากให้ถูกต้องตามใบนำส่ง"},
+      {"t":"14.11.69","r":28,"bc":"EM218130580TH","op":"wanchana.th","c":"เลขที่ตอบรับ","s":"กำชับให้ จนท.รับฝาก  แจ้งให้ผู้รับคืนกับเจ้าหน้าที่นำจ่ายที่รับผิดชอบ"},
+      {"t":"17.11.69","r":22,"bc":"EM056494219TH","op":"anyarat.su","c":"เงินเชื่อ - ตรวจสอบงานตรงตามใบนำส่ง","s":"กำชับ จนท.ให้ระมัดระวังในการปฏิบัติงาน มากยิ่งขึ้น"},
+      {"t":"17.11.69","r":23,"bc":"EQ357737618TH","op":"note.th","c":"เงินเชื่อ - ตรวจสอบงานตรงตามใบนำส่ง","s":"กำชับ จนท.ให้ระมัดระวังในการปฏิบัติงาน มากยิ่งขึ้น"},
+      {"t":"17.11.69","r":24,"bc":"EW632017998TH","op":"burapa.lu","c":"เงินเชื่อ - ตรวจสอบงานตรงตามใบนำส่ง","s":"กำชับ จนท.ให้ระมัดระวังในการปฏิบัติงาน มากยิ่งขึ้น"},
+      {"t":"18.11.69","r":7,"bc":"EM876423235TH","op":"burapa.lu","c":"EMS Point มีการยกเลิกเลขที่ ไม่ได้ใช้งานจริง","s":"ยกเลิก เลขที่ชิ้นงานดังกล่าวแล้ว"},
+      {"t":"19.11.69","r":19,"bc":"EQ357737839TH","op":"wanchana.th","c":"พิมพ์เลขหน้าผิด จาก 3577  พิมพ์เป็น 3537","s":"แจ้งให้ จนท.ทราบแล้ว และให้เพิ่มตรวจสอบให้ถูกต้องตรงตามจริง"},
+      {"t":"19.11.69","r":20,"bc":"EQ514533618TH","op":"wanchana.th","c":"งานรายเดือนหมวดเลขผิด แต่ทำการรับฝากตามใบนำส่งเรียบร้อย","s":"แจ้งให้ จนท.ทราบแล้ว และให้เพิ่มตรวจสอบให้ถูกต้องตรงตามจริง"},
+      {"t":"19.11.69","r":21,"bc":"EQ514533621TH","op":"wanchana.th","c":"งานรายเดือนหมวดเลขผิด แต่ทำการรับฝากตามใบนำส่งเรียบร้อย","s":"แจ้งให้ จนท.ทราบแล้ว และให้เพิ่มตรวจสอบให้ถูกต้องตรงตามจริง"},
+      {"t":"19.11.69","r":22,"bc":"EQ514533635TH","op":"weerapat.ku","c":"งานรายเดือนหมวดเลขผิด แต่ทำการรับฝากตามใบนำส่งเรียบร้อย","s":"แจ้งให้ จนท.ทราบแล้ว และให้เพิ่มตรวจสอบให้ถูกต้องตรงตามจริง"},
+      {"t":"20.11.69","r":20,"bc":"EQ493613812TH","op":"wanchana.th","c":"รายเดือน - ลงตัวอักษรท้ายจาก TH ลงเป็นTG","s":"แจ้งให้ จนท. ทราบ และให้เพิ่มความระมัดระวังเพิ่มขึ้น"}
+    ];
+
     const DEFAULT_TAB_GIDS = {
       '28.10.69': '0',
       '29.10.69': '1911902467',
@@ -832,6 +928,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       solutionsList: DEFAULT_SOLUTIONS.slice(),
       deletedSolutions: [],
       casesByBarcode: {},
+      reportHistory: {},
       neighborState: {},
       resolvedTabsCache: {},
       protectedRanges: Object.assign({}, DEFAULT_PROTECTED_RANGES),
@@ -890,6 +987,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           }
           state.deletedCauses = Array.isArray(p.deletedCauses) ? p.deletedCauses : [];
           state.casesByBarcode = p.casesByBarcode || {};
+          state.reportHistory = (p.reportHistory && typeof p.reportHistory === 'object') ? p.reportHistory : {};
           state.neighborState = p.neighborState || {};
           state.resolvedTabsCache = p.resolvedTabsCache || {};
           state.protectedRanges = Object.assign({}, DEFAULT_PROTECTED_RANGES, (p.protectedRanges && typeof p.protectedRanges === 'object') ? p.protectedRanges : {});
@@ -904,11 +1002,29 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           delete state.casesByBarcode[bc];
         }
       });
+      if (!state.reportHistory || typeof state.reportHistory !== 'object') state.reportHistory = {};
+      SEED_PAST_REPORTS.forEach(item => {
+        const key = `${item.t}:${item.r}`;
+        if (!state.reportHistory[key]) {
+          state.reportHistory[key] = Object.assign({}, item);
+        }
+      });
       Object.values(state.casesByBarcode).forEach(c => {
         if (c.sheetCause) autoLearnCause(c.sheetCause);
         if (c.userCause) autoLearnCause(c.userCause);
         if (c.sheetSolution) autoLearnSolution(c.sheetSolution);
         if (c.userSolution) autoLearnSolution(c.userSolution);
+        const effCause = (c.sheetCause || c.userCause || '').trim();
+        if (c.tabName && c.rowNum && c.barcode && effCause) {
+          state.reportHistory[`${c.tabName}:${c.rowNum}`] = {
+            t: c.tabName,
+            r: c.rowNum,
+            bc: c.barcode,
+            op: c.operator || '',
+            c: effCause,
+            s: (c.sheetSolution || c.userSolution || '').trim()
+          };
+        }
       });
       syncTrackTargetSelects();
     }
@@ -1004,6 +1120,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           ex.closedByUser = true;
         }
       }
+      const saved = state.casesByBarcode[bc];
+      const effCause = (saved && (saved.sheetCause || saved.userCause) || '').trim();
+      if (saved && saved.tabName && saved.rowNum && effCause) {
+        if (!state.reportHistory || typeof state.reportHistory !== 'object') state.reportHistory = {};
+        state.reportHistory[`${saved.tabName}:${saved.rowNum}`] = {
+          t: saved.tabName,
+          r: saved.rowNum,
+          bc: saved.barcode,
+          op: saved.operator || '',
+          c: effCause,
+          s: (saved.sheetSolution || saved.userSolution || '').trim()
+        };
+      }
     }
 
     // S10 Check Digit & Parser
@@ -1052,6 +1181,161 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         });
       }
       return arr;
+    }
+
+    // ตัวช่วยตรวจจับเลขที่ซ้ำหรือใกล้เคียงกับที่เคยรายงานไปแล้วในอดีต
+    function getAllHistoricalReports() {
+      const map = Object.assign({}, state.reportHistory || {});
+      SEED_PAST_REPORTS.forEach(item => {
+        const k = `${item.t}:${item.r}`;
+        if (!map[k]) map[k] = item;
+      });
+      Object.values(state.casesByBarcode || {}).forEach(c => {
+        const cause = ((c && (c.sheetCause || c.userCause)) || '').trim();
+        if (c && c.tabName && c.rowNum && c.barcode && cause) {
+          map[`${c.tabName}:${c.rowNum}`] = {
+            t: c.tabName,
+            r: c.rowNum,
+            bc: c.barcode,
+            op: c.operator || '',
+            c: cause,
+            s: ((c.sheetSolution || c.userSolution) || '').trim()
+          };
+        }
+      });
+      return Object.values(map);
+    }
+
+    function findNearbyReportedCases(barcode, excludeTab = '', excludeRow = 0) {
+      const p = parseS10(barcode);
+      if (!p) return [];
+      const history = getAllHistoricalReports();
+      const grouped = {};
+
+      history.forEach(h => {
+        if (!h || !h.bc || !h.c || !h.c.trim()) return;
+        if (excludeTab && h.t === excludeTab && Number(h.r) === Number(excludeRow)) return;
+        const hp = parseS10(h.bc);
+        if (!hp || hp.prefix !== p.prefix) return;
+
+        const diff = p.serialNum - hp.serialNum;
+        const absDiff = Math.abs(diff);
+
+        let level = 0;
+        if (absDiff === 0) {
+          level = 1; // เลขซ้ำเดิมเป๊ะ
+        } else if (absDiff <= 100) {
+          level = 2; // เลขติดกัน / ใกล้เคียงมาก (ห่างไม่เกิน 100)
+        } else if (absDiff <= 9999 && hp.first4 === p.first4) {
+          level = 3; // หมวด 4 ตัวหน้าเดียวกัน (เช่น EQ 3577xxxx)
+        } else if (absDiff <= 50000 && hp.serialStr.slice(0, 3) === p.serialStr.slice(0, 3)) {
+          level = 4; // หมวด 3 ตัวหน้าใกล้เคียงกัน (เช่น EQ 5144xxxx กับ EQ 5145xxxx)
+        } else {
+          return;
+        }
+
+        const gKey = `${h.t}||${h.c.trim()}`;
+        if (!grouped[gKey]) {
+          grouped[gKey] = {
+            key: `${h.t}:${h.r}`,
+            t: h.t,
+            r: h.r,
+            bc: h.bc,
+            hp,
+            op: h.op || '',
+            c: h.c.trim(),
+            s: (h.s || '').trim(),
+            diff,
+            absDiff,
+            level,
+            count: 1
+          };
+        } else {
+          grouped[gKey].count++;
+          if (absDiff < grouped[gKey].absDiff) {
+            grouped[gKey].key = `${h.t}:${h.r}`;
+            grouped[gKey].r = h.r;
+            grouped[gKey].bc = h.bc;
+            grouped[gKey].hp = hp;
+            grouped[gKey].op = h.op || grouped[gKey].op;
+            grouped[gKey].diff = diff;
+            grouped[gKey].absDiff = absDiff;
+            grouped[gKey].level = level;
+          }
+        }
+      });
+
+      const list = Object.values(grouped);
+      list.sort((a, b) => (a.level - b.level) || (a.absDiff - b.absDiff) || (parseTabDate(b.t) - parseTabDate(a.t)));
+      return list.slice(0, 3);
+    }
+
+    function applyNearbyCauseToCase(targetBarcode, historyKey) {
+      const c = state.casesByBarcode[targetBarcode];
+      if (!c) return;
+      const history = getAllHistoricalReports();
+      const found = history.find(h => `${h.t}:${h.r}` === historyKey);
+      if (!found || !found.c) return;
+
+      c.userCause = found.c;
+      if (found.s) c.userSolution = found.s;
+      else c.userSolution = getSuggestedSolution(found.c);
+      autoLearnCause(found.c);
+      if (c.userSolution) autoLearnSolution(c.userSolution);
+      saveState();
+      render();
+      copyText(found.c, `เลือกและคัดลอกสาเหตุจากรายการใกล้เคียง (${found.bc}) แล้ว`);
+    }
+
+    function renderNearbyReportsBox(barcode, excludeTab = '', excludeRow = 0, allowApply = false) {
+      const matches = findNearbyReportedCases(barcode, excludeTab, excludeRow);
+      if (!matches.length) return '';
+
+      return `
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:8px; padding:8px 10px; font-size:0.79rem;">
+          <div style="font-weight:800; color:#92400e; margin-bottom:5px; display:flex; align-items:center; gap:5px;">
+            <span>💡 พบเลขใกล้เคียงที่เคยรายงานไปแล้ว (${matches.length} กลุ่ม)</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            ${matches.map(m => {
+              const diffStr = m.diff === 0 ? 'เลขเดียวกันเป๊ะ' : `ห่าง ${m.diff > 0 ? '+' + m.diff.toLocaleString() : m.diff.toLocaleString()} เลข`;
+              const badgeHtml = m.level === 1
+                ? `<span style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; padding:1px 6px; border-radius:4px; font-weight:800; font-size:0.72rem;">🚨 เลขซ้ำเดิม!</span>`
+                : m.level === 2
+                ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:1px 6px; border-radius:4px; font-weight:800; font-size:0.72rem;">🎯 ใกล้มาก (${diffStr})</span>`
+                : m.level === 3
+                ? `<span style="background:#dbeafe; color:#1d4ed8; border:1px solid #93c5fd; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">💡 หมวด ${m.hp.prefix} ${m.hp.first4}xxxx เดียวกัน (${diffStr})</span>`
+                : `<span style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">🔎 หมวด ${m.hp.prefix} ${m.hp.serialStr.slice(0, 3)}xxxxx ใกล้เคียง (${diffStr})</span>`;
+
+              const countStr = m.count > 1 ? ` (รวม ${m.count} ชิ้นในแท็บนี้)` : '';
+              return `
+                <div style="background:#ffffff; border:1px solid #fde68a; border-radius:7px; padding:6px 8px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:190px;">
+                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
+                      ${badgeHtml}
+                      <span style="font-family:var(--mono); font-weight:700; color:#0f172a;">${m.hp ? `${m.hp.prefix}${m.hp.first4}<b>${m.hp.last4}</b>${m.hp.check}${m.hp.suffix}` : m.bc}</span>
+                      <span style="color:var(--muted); font-size:0.73rem;">[แท็บ ${m.t} แถว ${m.r}${countStr}]</span>
+                    </div>
+                    <div style="color:#065f46; font-weight:700; margin-top:3px;">
+                      ✓ สาเหตุเดิม: "${m.c}"
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap;">
+                    ${allowApply ? `
+                      <button type="button" class="btn btn-sm" style="background:#f59e0b; color:#fff; border-color:#d97706; font-weight:700; padding:4px 9px; font-size:0.75rem;" onclick="applyNearbyCauseToCase('${barcode}', '${m.key}')">
+                        ⚡ ใช้สาเหตุนี้
+                      </button>
+                    ` : ''}
+                    <button type="button" class="btn btn-sm" style="padding:4px 8px; font-size:0.74rem;" onclick="openNeighborModal('${m.bc}')">
+                      🔍 ดูเลขเดิม
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
     }
 
     // Reliable SVG QR Code Renderer using inlined `qrcode` library
@@ -1493,6 +1777,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                       </button>
                     </div>
                   </div>
+
+                  ${renderNearbyReportsBox(c.barcode, c.tabName, c.rowNum, true)}
 
                   <div class="item-bottom">
                     <div class="cause-picker-wrap" id="cpWrap_${c.barcode}">
@@ -2035,12 +2321,21 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function renderNeighborModalList() {
       const listEl = document.getElementById('nmListBody');
+      const allHist = getAllHistoricalReports();
+      const histByBc = {};
+      allHist.forEach(h => {
+        if (h && h.bc && h.c) {
+          if (!histByBc[h.bc]) histByBc[h.bc] = [];
+          histByBc[h.bc].push(h);
+        }
+      });
       listEl.innerHTML = activeModalNeighbors.map((n, idx) => {
         const isMain = n.offset === 0;
         const isSelectedQr = idx === activeQrIndex;
         const isChecked = selectedModalCodes.has(n.code);
         const noteVal = (state.neighborState[n.code] && state.neighborState[n.code].note) || '';
         const roleLabel = isMain ? 'เลขหลัก (0)' : (n.offset < 0 ? `ก่อนหน้า ${n.offset}` : `ถัดไป +${n.offset}`);
+        const exactReports = histByBc[n.code] || [];
 
         return `
           <div class="n-item ${isMain ? 'n-main' : ''} ${isSelectedQr ? 'n-active-qr' : ''}" id="nItem_${idx}">
@@ -2055,6 +2350,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 <button class="btn btn-sm ${isSelectedQr ? 'btn-primary' : ''}" onclick="selectQrIndex(${idx})">📲 QR</button>
               </div>
             </div>
+            ${exactReports.length ? `
+              <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:4px 8px; margin-bottom:5px; font-size:0.75rem; color:#92400e; font-weight:700;">
+                📌 เคยรายงานเมื่อ ${exactReports.map(r => `${r.t} (แถว ${r.r}): "${r.c}"`).join(' • ')}
+              </div>
+            ` : ''}
             ${isMain
               ? `<div style="color:var(--danger); font-size:0.78rem; font-weight:600; padding-left:25px;">❌ ชิ้นงานไม่มีสถานะรับฝาก</div>`
               : `<input type="text" class="input-clean" style="padding:6px 10px; font-size:0.8rem;" placeholder="บันทึกผล QMS / เลขใบเสร็จ 13 หลัก..." value="${noteVal.replace(/"/g, '&quot;')}" oninput="saveNeighborNote('${n.code}', this.value)">`
@@ -2591,6 +2891,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               เลขหลัก: <b style="font-family:var(--mono); color:#1d4ed8;">${mainCode}</b> (Check Digit = <b>${mainChk}</b>) • ทั้งหมด <b>${list.length}</b> เลข
             </div>
           </div>
+          ${canShowQrModal ? `<div style="margin-bottom:8px;">${renderNearbyReportsBox(mainCode, '', 0, false)}</div>` : ''}
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
             <button class="btn btn-sm" style="background:#fff; font-weight:700;" onclick="copyAllDigitResults()">
               📋 คัดลอกทั้งหมด (${list.length} เลข)
