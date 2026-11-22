@@ -1525,7 +1525,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           ${!qmsAnalysis ? `
             <div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px; padding:7px 10px; font-size:0.76rem; color:#475569; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
               <div style="flex:1; min-width:200px;">
-                <b style="color:#334155;">🛡️ ยังไม่มีข้อมูลยืนยันสาเหตุ & พนง.รับฝาก (ไม่คาดเดาเพื่อความถูกต้อง)</b>
+                <b style="color:#334155;">🛡️ ยังไม่มีข้อมูลยืนยันสาเหตุ & พนง.รับฝาก</b>
                 <div style="font-size:0.73rem; color:var(--muted); margin-top:1px;">
                   ไม่พบเลขหมวดใกล้เคียงในประวัติ • ชื่อ "${opName}" ในช่อง J คือผู้สแกนลงถุง ไม่ใช่ผู้รับฝาก กรุณาตรวจเลข ±3 ใน QMS
                 </div>
@@ -1725,6 +1725,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 <span style="font-size:0.8rem; color:#991b1b; font-weight:700;">แท็บ ${causeBrief}</span>
               </div>
               <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#fff; border-color:#93c5fd; color:#1d4ed8; font-weight:700;" onclick="copyAllReportNeighbors(false)">
+                  📋 คัดลอกเลขก่อนหน้า-ถัดไปทั้งหมด
+                </button>
                 ${firstCauseItem ? `
                   <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#dc2626; color:#fff; border-color:#dc2626; font-weight:700;" onclick="openSheetCell('${firstCauseItem.tabName}', '${firstCauseItem.causeCol || 'L'}', ${firstCauseItem.rowNum})">
                     🔗 ไปที่ช่อง ${firstCauseItem.causeCol || 'L'}${firstCauseItem.rowNum} (${firstCauseItem.tabName})
@@ -1968,13 +1971,19 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             </div>
             ${list.length === 1 ? `
               <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
+                <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', false)">
+                  📋 คัดลอกเลขก่อนหน้า-ถัดไปทั้งหมด
+                </button>
                 <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
                   ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลข + เปิด QMS' : '🌍 ก๊อปเลข + เปิดเว็บ Track'}
                 </button>
-                <button class="btn btn-success btn-sm" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
+                <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
               </div>
             ` : `
               <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
+                <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', false)">
+                  📋 คัดลอกเลขก่อนหน้า-ถัดไปทั้งหมด
+                </button>
                 <button class="btn btn-sm" onclick="copyDateNeighbors('${tabKey}', true)">
                   ${state.trackTarget === 'qms' ? '🏢 ก๊อปเลขวันนี้ + เปิด QMS' : '🌍 ก๊อปเลขวันนี้ + เปิดเว็บ Track'}
                 </button>
@@ -1987,7 +1996,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 <button class="btn btn-sm" onclick="quickCopySolutionRange('${tabKey}', ${minR}, ${maxR})">
                   📋 ก๊อปแนวทางแก้ไขทั้งวัน (ช่อง ${list[0].solCol || 'M'})
                 </button>
-                <button class="btn btn-success btn-sm btn-full" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
+                <button class="btn btn-success btn-sm" onclick="closeDateGroup('${tabKey}')">✓ ปิดงานวันนี้</button>
               </div>
             `}
           </div>
@@ -2326,8 +2335,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     function copyDateNeighbors(tabKey, openWeb = true) {
       const set = new Set();
+      let itemCount = 0;
       Object.values(state.casesByBarcode).forEach(c => {
-        if (c.tabName === tabKey && !c.closedByUser && !(c.sheetCause && c.sheetCause.trim())) {
+        const isActive = c.reopenedByUser || (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim()) && !isCaseCauseProtected(c) && isTabVisibleOrUnknown(c.tabName));
+        if (c.tabName === tabKey && isActive) {
+          itemCount++;
           getNeighbors(c.barcode).forEach(n => set.add(n.code));
         }
       });
@@ -2336,7 +2348,30 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       if (openWeb) {
         executeTrack(list);
       } else {
-        copyText(list.join(state.trackTarget === 'qms' ? ' ' : ','), `คัดลอกเลขค้นหา ${list.length} หมายเลขแล้ว`);
+        copyText(list.join(state.trackTarget === 'qms' ? ' ' : '\n'), `คัดลอกเลขก่อนหน้า-ถัดไปทั้งหมดของวันที่ ${tabKey} (${itemCount} รายการ • รวม ${list.length} หมายเลข) แล้ว`);
+      }
+    }
+
+    function copyAllReportNeighbors(openWeb = false) {
+      const set = new Set();
+      let itemCount = 0;
+      const sortedCases = Object.values(state.casesByBarcode)
+        .filter(c => isDateTab(c.tabName) && isTabVisibleOrUnknown(c.tabName) && !isCaseCauseProtected(c) && (c.reopenedByUser || (!c.closedByUser && !(c.sheetCause && c.sheetCause.trim()))))
+        .sort((a, b) => (parseTabDate(b.tabName) - parseTabDate(a.tabName)) || ((a.rowNum || 0) - (b.rowNum || 0)));
+
+      sortedCases.forEach(c => {
+        itemCount++;
+        getNeighbors(c.barcode).forEach(n => set.add(n.code));
+      });
+      const list = Array.from(set);
+      if (!list.length) {
+        showToast('ไม่มีรายการค้างในรายงานให้คัดลอก');
+        return;
+      }
+      if (openWeb) {
+        executeTrack(list);
+      } else {
+        copyText(list.join(state.trackTarget === 'qms' ? ' ' : '\n'), `คัดลอกเลขก่อนหน้า-ถัดไปทั้งหมดจากรายงาน (${itemCount} รายการ • รวม ${list.length} หมายเลข) แล้ว`);
       }
     }
 
