@@ -1244,13 +1244,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
         let level = 0;
         if (absDiff === 0) {
-          level = 1; // เลขซ้ำเดิมเป๊ะ (ยืนยัน 100%)
-        } else if (absDiff <= 100) {
-          level = 2; // เลขติดกัน / ล็อตเดียวกัน (ความน่าจะเป็นสูง)
-        } else if (absDiff <= 9999 && hp.first4 === p.first4) {
-          level = 3; // หมวด 4 ตัวหน้าเดียวกัน (เช่น EQ 3577xxxx)
-        } else if (absDiff <= 50000 && hp.serialStr.slice(0, 3) === p.serialStr.slice(0, 3)) {
-          level = 4; // หมวด 3 ตัวหน้าใกล้เคียงกัน (เบาะแสเปรียบเทียบ รอตรวจ QMS ยืนยัน)
+          level = 1; // เลขซ้ำเดิมเป๊ะ (ถูกดึงซ้ำมาจากวันก่อน)
+        } else if (absDiff <= 20 && hp.first4 === p.first4) {
+          level = 2; // เลขเรียงติดกันในใบนำส่งเดียวกัน (ห่างไม่เกิน 20 เลข)
+        } else if (absDiff <= 100 && hp.first4 === p.first4) {
+          level = 3; // เลขในล็อตชุดเดียวกัน (ห่างไม่เกิน 100 เลข ในหมวด 4 ตัวหน้าเดียวกัน)
         } else {
           return;
         }
@@ -1541,13 +1539,11 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         `;
       }
 
-      const hasOnlyLevel4 = matches.every(m => m.level === 4);
-
       return `
         ${qmsBlockHtml}
         <div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:8px; padding:8px 10px; font-size:0.79rem;">
           <div style="font-weight:800; color:#92400e; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-            <span>💡 พบเลขใกล้เคียงที่เคยรายงานไปแล้ว (${matches.length} กลุ่ม) ${hasOnlyLevel4 ? '• ⚠️ เบาะแสหมวดใกล้เคียง รอยืนยันจาก QMS' : ''}</span>
+            <span>💡 พบเลขซ้ำหรือล็อตเดียวกันจากวันก่อน (${matches.length} กลุ่ม • ห่างไม่เกิน 100 เลข)</span>
             ${(allowApply && !qmsAnalysis) ? `
               <button type="button" class="btn btn-sm" style="padding:2px 7px; font-size:0.72rem; background:#fff;" onclick="toggleQmsPasteDrawer('${barcode}')">
                 📋 วางผล QMS ยืนยัน
@@ -1558,20 +1554,16 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             ${matches.map(m => {
               const diffStr = m.diff === 0 ? 'เลขเดียวกันเป๊ะ' : `ห่าง ${m.diff > 0 ? '+' + m.diff.toLocaleString() : m.diff.toLocaleString()} เลข`;
               const probLabel = m.level === 1
-                ? 'ความน่าจะเป็น: ยืนยัน 100% (เลขซ้ำเดิม)'
+                ? 'ความน่าจะเป็น: ยืนยัน 100% (เลขซ้ำเดิมที่ถูกดึงซ้ำจากวันก่อน)'
                 : m.level === 2
-                ? 'ความน่าจะเป็น: สูงมาก (เลขเรียงล็อตเดียวกัน)'
-                : m.level === 3
-                ? 'ความน่าจะเป็น: ปานกลาง-สูง (หมวด 4 ตัวหน้าเดียวกัน)'
-                : 'ความน่าจะเป็น: เบาะแสหมวด 3 ตัวหน้าใกล้เคียง (ยังไม่ฟันธง ต้องเช็ค QMS)';
+                ? 'ความน่าจะเป็น: สูงมาก (เลขเรียงติดกันในใบนำส่งเดียวกัน ห่างไม่เกิน 20 เลข)'
+                : 'ความน่าจะเป็น: สูง (เลขในล็อตชุดเดียวกัน ห่างไม่เกิน 100 เลข)';
 
               const badgeHtml = m.level === 1
                 ? `<span style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; padding:1px 6px; border-radius:4px; font-weight:800; font-size:0.72rem;">🚨 เลขซ้ำเดิม!</span>`
                 : m.level === 2
-                ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:1px 6px; border-radius:4px; font-weight:800; font-size:0.72rem;">🎯 ใกล้มาก (${diffStr})</span>`
-                : m.level === 3
-                ? `<span style="background:#dbeafe; color:#1d4ed8; border:1px solid #93c5fd; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">💡 หมวด ${m.hp.prefix} ${m.hp.first4}xxxx เดียวกัน (${diffStr})</span>`
-                : `<span style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">🔎 หมวด ${m.hp.prefix} ${m.hp.serialStr.slice(0, 3)}xxxxx ใกล้เคียง (${diffStr})</span>`;
+                ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; padding:1px 6px; border-radius:4px; font-weight:800; font-size:0.72rem;">🎯 เลขติดกัน (${diffStr})</span>`
+                : `<span style="background:#dbeafe; color:#1d4ed8; border:1px solid #93c5fd; padding:1px 6px; border-radius:4px; font-weight:700; font-size:0.72rem;">💡 ล็อตเดียวกัน (${diffStr})</span>`;
 
               const countStr = m.count > 1 ? ` (รวม ${m.count} ชิ้นในแท็บนี้)` : '';
               const staffHtml = m.st
