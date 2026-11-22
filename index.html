@@ -783,6 +783,46 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     const SEED_ACTIVE = [];
 
+    const DEFAULT_TAB_GIDS = {
+      '28.10.69': '0',
+      '29.10.69': '1911902467',
+      '1.11.69': '709649230',
+      '2.11.69': '1830268165',
+      '3.11.69': '576758379',
+      '4.11.69': '1804342213',
+      '5.11.69': '2146078973',
+      '6.11.69': '500753212',
+      '7.11.69': '604481503',
+      '8.11.69': '1103953673',
+      '9.11.69': '754456240',
+      '10.11.69': '2062386536',
+      '11.11.69': '1625631201',
+      '12.11.69': '1853431167',
+      '13.11.69': '621239603',
+      '14.11.69': '264436376',
+      '15.11.69': '1326500605',
+      '16.11.69': '1223659328',
+      '17.11.69': '639191522',
+      '18.11.69': '1275238192',
+      '19.11.69': '2001504505',
+      '20.11.69': '141723209',
+      '21.11.69': '460866408'
+    };
+
+    // สำรองข้อมูลช่วงเซลล์ที่ถูกล็อกสำหรับมือถือ (iPhone/Android ที่ Google บังคับ redirect /edit -> /htmlview)
+    const DEFAULT_PROTECTED_RANGES = {
+      '0': [{ startRow: 0, endRow: 233, startCol: 0, endCol: 10 }],
+      '576758379': [{ startRow: 11, endRow: 12, startCol: 10, endCol: 11 }],
+      '709649230': [{ startRow: 1, endRow: 366, startCol: 0, endCol: 10 }],
+      '754456240': [{ startRow: 0, endRow: 1000000000, startCol: 0, endCol: 10 }],
+      '998585994': [{ startRow: 0, endRow: 1000000000, startCol: 0, endCol: 1000000000 }],
+      '1625631201': [{ startRow: 12, endRow: 13, startCol: 11, endCol: 12 }],
+      '1830268165': [{ startRow: 1, endRow: 139, startCol: 0, endCol: 10 }],
+      '1853431167': [{ startRow: 8, endRow: 9, startCol: 10, endCol: 11 }],
+      '1911902467': [{ startRow: 1, endRow: 186, startCol: 0, endCol: 10 }],
+      '2062386536': [{ startRow: 9, endRow: 10, startCol: 11, endCol: 12 }]
+    };
+
     let state = {
       trackTarget: 'qms',
       searchQuery: '',
@@ -794,9 +834,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       casesByBarcode: {},
       neighborState: {},
       resolvedTabsCache: {},
-      protectedRanges: {},
+      protectedRanges: Object.assign({}, DEFAULT_PROTECTED_RANGES),
       visibleDateTabs: [],
-      tabGids: { '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230', '4.11.69': '1804342213', '5.11.69': '2146078973' }
+      tabGids: Object.assign({}, DEFAULT_TAB_GIDS)
     };
 
     function getSolutionsList() {
@@ -852,9 +892,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
           state.casesByBarcode = p.casesByBarcode || {};
           state.neighborState = p.neighborState || {};
           state.resolvedTabsCache = p.resolvedTabsCache || {};
-          state.protectedRanges = (p.protectedRanges && typeof p.protectedRanges === 'object') ? p.protectedRanges : {};
+          state.protectedRanges = Object.assign({}, DEFAULT_PROTECTED_RANGES, (p.protectedRanges && typeof p.protectedRanges === 'object') ? p.protectedRanges : {});
           state.visibleDateTabs = Array.isArray(p.visibleDateTabs) ? p.visibleDateTabs : [];
-          state.tabGids = Object.assign({ '28.10.69': '0', '29.10.69': '1911902467', '1.11.69': '709649230' }, p.tabGids || {});
+          state.tabGids = Object.assign({}, DEFAULT_TAB_GIDS, p.tabGids || {});
         }
       } catch (e) {}
       // ล้างข้อมูลเก่าที่ผิดปกติ (เช่น ข้อมูลเดือนตุลาคม หรือแถวที่ไม่ใช่วันที่จริง)
@@ -1774,9 +1814,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const rowDesc = minR === maxR ? `แถว ${minR}` : `แถว ${minR}–${maxR}`;
       copyText(lines.join('\n'), `คัดลอกสาเหตุ${rowDesc} แล้ว กด Ctrl+V วางที่ช่อง ${causeCol}${minR} ได้เลย`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${minR}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, causeCol, minR);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -1797,9 +1835,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }
       copyText(lines.join('\n'), `คัดลอกแนวทางแก้ไข ${lines.length} แถวแล้ว • เปิดช่อง ${solCol}${startRow} ให้แล้ว กด Ctrl+V วางได้เลย!`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${solCol}${startRow}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, solCol, startRow);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -1821,9 +1857,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }
       copyText(lines.join('\n'), `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) ${lines.length} แถวแล้ว • เปิดช่อง ${causeCol}${startRow} ให้แล้ว กด Ctrl+V เติมช่อง ${causeCol} และ ${solCol} พร้อมกันได้ทันที!`);
       const gid = state.tabGids[tabKey] || items[0].gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${startRow}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, causeCol, startRow);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -1834,9 +1868,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(c.userCause || c.sheetCause)).trim();
       copyText(sol, `คัดลอกแนวทางแก้ไขแถว ${c.rowNum} แล้ว • เปิด Google Sheet ให้แล้ว กด Ctrl+V วางที่ช่อง ${solCol}${c.rowNum} ได้เลย`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${solCol}${c.rowNum}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, solCol, c.rowNum);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -1849,9 +1881,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const sol = (c.userSolution || c.sheetSolution || getSuggestedSolution(cause)).trim();
       copyText(`${cause}\t${sol}`, `คัดลอกคู่ (สาเหตุ+แนวทางแก้ไข) แถว ${c.rowNum} แล้ว • เปิด Google Sheet ให้แล้ว กด Ctrl+V ที่ช่อง ${causeCol}${c.rowNum} จะเติมทั้ง 2 ช่องพร้อมกันทันที!`);
       const gid = state.tabGids[c.tabName] || c.gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${c.rowNum}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, causeCol, c.rowNum);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -1869,9 +1899,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         showToast(`เปิดไปที่ช่อง ${causeCol}${c.rowNum} แล้ว (ยังไม่ได้เลือกสาเหตุในหน้าเว็บ)`);
       }
       const gid = state.tabGids[c.tabName] || c.gid || '';
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${causeCol}${c.rowNum}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, causeCol, c.rowNum);
       window.open(url, '_blank', 'noopener');
     }
 
@@ -2063,13 +2091,17 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
 
 
+    function buildSheetCellUrl(gid, colLetter, rowNum) {
+      if (!gid) return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const cell = `${colLetter || 'A'}${rowNum || 1}`;
+      return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?gid=${gid}&range=${cell}&authuser=pnk10501@gmail.com#gid=${gid}&range=${cell}`;
+    }
+
     function openSheetCell(tabKey, colLetter, rowNum) {
       const gid = state.tabGids[tabKey] || '';
       const col = colLetter || 'A';
       const row = rowNum || 1;
-      const url = gid
-        ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com#gid=${gid}&range=${col}${row}`
-        : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+      const url = buildSheetCellUrl(gid, col, row);
       showToast(`เปิด Google Sheet ไปที่ช่อง ${col}${row} (แท็บ ${tabKey}) แล้ว`);
       window.open(url, '_blank', 'noopener');
     }
@@ -2279,24 +2311,32 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     // Live Google Sheet Sync
     async function discoverAllSheetTabs() {
+      state.protectedRanges = Object.assign({}, DEFAULT_PROTECTED_RANGES, state.protectedRanges || {});
+      let fallbackHtml = '';
       try {
         const editRes = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`, { cache: 'no-store' });
         if (editRes.ok) {
-          const meta = parseBootstrapMetadata(await editRes.text());
+          const text = await editRes.text();
+          const meta = parseBootstrapMetadata(text);
           if (meta && meta.visibleDateTabs.length) {
             Object.assign(state.tabGids, meta.tabGids);
-            state.protectedRanges = meta.protectedByGid;
+            state.protectedRanges = Object.assign({}, DEFAULT_PROTECTED_RANGES, meta.protectedByGid);
             state.visibleDateTabs = meta.visibleDateTabs;
             return meta.visibleDateTabs;
           }
+          // บน iPhone/Android Google จะ redirect /edit ไปหน้า /htmlview อัตโนมัติ สามารถใช้ text นี้ดึงแท็บต่อได้เลย
+          if (text.includes('items.push')) fallbackHtml = text;
         }
       } catch (e) {}
 
       const found = [];
       try {
-        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlview`, { cache: 'no-store' });
-        if (res.ok) {
-          const html = await res.text();
+        let html = fallbackHtml;
+        if (!html) {
+          const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlview`, { cache: 'no-store' });
+          if (res.ok) html = await res.text();
+        }
+        if (html) {
           const re = /items\.push\(\{name:\s*"([^"]+)",\s*pageUrl:[^,]+,\s*gid:\s*"(\d+)"/g;
           let m;
           while ((m = re.exec(html)) !== null) {
