@@ -77,8 +77,13 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     }
     .topbar-actions {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
+    }
+    @media (min-width: 560px) {
+      .topbar-actions {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
     /* Clean Touch-Friendly Buttons */
@@ -579,6 +584,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     </div>
     <div class="topbar-actions">
       <button class="btn btn-sm" onclick="syncGoogleSheets(false, true)">🔄 อัปเดตชีต</button>
+      <button class="btn btn-sm" style="background:#eff6ff; border-color:#93c5fd; color:#1d4ed8; font-weight:700;" id="openLatestSheetBtn" onclick="openLatestDateSheet()">📄 เปิดชีต (<span id="latestTabBtnLabel">ล่าสุด</span>)</button>
       <button class="btn btn-sm" onclick="openModal('toolsModal')">🧰 เครื่องมือ</button>
       <button class="btn btn-sm" onclick="openModal('historyModal')">🗂️ ประวัติ (<span id="closedCount">0</span>)</button>
     </div>
@@ -902,7 +908,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       '18.11.69': '1275238192',
       '19.11.69': '2001504505',
       '20.11.69': '141723209',
-      '21.11.69': '460866408'
+      '21.11.69': '460866408',
+      '22.11.69': '2037892150',
+      '23.11.69': '1996885432',
+      '24.11.69': '62394650',
+      '25.11.69': '347215389',
+      '26.11.69': '467275152'
     };
 
     // สำรองข้อมูลช่วงเซลล์ที่ถูกล็อกสำหรับมือถือ (iPhone/Android ที่ Google บังคับ redirect /edit -> /htmlview)
@@ -1696,6 +1707,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const { totalMissingCause, totalMissingSol, lockedCount, byTabCause, byTabSol } = detectRedStripes();
 
       if (totalMissingCause === 0 && totalMissingSol === 0) {
+        const latestInfo = getLatestDateTabInfo();
+        const latestLabel = latestInfo.tabName ? ` (${latestInfo.tabName})` : '';
         bannerEl.innerHTML = `
           <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:8px 12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
             <div>
@@ -1704,7 +1717,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
               </div>
               ${lockedCount > 0 ? `<div style="font-size:0.75rem; color:#047857; font-weight:500; margin-top:2px;">🔒 ข้าม ${lockedCount} รายการที่เจ้าของชีตป้องกัน/ล็อกเซลล์ไว้ (แก้ไขไม่ได้)</div>` : ''}
             </div>
-            <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสด</button>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              <button class="btn btn-sm" style="padding:4px 10px; font-size:0.76rem; background:#fff; border-color:#86efac; color:#065f46; font-weight:700;" onclick="openLatestDateSheet()">🔗 เปิดชีตแท็บล่าสุด${latestLabel}</button>
+              <button class="btn btn-sm" style="padding:4px 8px; font-size:0.76rem;" onclick="syncGoogleSheets(true, true)">🔍 ตรวจสอบสด</button>
+            </div>
           </div>
         `;
         return;
@@ -1891,15 +1907,22 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       }).sort((a, b) => parseTabDate(b.tabName) - parseTabDate(a.tabName) || ((a.rowNum || 0) - (b.rowNum || 0)));
 
       document.getElementById('closedCount').textContent = closed.length;
+      const latestInfo = getLatestDateTabInfo();
+      const latestBtnLbl = document.getElementById('latestTabBtnLabel');
+      if (latestBtnLbl) latestBtnLbl.textContent = latestInfo.tabName || 'ล่าสุด';
 
       const container = document.getElementById('mainContainer');
       if (!active.length) {
         const { lockedCount } = detectRedStripes();
+        const latestLabel = latestInfo.tabName ? ` (แท็บ ${latestInfo.tabName})` : '';
         container.innerHTML = `
           <div class="date-card" style="padding:28px 16px; text-align:center;">
             <div style="font-size:1.05rem; font-weight:700; color:var(--success);">✅ ไม่มีรายการค้าง</div>
             <div style="font-size:0.84rem; color:var(--muted); margin-top:4px;">รายการของ ปณก. 10501 ที่แก้ไขได้ลงสาเหตุครบทั้งหมดแล้ว</div>
             ${lockedCount > 0 ? `<div style="font-size:0.76rem; color:var(--muted); margin-top:6px;">🔒 ซ่อน ${lockedCount} รายการที่ชีตป้องกัน/ล็อกเซลล์ไว้ไม่สามารถคีย์ข้อมูลได้</div>` : ''}
+            <div style="margin-top:12px;">
+              <button class="btn btn-primary btn-sm" onclick="openLatestDateSheet()">📄 เปิด Google Sheet แท็บวันที่ล่าสุด${latestLabel}</button>
+            </div>
           </div>
         `;
       } else {
@@ -1968,6 +1991,9 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
                 📅 วันที่ ${tabKey}
                 <span class="count-pill">${list.length} รายการ (แถว ${minR}–${maxR})</span>
               </div>
+              <button class="btn btn-sm" style="padding:4px 9px; font-size:0.75rem; background:#fff;" onclick="openSheetCell('${tabKey}', '${list[0].causeCol || 'L'}', ${minR})">
+                🔗 เปิดชีตแท็บ ${tabKey}
+              </button>
             </div>
             ${list.length === 1 ? `
               <div class="date-actions" style="grid-template-columns: 1fr 1fr; gap:6px;">
@@ -2712,6 +2738,40 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       const row = rowNum || 1;
       const url = buildSheetCellUrl(gid, col, row);
       showToast(`เปิด Google Sheet ไปที่ช่อง ${col}${row} (แท็บ ${tabKey}) แล้ว`);
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function getLatestDateTabInfo() {
+      const candidateSet = new Set();
+      if (Array.isArray(state.visibleDateTabs) && state.visibleDateTabs.length) {
+        state.visibleDateTabs.forEach(t => { if (isDateTab(t)) candidateSet.add(t); });
+      }
+      if (!candidateSet.size) {
+        Object.keys(state.tabGids || {}).forEach(t => { if (isDateTab(t)) candidateSet.add(t); });
+      }
+      const sorted = Array.from(candidateSet).sort((a, b) => parseTabDate(b) - parseTabDate(a));
+      const latestTab = sorted[0] || '';
+      const gid = latestTab ? ((state.tabGids && state.tabGids[latestTab]) || DEFAULT_TAB_GIDS[latestTab] || '') : '';
+      return { tabName: latestTab, gid };
+    }
+
+    function openLatestDateSheet() {
+      const { tabName, gid } = getLatestDateTabInfo();
+      if (!tabName) {
+        const fallbackUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?authuser=pnk10501@gmail.com&usp=sharing`;
+        showToast('เปิด Google Sheet แล้ว');
+        window.open(fallbackUrl, '_blank', 'noopener');
+        return;
+      }
+      const tabCases = Object.values(state.casesByBarcode || {})
+        .filter(c => c && c.tabName === tabName)
+        .sort((a, b) => (a.rowNum || 0) - (b.rowNum || 0));
+      const activeCases = tabCases.filter(c => !c.closedByUser && !(c.sheetCause && c.sheetCause.trim()) && !isCaseCauseProtected(c));
+      const targetCase = activeCases[0] || tabCases[0] || null;
+      const col = targetCase ? (targetCase.causeCol || 'L') : 'A';
+      const row = targetCase ? (targetCase.rowNum || 1) : 1;
+      const url = buildSheetCellUrl(gid, col, row);
+      showToast(`เปิด Google Sheet แท็บวันที่ล่าสุด (${tabName}) แล้ว`);
       window.open(url, '_blank', 'noopener');
     }
 
